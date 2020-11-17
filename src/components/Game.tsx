@@ -23,21 +23,40 @@
  */
 
 import React from 'react';
-import ReactDOM from 'react-dom';
-import Helmet from 'react-helmet';
-import './index.css';
-import Game from './components/Game'
-import Header from './components/Header'
+import Grid from './Grid';
 
-const TITLE = 'C-Sudoku'
+/**
+ * This class represent the Game that glues all components together.
+ */
+class Game extends React.Component {
+    generateInitialGrid(){
+      const initVal = ["6","","2","3","8","7","9","1","4",
+                      "7","1","9","4","5","2","3","6","8",
+                      "3","4","8","1","9","6","2","5","7",
+                      "8","2","1","9","3","5","4","7","6",
+                      "5","9","6","2","7","4","8","3","1",
+                      "4","7","3","8","6","1","5","2","9",
+                      "1","8","7","5","2","9","","","3",
+                      "2","3","4","6","1","8","7","9","5",
+                      "","6","5","7","4","3","1","8","2"]
+      return initVal
+    }
 
-ReactDOM.render(
-  <>
-  <Helmet>
-    <title>{TITLE}</title>
-  </Helmet>
-  <Header />
-  <Game />
-  </>,
-  document.getElementById('root')
-);
+    render() {
+      return (
+        <div className="game">
+          <div className="game-grid">
+            <Grid 
+                initial = {this.generateInitialGrid()}
+            />
+          </div><br />
+          <div className="game-info">
+            <div>{/* status */}</div>
+            <ol>{/* TODO */}</ol>
+          </div>
+        </div>
+      );
+    }
+  }
+
+export default Game

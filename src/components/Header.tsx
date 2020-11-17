@@ -23,21 +23,19 @@
  */
 
 import React from 'react';
-import ReactDOM from 'react-dom';
-import Helmet from 'react-helmet';
-import './index.css';
-import Game from './components/Game'
-import Header from './components/Header'
 
-const TITLE = 'C-Sudoku'
+/**
+ * This class represent the header of the site.
+ */
+class Header extends React.Component {
+    render() {
+      return (
+        <div className="header">
+          <h1>C - Sudoku</h1>
+          <h5>Sudoku with CRDT</h5>
+        </div>
+      )
+    }
+  }
 
-ReactDOM.render(
-  <>
-  <Helmet>
-    <title>{TITLE}</title>
-  </Helmet>
-  <Header />
-  <Game />
-  </>,
-  document.getElementById('root')
-);
+export default Header
