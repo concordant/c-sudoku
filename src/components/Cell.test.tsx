@@ -35,55 +35,67 @@ beforeEach(() => {
 });
 
 describe("Testing UI", () => {
-    test("Cell initialization", () => {
-        const wrapper = mount(<Cell
-            index={3}
-            value={"6"}
-            onChange={(index:number, value:string) => {}}
-            lock={false}
-          />)
-        expect(wrapper.find('textarea').text()).toBe("6")
-    });
+  /**
+   * Test if the cell display the initial value.
+   */
+  test("Cell value initialization", () => {
+      const wrapper = mount(<Cell
+          index={3}
+          value={"6"}
+          onChange={(index:number, value:string) => {}}
+          lock={false}
+        />)
+      expect(wrapper.find('textarea').text()).toBe("6")
+  });
 
-    test("Cell value changed", () => {
-        const wrapper = mount(<Cell
-            index={3}
-            value={"6"}
-            onChange={(index:number, value:string) => {}}
-            lock={false}
-          />)
-        expect(wrapper.find('textarea').text()).toBe("6")
-        wrapper.find('textarea').simulate('change', { target: {value: "2"} })
-        expect(wrapper.find('textarea').text()).toBe("2")
-    });
+  /**
+   * Test if the cell display the right value when it is changed.
+   */
+  test("Cell value changed", () => {
+      const wrapper = mount(<Cell
+          index={3}
+          value={"6"}
+          onChange={(index:number, value:string) => {}}
+          lock={false}
+        />)
+      expect(wrapper.find('textarea').text()).toBe("6")
+      wrapper.find('textarea').simulate('change', { target: {value: "2"} })
+      expect(wrapper.find('textarea').text()).toBe("2")
+  });
 
-    test("Cell locked", () => {
-        const wrapper = mount(<Cell
-            index={3}
-            value={"6"}
-            onChange={(index:number, value:string) => {}}
-            lock={true}
-          />)
-        expect(wrapper.find('textarea').text()).toBe("6")
-        wrapper.find('textarea').simulate('change', { target: {value: "2"} })
-        expect(wrapper.find('textarea').text()).toBe("6")
-    });
+  /**
+   * Test if the value of a cell cannot be modified when locked.
+   */
+  test("Cell locked", () => {
+      const wrapper = mount(<Cell
+          index={3}
+          value={"6"}
+          onChange={(index:number, value:string) => {}}
+          lock={true}
+        />)
+      expect(wrapper.find('textarea').text()).toBe("6")
+      wrapper.find('textarea').simulate('change', { target: {value: "2"} })
+      expect(wrapper.find('textarea').text()).toBe("6")
+  });
 
-    test("Cell wrong value", () => {
-        const wrapper = mount(<Cell
-            index={3}
-            value={"6"}
-            onChange={(index:number, value:string) => {}}
-            lock={false}
-          />)
-        expect(wrapper.find('textarea').text()).toBe("6")
-        wrapper.find('textarea').simulate('change', { target: {value: "0"} })
-        expect(wrapper.find('textarea').text()).toBe("6")
-        wrapper.find('textarea').simulate('change', { target: {value: "10"} })
-        expect(wrapper.find('textarea').text()).toBe("6")
-        wrapper.find('textarea').simulate('change', { target: {value: "1.1"} })
-        expect(wrapper.find('textarea').text()).toBe("6")
-        wrapper.find('textarea').simulate('change', { target: {value: "abc"} })
-        expect(wrapper.find('textarea').text()).toBe("6")
-    });
+  /**
+   * Test if the value of a cell cannot be modified with wrong kind of value.
+   */
+  test("Cell wrong value", () => {
+      const wrapper = mount(<Cell
+          index={3}
+          value={"6"}
+          onChange={(index:number, value:string) => {}}
+          lock={false}
+        />)
+      expect(wrapper.find('textarea').text()).toBe("6")
+      wrapper.find('textarea').simulate('change', { target: {value: "0"} })
+      expect(wrapper.find('textarea').text()).toBe("6")
+      wrapper.find('textarea').simulate('change', { target: {value: "10"} })
+      expect(wrapper.find('textarea').text()).toBe("6")
+      wrapper.find('textarea').simulate('change', { target: {value: "1.1"} })
+      expect(wrapper.find('textarea').text()).toBe("6")
+      wrapper.find('textarea').simulate('change', { target: {value: "abc"} })
+      expect(wrapper.find('textarea').text()).toBe("6")
+  });
 });
