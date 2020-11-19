@@ -23,8 +23,9 @@
  */
 
 import React from 'react';
+import assert from 'assert';
 import Cell from './Cell';
-import { crdtlib } from 'c-crdtlib';
+import { crdtlib } from '@concordant/c-crdtlib';
 
 let env = new crdtlib.utils.SimpleEnvironment(
     new crdtlib.utils.ClientUId("myClientId"));
@@ -49,11 +50,13 @@ interface IGridState {
 class Grid extends React.Component<IGridProps, IGridState> {
   constructor(props: any) {
     super(props);
+    assert.ok(this.props.initial.every(x => (x==="" || Number(x)>=1)))
+    assert.ok(this.props.initial.every(x => Number(x)<=9))
 
     let mvArray : any[] = Array(9*9)
-    for (let i=0; i<9*9; i++){
+    for (let i=0; i<9*9; i++) {
       mvArray[i] = new crdtlib.crdt.MVRegister()
-      if (props.initial[i]!=""){
+      if (props.initial[i]!=="") {
         mvArray[i].set(props.initial[i], env.tick())
       }
     }
@@ -61,7 +64,7 @@ class Grid extends React.Component<IGridProps, IGridState> {
     // TEST MV
     // let envs = Array(9)
     // let newvals = Array(9)
-    // for (let i = 0; i<9; i++){
+    // for (let i = 0; i<9; i++) {
     //     envs[i] = new crdtlib.utils.SimpleEnvironment(
     //         new crdtlib.utils.ClientUId("myClientId"+i));
     //     newvals[i] = new crdtlib.crdt.MVRegister()
@@ -81,6 +84,10 @@ class Grid extends React.Component<IGridProps, IGridState> {
    * @param value The new value of the cell.
    */
   handleChange(index:number , value:string) {
+    assert.ok(value === "" || Number(value) >= 1)
+    assert.ok(Number(value) <= 9)
+    assert.ok(index >= 0)
+    assert.ok(index < 9*9)
     const cells = this.state.cells.slice();
     console.log(index + " : change from " + this.getValue(index) + " to "+ value)
     cells[index].set(value, env.tick());
@@ -94,6 +101,8 @@ class Grid extends React.Component<IGridProps, IGridState> {
    * @param index The index of the cell to render.
    */
   renderCell(index: number) {
+    assert.ok(index >= 0)
+    assert.ok(index < 9*9)
     let val = this.getValue(index)
     let toLock
     if (this.props.initial[index]) {
@@ -115,7 +124,9 @@ class Grid extends React.Component<IGridProps, IGridState> {
    * This function return a React element corresponding to a block of cell.
    * @param blockNum The index of the block to render.
    */
-  renderBlock(blockNum: number){
+  renderBlock(blockNum: number) {
+    assert.ok(blockNum >= 0)
+    assert.ok(blockNum < 9)
     let index = blockIndex(blockNum)
     return (
       <td>
@@ -162,12 +173,14 @@ class Grid extends React.Component<IGridProps, IGridState> {
    * Return the element at the given index from the cells.
    * @param index The index of the cell. The value of the cell at ‘index’ is returned.
    */
-  getValue(index: number){
+  getValue(index: number) {
+    assert.ok(index >= 0)
+    assert.ok(index < 9*9)
     const cells = this.state.cells.slice();
     let value = new Set()
 
     let it = cells[index].get().iterator()
-    while (it.hasNext()){
+    while (it.hasNext()) {
       value.add(it.next())
     }
     return Array.from(value).join(' ')
@@ -177,12 +190,14 @@ class Grid extends React.Component<IGridProps, IGridState> {
    * Check if a line respect Sudoku lines rules.
    * @param line The line number to be checked.
    */
-  checkLine(line:number){
+  checkLine(line:number) {
+    assert.ok(line >= 0)
+    assert.ok(line < 9)
     let check=Array(9).fill(0)
-    for (let col=0; col<9; col++){
+    for (let col=0; col<9; col++) {
       let index=line*9+col
       let val = this.getValue(index)
-      if (val.length==0 || val.length>1){
+      if (val.length===0 || val.length>1) {
         continue
       }
       check[Number(val)-1]++
@@ -194,12 +209,14 @@ class Grid extends React.Component<IGridProps, IGridState> {
    * Check if a column respect Sudoku columns rules.
    * @param col The column number to be checked.
    */
-  checkColumn(col:number){
+  checkColumn(col:number) {
+    assert.ok(col >= 0)
+    assert.ok(col < 9)
     let check=Array(9).fill(0)
-    for (let line=0; line<9; line++){
+    for (let line=0; line<9; line++) {
       let index=line*9+col
       let val = this.getValue(index)
-      if (val.length==0 || val.length>1){
+      if (val.length===0 || val.length>1) {
         continue
       }
       check[Number(val)-1]++
@@ -211,12 +228,14 @@ class Grid extends React.Component<IGridProps, IGridState> {
    * Check if a block respect Sudoku blocks rules.
    * @param block The block number to be checked.
    */
-  checkBlock(block:number){
+  checkBlock(block:number) {
+    assert.ok(block >= 0)
+    assert.ok(block < 9)
     let check=Array(9).fill(0)
     let listIndex=blockIndex(block)
-    for (let index of listIndex){
+    for (let index of listIndex) {
       let val = this.getValue(index)
-      if (val.length==0 || val.length>1){
+      if (val.length===0 || val.length>1) {
         continue
       }
       check[Number(val)-1]++
@@ -229,17 +248,17 @@ class Grid extends React.Component<IGridProps, IGridState> {
    */
   validateLine() {
     let error=""
-    for (let line=0; line<9; line++){
-      if (this.checkLine(line)==false){
+    for (let line=0; line<9; line++) {
+      if (this.checkLine(line)===false) {
         error+="Erreur ligne "+ (line+1).toString()+" "
         let listIndex=[]
-        for (let i=0; i<9; i++){
+        for (let i=0; i<9; i++) {
           listIndex.push(line*9+i)
         }
         setErrorCell(listIndex)
       }
     }
-    if (error){
+    if (error) {
       console.log(error)
       return false
     }
@@ -249,19 +268,19 @@ class Grid extends React.Component<IGridProps, IGridState> {
   /**
    * This function check if all columns respect Sudoku columns rules.
    */
-  validateColumn(){
+  validateColumn() {
     let error=""
-    for (let col=0; col<9; col++){
-      if (this.checkColumn(col)==false){
+    for (let col=0; col<9; col++) {
+      if (this.checkColumn(col)===false) {
         error+= "Erreur colonne "+ (col+1).toString()+" "
         let listIndex=[]
-        for (let i=0; i<9; i++){
+        for (let i=0; i<9; i++) {
           listIndex.push(i*9+col)
         }
         setErrorCell(listIndex)
       }
     }
-    if (error){
+    if (error) {
       console.log(error)
       return false
     }
@@ -271,16 +290,16 @@ class Grid extends React.Component<IGridProps, IGridState> {
   /**
    * This function check if all blocks respect Sudoku blocks rules.
    */
-  validateBlock(){
+  validateBlock() {
     let error=""
-    for (let block=0; block<9; block++){
-      if (this.checkBlock(block)==false){
+    for (let block=0; block<9; block++) {
+      if (this.checkBlock(block)===false) {
         error+= "Erreur block "+ (block+1).toString()+" "
         let listIndex=blockIndex(block)
         setErrorCell(listIndex)
       }
     }
-    if (error){
+    if (error) {
       console.log(error)
       return false
     }
@@ -292,29 +311,29 @@ class Grid extends React.Component<IGridProps, IGridState> {
    */
   validateSudoku() {
     let listIndex = []
-    for (let i=0; i<9*9; i++){
+    for (let i=0; i<9*9; i++) {
       listIndex.push(i)
     }
     setCellColor(listIndex, "white")
 
     let error=""
-    if (!this.validateLine()){
+    if (!this.validateLine()) {
       error="Error"
     }
-    if (!this.validateColumn()){
+    if (!this.validateColumn()) {
       error="Error"
     }
-    if (!this.validateBlock()){
+    if (!this.validateBlock()) {
       error="Error"
     }
 
-    if (error){
+    if (error) {
       return error
     }
     
     const regex = /^[1-9]$/
-    for (let i=0;i<9*9;i++){
-      if (!regex.test(this.getValue(i))){
+    for (let i=0;i<9*9;i++) {
+      if (!regex.test(this.getValue(i))) {
         return "Continue"
       }
     }
@@ -326,9 +345,9 @@ class Grid extends React.Component<IGridProps, IGridState> {
  * Check if a array only contains values 0 or 1.
  * @param array The array to be checked.
  */
-export function checkArray(array:any){
-  for (let i=0;i<array.length;i++){
-    if (array[i]!=0 && array[i]!=1){
+export function checkArray(array:any) {
+  for (let i=0;i<array.length;i++) {
+    if (array[i]!==0 && array[i]!==1) {
       return false
     }
   }
@@ -339,7 +358,9 @@ export function checkArray(array:any){
  * Return the position of the first cell of a block.
  * @param block The block number of which we want the position.
  */
-export function firstCellOfBlock(block:number){
+export function firstCellOfBlock(block:number) {
+  assert.ok(block >= 0)
+  assert.ok(block < 9)
   let line=Math.floor(block/3)*3
   let column=(block%3)*3
   return [line,column]
@@ -349,13 +370,15 @@ export function firstCellOfBlock(block:number){
  * Return an array containing all cell index of a block.
  * @param block The block number of which we want the cells index.
  */
-export function blockIndex(block: number){
+export function blockIndex(block: number) {
+  assert.ok(block >= 0)
+  assert.ok(block < 9)
   let blocklc=firstCellOfBlock(block)
   let line=blocklc[0]
   let col=blocklc[1]
   let index=[ line   *9 + col,   line   *9 + col+1,  line   *9 + col+2,
-          (line+1)*9 + col,  (line+1)*9 + col+1, (line+1)*9 + col+2,
-          (line+2)*9 + col,  (line+2)*9 + col+1, (line+2)*9 + col+2]
+            (line+1)*9 + col,  (line+1)*9 + col+1, (line+1)*9 + col+2,
+            (line+2)*9 + col,  (line+2)*9 + col+1, (line+2)*9 + col+2]
   return index
 }
 
@@ -364,10 +387,10 @@ export function blockIndex(block: number){
  * @param listIndex List of cells index of which we want to change the color.
  * @param color Color to be set.
  */
-function setCellColor(listIndex: any, color: string){
-  for (let index of listIndex){
+function setCellColor(listIndex: any, color: string) {
+  for (let index of listIndex) {
     const myElem = document.getElementById(String(index))
-    if (myElem){
+    if (myElem) {
       myElem.style.background=color
     }
   }
@@ -377,7 +400,7 @@ function setCellColor(listIndex: any, color: string){
  * Change the color of a list of cells index to indicate an error.
  * @param listIndex List of cells index of which we want to change the color.
  */
-function setErrorCell(listIndex: any){
+function setErrorCell(listIndex: any) {
   const errorColor = "crimson"
   setCellColor(listIndex,errorColor)
 }

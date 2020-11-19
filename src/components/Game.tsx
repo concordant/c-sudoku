@@ -23,6 +23,7 @@
  */
 
 import React from 'react';
+import assert from 'assert';
 import Grid from './Grid';
 
 /**
@@ -39,6 +40,8 @@ class Game extends React.Component {
                       "1","8","7","5","2","9","","","3",
                       "2","3","4","6","1","8","7","9","5",
                       "","6","5","7","4","3","1","8","2"]
+      assert.ok(initVal.every(x => (x==="" || Number(x)>=1)))
+      assert.ok(initVal.every(x => Number(x)<=9))
       return initVal
     }
 

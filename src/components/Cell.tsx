@@ -57,7 +57,7 @@ class Cell extends React.Component<ICellProps,ICellState> {
   onChange(event: any){
     if (this.props.lock){
       //console.log("lock")
-    } else if (event.target.value == "" || this.state.regexp.test(event.target.value)){
+    } else if (event.target.value === "" || this.state.regexp.test(event.target.value)){
       this.setState({value: event.target.value})
       this.props.onChange(this.props.index, event.target.value)
     } else {
