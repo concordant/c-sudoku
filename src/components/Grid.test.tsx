@@ -23,7 +23,6 @@
  */
 
 import React from "react";
-import renderer from 'react-test-renderer';
 import { configure } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 import { shallow, mount, render } from 'enzyme';

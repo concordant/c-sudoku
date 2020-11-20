@@ -11,7 +11,7 @@ Sudoku using the Concordant platform API.
 For the next steps, you will need the following software:
 
 - Make sure you have the latest version of Node.js: [see official installation guide](https://nodejs.org/en/download/);
-- The project uses Git to download some required dependencies: [follow the official install guide](https://git-scm.com/book/en/v2/Getting-Started-Installing-Git)
+- The project uses the CRDT library from Concordant private registry: [see Usage section](https://gitlab.inria.fr/concordant/software/c-crdtlib/-/blob/master/README.md).
 
 For the moment, we are using a private scoped package of CRDT.
 
