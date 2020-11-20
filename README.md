@@ -13,16 +13,6 @@ For the next steps, you will need the following software:
 - Make sure you have the latest version of Node.js: [see official installation guide](https://nodejs.org/en/download/);
 - The project uses the CRDT library from Concordant private registry: [see Usage section](https://gitlab.inria.fr/concordant/software/c-crdtlib/-/blob/master/README.md).
 
-For the moment, we are using a private scoped package of CRDT.
-
-For that purpose, we need to [create a deploy token](https://docs.gitlab.com/ee/user/project/deploy_tokens/) in concordant/Software/c-crdtlib.
-
-Then use the following command to configure our npm client to use our organization's scope:
-```
-$ npm config set @concordant:registry "https://gitlab.inria.fr/api/v4/packages/npm/"
-$ npm config set '//gitlab.inria.fr/api/v4/packages/npm/:_authToken' "<deployToken>"
-```
-
 1.**Install Project dependencies**
 
 Go to project root directory and:
