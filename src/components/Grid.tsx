@@ -24,7 +24,7 @@
 
 import React from 'react';
 import Cell from './Cell';
-import { crdtlib } from 'c-crdtlib';
+import { crdtlib } from '@concordant/c-crdtlib';
 
 let env = new crdtlib.utils.SimpleEnvironment(
     new crdtlib.utils.ClientUId("myClientId"));
