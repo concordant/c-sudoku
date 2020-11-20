@@ -23,7 +23,6 @@
  */
 
 import React from "react";
-import renderer from 'react-test-renderer';
 import { configure } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 import { shallow, mount, render } from 'enzyme';
@@ -38,7 +37,7 @@ beforeEach(() => {
 });
 
 /**
- * Test if checkArray return true if all value are equal to 0 or 1.
+ * This test evaluates that checkArray return true only if the array contains only integers equal to 0 or 1.
  */
 describe("checkArray", () => {
     test("checkArray", () => {
@@ -49,7 +48,7 @@ describe("checkArray", () => {
 });
 
 /**
- * Test if firstCellOfBlock return well the position of the top-left cell of the block.
+ * This test evaluates that firstCellOfBlock return the position of the top-left cell of the block.
  */
 describe("firstCellOfBlock", () => {
     test("firstCellOfBlock", () => {
@@ -62,7 +61,7 @@ describe("firstCellOfBlock", () => {
 });
 
 /**
- * Test if blockIndex return a list containing index of all cells of the block.
+ * This test evaluates that blockIndex return a list containing index of all cells of the same block.
  */
 describe("blockIndex", () => {
     test("blockIndex", () => {
@@ -75,7 +74,7 @@ describe("blockIndex", () => {
 });
 
 /**
- * Test if getValue return well the right initial value.
+ * This test evaluates that getValue return the right initial value.
  */
 describe ("getValue", () => {
     test("getValue", () => {
@@ -107,7 +106,8 @@ describe ("getValue", () => {
 });
 
 /**
- * Test if handleChange change the value of the cell.
+ * This test evaluates that handleChange change the value of the cell.
+ * Call to getValue should return the new value (2).
  */
 describe ("handleChange", () => {
     test("handleChange", () => {
@@ -130,8 +130,8 @@ describe ("handleChange", () => {
 });
 
 /**
- * Test if checkLine return true only if the array contains all numbers
- * from 1 to 9 without repeat.
+ * This test evaluates that checkLine return true only if 
+ * the array contains all numbers from 1 to 9 without repeat.
  */
 describe("checkLine", () => {
     test("checkLine", () => {
@@ -163,8 +163,8 @@ describe("checkLine", () => {
 });
 
 /**
- * Test if checkColumn return true only if the array contains all numbers
- * from 1 to 9 without repeat.
+ * This test evaluates that checkColumn return true only if 
+ * the array contains all numbers from 1 to 9 without repeat.
  */
 describe("checkColumn", () => {
     test("checkColumn", () => {
@@ -196,8 +196,8 @@ describe("checkColumn", () => {
 });
 
 /**
- * Test if checkBlock return true only if the array contains all numbers
- * from 1 to 9 without repeat.
+ * This test evaluates that checkBlock return true only if 
+ * the array contains all numbers from 1 to 9 without repeat.
  */
 describe("checkBlock", () => {
     test("checkBlock", () => {
@@ -229,11 +229,11 @@ describe("checkBlock", () => {
 });
 
 /**
- * Test if validateLine return false if a line contains an error.
+ * This test evaluates that validateLine return false if a line contains an error.
  */
 describe("validateLine", () => {
     /**
-     * Test if validateLine return true with a line containing full empty cell.
+     * This test evaluates that validateLine return true with a line containing full empty cell.
      */
     test("validateLine empty", () => {
         const initVal = ["","","","","","","","","",
@@ -251,7 +251,7 @@ describe("validateLine", () => {
     });
 
     /**
-     * Test if validateLine return true with a line containing all numbers
+     * This test evaluates that validateLine return true with a line containing all numbers
      * from 1 to 9 without repeat.
      */
     test("validateLine complete", () => {
@@ -270,7 +270,7 @@ describe("validateLine", () => {
     });
 
     /**
-     * Test if validateLine return true if a line is missing a value.
+     * This test evaluates that validateLine return true if a line is missing a value.
      */
     test("validateLine with missing values", () => {
         const initVal = ["6","","2","3","8","7","9","1","4",
@@ -288,7 +288,7 @@ describe("validateLine", () => {
     });
 
     /**
-     * Test if validateLine return false when a value is dupplicated.
+     * This test evaluates that validateLine return false when a value is dupplicated.
      */
     test("validateLine with wrongs values", () => {
         const initVal = ["6","2","2","3","8","7","9","1","4",
@@ -306,7 +306,7 @@ describe("validateLine", () => {
     });
 
     /**
-     * Test if validateLine return true when a cell has multiple values.
+     * This test evaluates that validateLine return true when a cell has multiple values.
      */
     test("validateLine with multiples values", () => {
         const initVal = ["6","5","","3","8","7","9","1","4",
@@ -332,11 +332,11 @@ describe("validateLine", () => {
 });
 
 /**
- * Test if validateColumn return false if a column contains an error.
+ * This test evaluates that validateColumn return false if a column contains an error.
  */
 describe("validateColumn", () => {
     /**
-     * Test if validateColumn return true with a column containing full empty cell.
+     * This test evaluates that validateColumn return true with a column containing full empty cell.
      */
     test("validateColumn empty", () => {
         const initVal = ["","","","","","","","","",
@@ -354,7 +354,7 @@ describe("validateColumn", () => {
     });
 
     /**
-     * Test if validateColumn return true with a column containing all numbers
+     * This test evaluates that validateColumn return true with a column containing all numbers
      * from 1 to 9 without repeat.
      */
     test("validateColumn complete", () => {
@@ -373,7 +373,7 @@ describe("validateColumn", () => {
     });
 
     /**
-     * Test if validateColumn return true if a column is missing a value.
+     * This test evaluates that validateColumn return true if a column is missing a value.
      */
     test("validateColumn with missing values", () => {
         const initVal = ["6","","2","3","8","7","9","1","4",
@@ -391,7 +391,7 @@ describe("validateColumn", () => {
     });
 
     /**
-     * Test if validateColumn return false when a value is dupplicated.
+     * This test evaluates that validateColumn return false when a value is dupplicated.
      */
     test("validateColumn with wrongs values", () => {
         const initVal = ["6","2","2","3","8","7","9","1","4",
@@ -409,7 +409,7 @@ describe("validateColumn", () => {
     });
 
     /**
-     * Test if validateColumn return true when a cell has multiple values.
+     * This test evaluates that validateColumn return true when a cell has multiple values.
      */
     test("validateColumn with multiples values", () => {
         const initVal = ["6","5","","3","8","7","9","1","4",
@@ -435,11 +435,11 @@ describe("validateColumn", () => {
 });
 
 /**
- * Test if validateBlock return false if a line contains an error.
+ * This test evaluates that validateBlock return false if a line contains an error.
  */
 describe("validateBlock", () => {
     /**
-     * Test if validateBlock return true with a line containing full empty cell.
+     * This test evaluates that validateBlock return true with a line containing full empty cell.
      */
     test("validateBlock empty", () => {
         const initVal = ["","","","","","","","","",
@@ -457,7 +457,7 @@ describe("validateBlock", () => {
     });
 
     /**
-     * Test if validateBlock return true with a line containing all numbers
+     * This test evaluates that validateBlock return true with a line containing all numbers
      * from 1 to 9 without repeat.
      */
     test("validateBlock complete", () => {
@@ -476,7 +476,7 @@ describe("validateBlock", () => {
     });
 
     /**
-     * Test if validateBlock return true if a line is missing a value.
+     * This test evaluates that validateBlock return true if a line is missing a value.
      */
     test("validateBlock with missing values", () => {
         const initVal = ["6","","2","3","8","7","9","1","4",
@@ -494,7 +494,7 @@ describe("validateBlock", () => {
     });
 
     /**
-     * Test if validateBlock return false when a value is dupplicated.
+     * This test evaluates that validateBlock return false when a value is dupplicated.
      */
     test("validateBlock with wrongs values", () => {
         const initVal = ["6","2","2","3","8","7","9","1","4",
@@ -512,7 +512,7 @@ describe("validateBlock", () => {
     });
 
     /**
-     * Test if validateBlock return true when a cell has multiple values.
+     * This test evaluates that validateBlock return true when a cell has multiple values.
      */
     test("validateBlock with multiples values", () => {
         const initVal = ["6","5","","3","8","7","9","1","4",
@@ -538,11 +538,11 @@ describe("validateBlock", () => {
 });
 
 /**
- * Test if validateSudoku return false if a line, column or block contains an error.
+ * This test evaluates that validateSudoku return false if a line, column or block contains an error.
  */
 describe("validateSudoku", () => {
     /**
-     * Test if validateSudoku return true with a full empty grid.
+     * This test evaluates that validateSudoku return true with a full empty grid.
      */
     test("validateSudoku empty", () => {
         const initVal = ["","","","","","","","","",
@@ -560,7 +560,7 @@ describe("validateSudoku", () => {
     });
 
     /**
-     * Test if validateSudoku return true with all lines, columns and blocks 
+     * This test evaluates that validateSudoku return true with all lines, columns and blocks 
      * containing all numbers from 1 to 9 without repeat.
      */
     test("validateSudoku complete", () => {
@@ -579,7 +579,7 @@ describe("validateSudoku", () => {
     });
 
     /**
-     * Test if validateSudoku return true if the grid is missing a value.
+     * This test evaluates that validateSudoku return true if the grid is missing a value.
      */
     test("validateSudoku with missing values", () => {
         const initVal = ["6","","2","3","8","7","9","1","4",
@@ -597,7 +597,7 @@ describe("validateSudoku", () => {
     });
 
     /**
-     * Test if validateSudoku return false when a value is dupplicated.
+     * This test evaluates that validateSudoku return false when a value is dupplicated.
      */
     test("validateSudoku with wrongs values", () => {
         const initVal = ["6","2","2","3","8","7","9","1","4",
@@ -615,7 +615,7 @@ describe("validateSudoku", () => {
     });
 
     /**
-     * Test if validateSudoku return true when a cell has multiple values.
+     * This test evaluates that validateSudoku return true when a cell has multiple values.
      */
     test("validateSudoku with multiples values", () => {
         const initVal = ["6","5","","3","8","7","9","1","4",
@@ -642,7 +642,7 @@ describe("validateSudoku", () => {
 
 describe("Testing status", () => {
     /**
-     * Test if the status field display "Continue" when the grid
+     * This test evaluates that the status field display "Continue" when the grid
      * is missing a value without wrong entries.
      */
     test("UI status continue", () => {
@@ -662,7 +662,7 @@ describe("Testing status", () => {
     });
 
     /**
-     * Test if the status field display "Error" when the grid
+     * This test evaluates that the status field display "Error" when the grid
      * contains an error.
      */
     test("UI status error", () => {
@@ -682,7 +682,7 @@ describe("Testing status", () => {
     });
 
     /**
-     * Test if the status field display "Complete" when the grid
+     * This test evaluates that the status field display "Complete" when the grid
      * is complete without errors.
      */
     test("UI status complete", () => {
@@ -704,7 +704,7 @@ describe("Testing status", () => {
 
 describe("Testing cells", () => {
     /**
-     * Test if the grid display the right numbers of Cell.
+     * This test evaluates that the grid display the right numbers of Cell.
      */
     test("Number of cells", () => {
         const initVal = ["6","5","","3","8","7","9","1","4",
@@ -722,7 +722,7 @@ describe("Testing cells", () => {
     });
 
     /**
-     * Test if the grid display the right initial value.
+     * This test evaluates that the grid display the right initial value.
      */
     test("Cell initialization", () => {
         const initVal = ["6","5","","3","8","7","9","1","4",

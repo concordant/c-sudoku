@@ -36,7 +36,8 @@ beforeEach(() => {
 
 describe("Testing UI", () => {
   /**
-   * Test if the cell display the initial value.
+   * This test evaluates that the cell displays the initial value.
+   * Here it should display 6.
    */
   test("Cell value initialization", () => {
       const wrapper = mount(<Cell
@@ -49,7 +50,9 @@ describe("Testing UI", () => {
   });
 
   /**
-   * Test if the cell display the right value when it is changed.
+   * This test evaluates that after updating the cell value,
+   * the cell display the right value.
+   * Here it should display 2.
    */
   test("Cell value changed", () => {
       const wrapper = mount(<Cell
@@ -64,7 +67,8 @@ describe("Testing UI", () => {
   });
 
   /**
-   * Test if the value of a cell cannot be modified when locked.
+   * This test evaluates that the value of a locked cell cannot be modified.
+   * Here it should display 2 even if we try to modify it.
    */
   test("Cell locked", () => {
       const wrapper = mount(<Cell
@@ -79,7 +83,7 @@ describe("Testing UI", () => {
   });
 
   /**
-   * Test if the value of a cell cannot be modified with wrong kind of value.
+   * This test evaluates that the value of a cell can only be modified with integers from 1 to 9.
    */
   test("Cell wrong value", () => {
       const wrapper = mount(<Cell
