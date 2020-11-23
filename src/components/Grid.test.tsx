@@ -28,7 +28,7 @@ import Adapter from 'enzyme-adapter-react-16';
 import { shallow, mount, render } from 'enzyme';
 import Grid from "./Grid"
 import {checkArray, firstCellOfBlock, blockIndex} from "./Grid"
-import { crdtlib } from '@concordant/c-crdtlib';
+import {crdtlib} from '@concordant/c-crdtlib';
 
 configure({ adapter: new Adapter() });
 
