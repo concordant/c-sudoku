@@ -36,13 +36,20 @@ beforeEach(() => {
     jest.spyOn(console, 'log').mockImplementation(() => {});
 });
 
+/**
+ * This test evaluates that checkArray return true only if the array contains only integers equal to 0 or 1.
+ */
 describe("checkArray", () => {
     test("checkArray", () => {
         expect(checkArray([0,1,2,3])).toBe(false);
         expect(checkArray([0,1,0,1])).toBe(true);
+        expect(checkArray([0,-1,0,1])).toBe(false);
     });
 });
 
+/**
+ * This test evaluates that firstCellOfBlock return the position of the top-left cell of the block.
+ */
 describe("firstCellOfBlock", () => {
     test("firstCellOfBlock", () => {
         expect(firstCellOfBlock(0)).toStrictEqual([0, 0]);
@@ -53,6 +60,9 @@ describe("firstCellOfBlock", () => {
     });
 });
 
+/**
+ * This test evaluates that blockIndex return a list containing index of all cells of the same block.
+ */
 describe("blockIndex", () => {
     test("blockIndex", () => {
         expect(blockIndex(0)).toStrictEqual([0, 1, 2, 9, 10, 11, 18, 19, 20]);
@@ -63,6 +73,9 @@ describe("blockIndex", () => {
     });
 });
 
+/**
+ * This test evaluates that getValue return the right initial value.
+ */
 describe ("getValue", () => {
     test("getValue", () => {
         const initVal = ["6","","","3","8","7","9","1","4",
@@ -92,6 +105,10 @@ describe ("getValue", () => {
     });
 });
 
+/**
+ * This test evaluates that handleChange change the value of the cell.
+ * Call to getValue should return the new value (2).
+ */
 describe ("handleChange", () => {
     test("handleChange", () => {
         const initVal = ["6","5","","3","8","7","9","1","4",
@@ -112,6 +129,10 @@ describe ("handleChange", () => {
     });
 });
 
+/**
+ * This test evaluates that checkLine return true only if 
+ * the array contains all numbers from 1 to 9 without repeat.
+ */
 describe("checkLine", () => {
     test("checkLine", () => {
         const initVal = ["","","","","","","","","",
@@ -141,6 +162,10 @@ describe("checkLine", () => {
     });
 });
 
+/**
+ * This test evaluates that checkColumn return true only if 
+ * the array contains all numbers from 1 to 9 without repeat.
+ */
 describe("checkColumn", () => {
     test("checkColumn", () => {
         const initVal = ["","1","1","1","8","7","9","1","4",
@@ -170,6 +195,10 @@ describe("checkColumn", () => {
     });
 });
 
+/**
+ * This test evaluates that checkBlock return true only if 
+ * the array contains all numbers from 1 to 9 without repeat.
+ */
 describe("checkBlock", () => {
     test("checkBlock", () => {
         const initVal = ["","","","1","2","3","1","2","3",
@@ -199,7 +228,13 @@ describe("checkBlock", () => {
     });
 });
 
+/**
+ * This test evaluates that validateLine return false if a line contains an error.
+ */
 describe("validateLine", () => {
+    /**
+     * This test evaluates that validateLine return true with a line containing full empty cell.
+     */
     test("validateLine empty", () => {
         const initVal = ["","","","","","","","","",
                         "","","","","","","","","",
@@ -215,6 +250,10 @@ describe("validateLine", () => {
         expect(grid.validateLine()).toBe(true)
     });
 
+    /**
+     * This test evaluates that validateLine return true with a line containing all numbers
+     * from 1 to 9 without repeat.
+     */
     test("validateLine complete", () => {
         const initVal = ["6","5","2","3","8","7","9","1","4",
                         "7","1","9","4","5","2","3","6","8",
@@ -230,6 +269,9 @@ describe("validateLine", () => {
         expect(grid.validateLine()).toBe(true)
     });
 
+    /**
+     * This test evaluates that validateLine return true if a line is missing a value.
+     */
     test("validateLine with missing values", () => {
         const initVal = ["6","","2","3","8","7","9","1","4",
                         "7","1","9","4","5","2","3","6","8",
@@ -245,6 +287,9 @@ describe("validateLine", () => {
         expect(grid.validateLine()).toBe(true)
     });
 
+    /**
+     * This test evaluates that validateLine return false when a value is dupplicated.
+     */
     test("validateLine with wrongs values", () => {
         const initVal = ["6","2","2","3","8","7","9","1","4",
                         "7","1","9","4","5","2","3","6","8",
@@ -260,6 +305,9 @@ describe("validateLine", () => {
         expect(grid.validateLine()).toBe(false)
     });
 
+    /**
+     * This test evaluates that validateLine return true when a cell has multiple values.
+     */
     test("validateLine with multiples values", () => {
         const initVal = ["6","5","","3","8","7","9","1","4",
                        "7","1","9","4","5","2","3","6","8",
@@ -283,7 +331,13 @@ describe("validateLine", () => {
     });
 });
 
+/**
+ * This test evaluates that validateColumn return false if a column contains an error.
+ */
 describe("validateColumn", () => {
+    /**
+     * This test evaluates that validateColumn return true with a column containing full empty cell.
+     */
     test("validateColumn empty", () => {
         const initVal = ["","","","","","","","","",
                         "","","","","","","","","",
@@ -299,6 +353,10 @@ describe("validateColumn", () => {
         expect(grid.validateColumn()).toBe(true)
     });
 
+    /**
+     * This test evaluates that validateColumn return true with a column containing all numbers
+     * from 1 to 9 without repeat.
+     */
     test("validateColumn complete", () => {
         const initVal = ["6","5","2","3","8","7","9","1","4",
                         "7","1","9","4","5","2","3","6","8",
@@ -314,6 +372,9 @@ describe("validateColumn", () => {
         expect(grid.validateColumn()).toBe(true)
     });
 
+    /**
+     * This test evaluates that validateColumn return true if a column is missing a value.
+     */
     test("validateColumn with missing values", () => {
         const initVal = ["6","","2","3","8","7","9","1","4",
                         "7","1","9","4","5","2","3","6","8",
@@ -329,6 +390,9 @@ describe("validateColumn", () => {
         expect(grid.validateColumn()).toBe(true)
     });
 
+    /**
+     * This test evaluates that validateColumn return false when a value is dupplicated.
+     */
     test("validateColumn with wrongs values", () => {
         const initVal = ["6","2","2","3","8","7","9","1","4",
                         "7","1","9","4","5","2","3","6","8",
@@ -344,6 +408,9 @@ describe("validateColumn", () => {
         expect(grid.validateColumn()).toBe(false)
     });
 
+    /**
+     * This test evaluates that validateColumn return true when a cell has multiple values.
+     */
     test("validateColumn with multiples values", () => {
         const initVal = ["6","5","","3","8","7","9","1","4",
                        "7","1","9","4","5","2","3","6","8",
@@ -367,7 +434,13 @@ describe("validateColumn", () => {
     });
 });
 
+/**
+ * This test evaluates that validateBlock return false if a line contains an error.
+ */
 describe("validateBlock", () => {
+    /**
+     * This test evaluates that validateBlock return true with a line containing full empty cell.
+     */
     test("validateBlock empty", () => {
         const initVal = ["","","","","","","","","",
                         "","","","","","","","","",
@@ -383,6 +456,10 @@ describe("validateBlock", () => {
         expect(grid.validateBlock()).toBe(true)
     });
 
+    /**
+     * This test evaluates that validateBlock return true with a line containing all numbers
+     * from 1 to 9 without repeat.
+     */
     test("validateBlock complete", () => {
         const initVal = ["6","5","2","3","8","7","9","1","4",
                         "7","1","9","4","5","2","3","6","8",
@@ -398,6 +475,9 @@ describe("validateBlock", () => {
         expect(grid.validateBlock()).toBe(true)
     });
 
+    /**
+     * This test evaluates that validateBlock return true if a line is missing a value.
+     */
     test("validateBlock with missing values", () => {
         const initVal = ["6","","2","3","8","7","9","1","4",
                         "7","1","9","4","5","2","3","6","8",
@@ -413,6 +493,9 @@ describe("validateBlock", () => {
         expect(grid.validateBlock()).toBe(true)
     });
 
+    /**
+     * This test evaluates that validateBlock return false when a value is dupplicated.
+     */
     test("validateBlock with wrongs values", () => {
         const initVal = ["6","2","2","3","8","7","9","1","4",
                         "7","1","9","4","5","2","3","6","8",
@@ -428,6 +511,9 @@ describe("validateBlock", () => {
         expect(grid.validateBlock()).toBe(false)
     });
 
+    /**
+     * This test evaluates that validateBlock return true when a cell has multiple values.
+     */
     test("validateBlock with multiples values", () => {
         const initVal = ["6","5","","3","8","7","9","1","4",
                        "7","1","9","4","5","2","3","6","8",
@@ -451,7 +537,13 @@ describe("validateBlock", () => {
     });
 });
 
+/**
+ * This test evaluates that validateSudoku return false if a line, column or block contains an error.
+ */
 describe("validateSudoku", () => {
+    /**
+     * This test evaluates that validateSudoku return true with a full empty grid.
+     */
     test("validateSudoku empty", () => {
         const initVal = ["","","","","","","","","",
                         "","","","","","","","","",
@@ -467,6 +559,10 @@ describe("validateSudoku", () => {
         expect(grid.validateSudoku()).toBe("Continue")
     });
 
+    /**
+     * This test evaluates that validateSudoku return true with all lines, columns and blocks 
+     * containing all numbers from 1 to 9 without repeat.
+     */
     test("validateSudoku complete", () => {
         const initVal = ["6","5","2","3","8","7","9","1","4",
                         "7","1","9","4","5","2","3","6","8",
@@ -482,6 +578,9 @@ describe("validateSudoku", () => {
         expect(grid.validateSudoku()).toBe("Complete")
     });
 
+    /**
+     * This test evaluates that validateSudoku return true if the grid is missing a value.
+     */
     test("validateSudoku with missing values", () => {
         const initVal = ["6","","2","3","8","7","9","1","4",
                         "7","1","9","4","5","2","3","6","8",
@@ -497,6 +596,9 @@ describe("validateSudoku", () => {
         expect(grid.validateSudoku()).toBe("Continue")
     });
 
+    /**
+     * This test evaluates that validateSudoku return false when a value is dupplicated.
+     */
     test("validateSudoku with wrongs values", () => {
         const initVal = ["6","2","2","3","8","7","9","1","4",
                         "7","1","9","4","5","2","3","6","8",
@@ -512,6 +614,9 @@ describe("validateSudoku", () => {
         expect(grid.validateSudoku()).toBe("Error")
     });
 
+    /**
+     * This test evaluates that validateSudoku return true when a cell has multiple values.
+     */
     test("validateSudoku with multiples values", () => {
         const initVal = ["6","5","","3","8","7","9","1","4",
                        "7","1","9","4","5","2","3","6","8",
@@ -536,6 +641,10 @@ describe("validateSudoku", () => {
 });
 
 describe("Testing status", () => {
+    /**
+     * This test evaluates that the status field display "Continue" when the grid
+     * is missing a value without wrong entries.
+     */
     test("UI status continue", () => {
         const initVal = ["","5","2","3","8","7","9","1","4",
                        "7","1","9","4","5","2","3","6","8",
@@ -552,6 +661,10 @@ describe("Testing status", () => {
         expect(status.text()).toBe("Status : Continue")
     });
 
+    /**
+     * This test evaluates that the status field display "Error" when the grid
+     * contains an error.
+     */
     test("UI status error", () => {
         const initVal = ["6","2","2","3","8","7","9","1","4",
                         "7","1","9","4","5","2","3","6","8",
@@ -568,6 +681,10 @@ describe("Testing status", () => {
         expect(status.text()).toBe("Status : Error")
     });
 
+    /**
+     * This test evaluates that the status field display "Complete" when the grid
+     * is complete without errors.
+     */
     test("UI status complete", () => {
         const initVal = ["6","5","2","3","8","7","9","1","4",
                         "7","1","9","4","5","2","3","6","8",
@@ -586,6 +703,9 @@ describe("Testing status", () => {
 });
 
 describe("Testing cells", () => {
+    /**
+     * This test evaluates that the grid display the right numbers of Cell.
+     */
     test("Number of cells", () => {
         const initVal = ["6","5","","3","8","7","9","1","4",
                         "7","1","9","4","5","2","3","6","8",
@@ -601,6 +721,9 @@ describe("Testing cells", () => {
         expect(wrapper.find('Cell')).toHaveLength(81)
     });
 
+    /**
+     * This test evaluates that the grid display the right initial value.
+     */
     test("Cell initialization", () => {
         const initVal = ["6","5","","3","8","7","9","1","4",
                         "7","1","9","4","5","2","3","6","8",
