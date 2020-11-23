@@ -23,13 +23,12 @@
  */
 
 import React from "react";
-import renderer from 'react-test-renderer';
 import { configure } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
 import { shallow, mount, render } from 'enzyme';
 import Grid from "./Grid"
 import {checkArray, firstCellOfBlock, blockIndex} from "./Grid"
-import {crdtlib} from 'c-crdtlib';
+import { crdtlib } from '@concordant/c-crdtlib';
 
 configure({ adapter: new Adapter() });
 
