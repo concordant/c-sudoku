@@ -314,7 +314,7 @@ class Grid extends React.Component<IGridProps, IGridState> {
     for (let i=0; i<9*9; i++) {
       listIndex.push(i)
     }
-    setCellColor(listIndex, "white")
+    removeErrorCell(listIndex)
 
     let error=""
     if (!this.validateLine()) {
@@ -383,26 +383,47 @@ export function blockIndex(block: number) {
 }
 
 /**
- * Change the cell color of a list of cells index.
- * @param listIndex List of cells index of which we want to change the color.
- * @param color Color to be set.
+ * Add a classname to a list of elements.
+ * @param listId List of elements id.
+ * @param classname ClassName to be added.
  */
-function setCellColor(listIndex: any, color: string) {
-  for (let index of listIndex) {
-    const myElem = document.getElementById(String(index))
+function addClassName(listId: any, classname: string) {
+  for (let id of listId) {
+    const myElem = document.getElementById(String(id))
     if (myElem) {
-      myElem.style.background=color
+      myElem.classList.add(classname)
     }
   }
 }
 
 /**
- * Change the color of a list of cells index to indicate an error.
- * @param listIndex List of cells index of which we want to change the color.
+ * Remove a classname to a list of elements.
+ * @param listId List of elements id.
+ * @param classname ClassName to be removed.
  */
-function setErrorCell(listIndex: any) {
-  const errorColor = "crimson"
-  setCellColor(listIndex,errorColor)
+function removeClassName(listId: any, classname: string) {
+  for (let id of listId) {
+    const myElem = document.getElementById(String(id))
+    if (myElem) {
+      myElem.classList.remove(classname)
+    }
+  }
+}
+
+/**
+ * Add errorcell class to a list of elements.
+ * @param listId List of elements id.
+ */
+function setErrorCell(listId: any) {
+  addClassName(listId, "errorcell")
+}
+
+/**
+ * Remove errorcell class to a list of elements.
+ * @param listId List of elements id.
+ */
+function removeErrorCell(listId: any) {
+  removeClassName(listId, "errorcell")
 }
 
 export default Grid

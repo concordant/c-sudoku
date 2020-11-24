@@ -35,39 +35,18 @@ body {
   display: table;
 }
 
+html {
+  text-align: center;
+}
+
 h1, h5 {
-  color: #ffea50
+  color: #FFEA50
 }
 
 h5 {
   margin-top: -1.5em;
   padding-bottom: 1em;
-  border-bottom: 2px dotted #ffea50;
-}
-
-.status {
-  margin-top:10px;
-  color: #ffea50;
-  border : dotted;
-}
-
-.cell {
-  background: white;
-  border: 1px solid #121212;
-  font-size: 40px;
-  font-weight: bold;
-  line-height: 34px;
-  height: 36px;
-  width: 36px;
-  padding:20px;
-  margin-right: -3px;
-  margin-top: -3px;
-  text-align: center;
-}
-
-.cell:focus {
-  outline: none;
-  background: #ffea50;
+  border-bottom: 2px dotted #FFEA50;
 }
 
 .game {
@@ -80,9 +59,15 @@ h5 {
   margin-right: auto;
 }
 
+.status {
+  margin-top:10px;
+  color: #FFEA50;
+  border : dotted;
+}
+
 textarea {
-  border-color:silver;
-  color: #38dce0;
+  color: #9e9e9e;
+  border: 1px solid #121212;
   display:inline-block;
   vertical-align:middle;
   resize: none;
@@ -100,10 +85,34 @@ textarea {
   display: none;
 }
 
-.lock {
-  color: black
+.cell {
+  background: #FFFFFF;
+  font-size: 40px;
+  font-weight: bold;
+  line-height: 34px;
+  height: 36px;
+  width: 36px;
+  padding:20px;
+  margin-right: -3px;
+  margin-top: -3px;
+  text-align: center;
 }
 
-html {
-  text-align: center;
+.errorcell {
+  color: #f05545;
+  background: #b71c1c;
+}
+
+.cell:focus {
+  outline: none;
+  background: #cfcfcf;
+}
+
+.errorcell:focus {
+  outline: none;
+  background: #7f0000;
+}
+
+.lock {
+  color:#121212
 }
