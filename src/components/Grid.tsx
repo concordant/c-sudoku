@@ -179,7 +179,7 @@ class Grid extends React.Component<IGridProps, IGridState> {
     const cells = this.state.cells.slice();
     let value = new Set()
 
-    let it = cells[index].get().iterator()
+    let it = cells[index].iterator()
     while (it.hasNext()) {
       value.add(it.next())
     }
