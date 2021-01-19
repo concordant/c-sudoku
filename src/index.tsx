@@ -32,12 +32,10 @@ import Header from './components/Header'
 const TITLE = 'C-Sudoku'
 
 ReactDOM.render(
-  <>
-  <Helmet>
-    <title>{TITLE}</title>
-  </Helmet>
-  <Header />
-  <Game />
-  </>,
-  document.getElementById('root')
+    <>
+    <Helmet><title>{TITLE}</title></Helmet>
+    <Header />
+    <Game />
+    </>,
+    document.getElementById('root')
 );

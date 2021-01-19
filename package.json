@@ -1,10 +1,13 @@
 {
   "name": "c-sudoku",
-  "version": "0.1.0",
-  "description": "Sudoku with CRDT",
-  "licence": "MIT",
+  "description": "Sudoku Demo with CRDT",
+  "version": "0.0.1",
+  "author": "Yannick Li <yannick.li@concordant.io>",
+  "license": "MIT",
+  "homepage": "/",
   "dependencies": {
-    "@concordant/c-crdtlib": "0.0.7-1",
+    "@concordant/c-crdtlib": "^1.0.1",
+    "@concordant/c-client": "^0.0.1",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
