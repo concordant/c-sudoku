@@ -33,7 +33,8 @@ interface ICellProps {
     index: number,
     value: string,
     onChange: any,
-    modifiable: boolean
+    modifiable: boolean,
+    error: boolean
 }
 
 /**
@@ -64,13 +65,14 @@ class Cell extends React.Component<ICellProps, {}> {
         if (!this.props.modifiable) {
             cellClass += " locked"
         }
+        if (this.props.error){
+            cellClass += " errorcell"
+        }
         return (
-            <textarea
+            <input
                 id={String(this.props.index)}
                 className={cellClass}
                 maxLength={1}
-                rows={3}
-                cols={6}
                 value={this.props.value}
                 onChange={(event) => this.onChange(event)}
             />

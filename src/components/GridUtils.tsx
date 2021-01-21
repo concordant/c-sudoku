@@ -25,6 +25,23 @@
 import assert from 'assert';
 
 /**
+ * Return a predefined Sudoku grid as an array.
+ */
+export function generateStaticGrid() {
+    const values = ["6", "", "2", "3", "8", "7", "9", "1", "4",
+                    "7", "1", "9", "4", "5", "2", "3", "6", "8",
+                    "3", "4", "8", "1", "9", "6", "2", "5", "7",
+                    "8", "2", "1", "9", "3", "5", "4", "7", "6",
+                    "5", "9", "", "2", "7", "4", "8", "3", "1",
+                    "4", "7", "3", "8", "6", "1", "5", "2", "9",
+                    "1", "8", "7", "5", "2", "9", "", "", "3",
+                    "2", "3", "4", "6", "1", "8", "7", "9", "5",
+                    "", "6", "5", "7", "4", "3", "1", "8", "2"];
+    assert.ok(values.every(x => (x==="" || (Number(x)>=1 && Number(x)<=9))));
+    return values;
+}
+
+/**
  * Check if a array only contains values 0 or 1.
  * @param array The array to be checked.
  */
@@ -64,45 +81,17 @@ export function blockIndex(block: number) {
 }
 
 /**
- * Add a classname to a list of elements.
- * @param listId List of elements id.
- * @param classname ClassName to be added.
+ * Concatenates all values of a HashSet as a String.
+ * @param set HashSet to be concatenated.
  */
-export function addClassName(listId: any, classname: string) {
-    for (let id of listId) {
-        const myElem = document.getElementById(String(id))
-        if (myElem) {
-            myElem.classList.add(classname)
+export function hashSetToString(set: any) {
+    let res = new Set();
+    let it = set.iterator();
+    while (it.hasNext()) {
+        let val = it.next();
+        if (val !== "") {
+            res.add(val);
         }
     }
-}
-
-/**
- * Remove a classname to a list of elements.
- * @param listId List of elements id.
- * @param classname ClassName to be removed.
- */
-export function removeClassName(listId: any, classname: string) {
-    for (let id of listId) {
-        const myElem = document.getElementById(String(id))
-        if (myElem) {
-            myElem.classList.remove(classname)
-        }
-    }
-}
-
-/**
- * Add errorcell class to a list of elements.
- * @param listId List of elements id.
- */
-export function setErrorCell(listId: any) {
-    addClassName(listId, "errorcell")
-}
-
-/**
- * Remove errorcell class to a list of elements.
- * @param listId List of elements id.
- */
-export function removeErrorCell(listId: any) {
-    removeClassName(listId, "errorcell")
+    return Array.from(res).sort().join(' ')
 }

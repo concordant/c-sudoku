@@ -24,8 +24,8 @@
 
 import React from 'react';
 import assert from 'assert';
-import Cell from './Cell';
 import * as GridUtils from './GridUtils';
+import Cell from './Cell';
 import { client } from '@concordant/c-client';
 
 /**
@@ -40,7 +40,9 @@ interface IGridProps {
  * Interface for the state of the Grid
  */
 interface IGridState {
-    cells: any
+    cells: any, //[value, modifiable, error]
+    isConnected: boolean,
+    finished: boolean
 }
 
 /**
@@ -48,12 +50,16 @@ interface IGridState {
  */
 class Grid extends React.Component<IGridProps, IGridState> {
     timerID!: NodeJS.Timeout;
+    cellsDeco: any;
 
     constructor(props: any) {
         super(props);
-        let cells = new Array(81).fill(null).map(()=>(["", false].slice()));
+        let cells = new Array(81).fill(null).map(()=>(["", false, false]));
+        this.cellsDeco = new Array(81).fill(null);
         this.state = {
-            cells: cells
+            cells: cells,
+            isConnected: true,
+            finished: false
         };
     }
 
@@ -63,7 +69,7 @@ class Grid extends React.Component<IGridProps, IGridState> {
      */
     componentDidMount() {
         this.timerID = setInterval(
-            () => this.setState({cells: this.updateCells()}),
+            () => this.updateGrid(),
             1000
         );
     }
@@ -77,37 +83,71 @@ class Grid extends React.Component<IGridProps, IGridState> {
     }
 
     /**
-     * Concatenates all values of a Set as a String.
-     * @param set Set to be concatenated.
+     * Update cells values from C-Client.
      */
-    setToString(set: any) {
-        let res = new Set();
-        let it = set.iterator();
-        while (it.hasNext()) {
-            res.add(it.next());
+    updateGrid() {
+        let cells = this.state.cells;
+        if (!this.state.isConnected) {
+            console.error("updateGrid() called while not connected.")
+            return cells;
         }
-        return Array.from(res).join(' ')
+        this.props.session.transaction(client.utils.ConsistencyLevel.RC, () => {
+            let itBoolean = this.props.mvmap.iteratorBoolean()
+            let itString = this.props.mvmap.iteratorString()
+            while(itBoolean.hasNext()) {
+                let val = itBoolean.next()
+                cells[val.first.replace('cell', '')][1] = val.second.iterator().next()
+            }
+            while(itString.hasNext()) {
+                let val = itString.next()
+                cells[val.first.replace('cell', '')][0] = GridUtils.hashSetToString(val.second)
+            }
+        })
+        this.checkGrid(cells)
     }
 
     /**
-     * Update cells values.
+     * This function is used to simulate the offline mode.
      */
-    updateCells() {
-        let cells = this.state.cells;
-        this.props.session.transaction(client.utils.ConsistencyLevel.RC, () => {
-            let itString = this.props.mvmap.iteratorString()
-            let itBoolean = this.props.mvmap.iteratorBoolean()
+    switchConnection() {
+        if (this.state.isConnected) {
+            this.cellsDeco = new Array(81).fill(null);
+            clearInterval(this.timerID);
+        } else {
+            this.props.session.transaction(client.utils.ConsistencyLevel.RC, () => {
+                for (let i = 0; i < 81; i++) {
+                    if (this.cellsDeco[i]!==null) {
+                        this.props.mvmap.setString("cell" + i, this.cellsDeco[i]);
+                    }
+                }
+            })
+            this.timerID = setInterval(
+                () => this.updateGrid(),
+                1000
+            );
+        }
+        this.setState({isConnected: !this.state.isConnected})
+    }
 
-            while(itString.hasNext()) {
-                let val = itString.next()
-                cells[val.first.replace('cell','')][0] = this.setToString(val.second)
+    /**
+     * Set the MVMap with the given values.
+     * @param values to be set in the MVMap.
+     */
+    setMVMap(values:any) {
+        let cells = this.state.cells;
+        for (let i = 0; i < 81; i++) {
+            cells[i][0] = values[i];
+            cells[i][1] = values[i] === "" ? true : false;
+            if (this.state.isConnected) {
+                this.props.session.transaction(client.utils.ConsistencyLevel.RC, () => {
+                    this.props.mvmap.setString("cell" + i, values[i]);
+                    this.props.mvmap.setBoolean("cell" + i, values[i] === "" ? true : false);
+                })
+            } else {
+                this.cellsDeco[i] = values[i];
             }
-            while(itBoolean.hasNext()) {
-                let val = itBoolean.next()
-                cells[val.first.replace('cell','')][1] = val.second.iterator().next()
-            }
-        })
-        return cells
+        }
+        this.checkGrid(cells)
     }
 
     /**
@@ -115,18 +155,20 @@ class Grid extends React.Component<IGridProps, IGridState> {
      * @param index The index of the cell changed.
      * @param value The new value of the cell.
      */
-    handleChange(index:number , value:string) {
+    handleChange(index: number, value: string) {
         assert.ok(value === "" || (Number(value) >= 1 && Number(value) <= 9))
         assert.ok(index >= 0 && index < 81)
         
         let cells = this.state.cells;
         cells[index][0] = value;
-        this.setState({cells:cells});
-
-        this.props.session.transaction(client.utils.ConsistencyLevel.RC, () => {
-            this.props.mvmap.setString("cell"+index, value);
-        })
+        this.cellsDeco[index] = value;
+        this.checkGrid(cells);
         
+        if (this.state.isConnected) {
+            this.props.session.transaction(client.utils.ConsistencyLevel.RC, () => {
+                this.props.mvmap.setString("cell"+index, value);
+            })
+        }
     }
 
     /**
@@ -135,16 +177,14 @@ class Grid extends React.Component<IGridProps, IGridState> {
      */
     renderCell(index: number) {
         assert.ok(index >= 0 && index < 81)
-
-        let value = this.state.cells[index][0]
-        let modifiable = this.state.cells[index][1]
-
+        let [value, modifiable, error] = this.state.cells[index];
         return (
             <Cell
                 index={index}
                 value={value}
                 modifiable={modifiable}
                 onChange={(index:number, value:string) => this.handleChange(index, value)}
+                error={error}
             />
         );
     }
@@ -155,7 +195,7 @@ class Grid extends React.Component<IGridProps, IGridState> {
      */
     renderBlock(blockNum: number) {
         assert.ok(blockNum >= 0 && blockNum < 9)
-        let index = GridUtils.blockIndex(blockNum)
+        let index = GridUtils.blockIndex(blockNum);
         return (
             <td>
                 {this.renderCell(index[0])}{this.renderCell(index[1])}{this.renderCell(index[2])}<br />
@@ -169,23 +209,23 @@ class Grid extends React.Component<IGridProps, IGridState> {
      * The function is called when the grid is updated. It return a React element corresponding to the grid of the Sudoku.
      */
     render() {
-        const status = "Status : " + this.validateSudoku();
         return (
             <div className="sudokuTable">
+                <div><button onClick={this.setMVMap.bind(this, GridUtils.generateStaticGrid())}>Reset</button></div>
+                <div><button onClick={() => this.switchConnection()}>{this.state.isConnected ? "Disconnect" : "Connect"}</button></div>
+                <br />
                 <table>
-                <tbody>
-                    <tr>
-                    {this.renderBlock(0)}{this.renderBlock(1)}{this.renderBlock(2)}      
-                    </tr>
-                    <tr>
-                    {this.renderBlock(3)}{this.renderBlock(4)}{this.renderBlock(5)}      
-                    </tr>
-                    <tr>
-                    {this.renderBlock(6)}{this.renderBlock(7)}{this.renderBlock(8)}      
-                    </tr>
-                </tbody>
+                    <tbody>
+                        {[0, 1, 2].map((line) =>
+                            <tr key={line.toString()}>
+                                {this.renderBlock(line * 3)}
+                                {this.renderBlock(line * 3 + 1)}
+                                {this.renderBlock(line * 3 + 2)}
+                            </tr>
+                        )}
+                    </tbody>
                 </table>
-                <div className="status" id="status">{status}</div>
+                {this.state.finished && <div className="status" id="status">Sudoku completed</div>}
             </div>
         );
     }
@@ -194,11 +234,11 @@ class Grid extends React.Component<IGridProps, IGridState> {
      * Check if a line respect Sudoku lines rules.
      * @param line The line number to be checked.
      */
-    checkLine(line:number) {
+    validateLine(line: number) {
         assert.ok(line >= 0 && line < 9)
         let check = Array(9).fill(0)
-        for (let col = 0; col < 9; col++) {
-            let index = line*9+col
+        for (let column = 0; column < 9; column++) {
+            let index = line * 9 + column
             let val = this.state.cells[index][0]
             if (val.length === 0 || val.length > 1) {
                 continue
@@ -212,11 +252,11 @@ class Grid extends React.Component<IGridProps, IGridState> {
      * Check if a column respect Sudoku columns rules.
      * @param col The column number to be checked.
      */
-    checkColumn(col:number) {
-        assert.ok(col >= 0 && col < 9)
+    validateColumn(column: number) {
+        assert.ok(column >= 0 && column < 9)
         let check = Array(9).fill(0)
         for (let line = 0; line < 9; line++) {
-            let index = line*9+col
+            let index = line * 9 + column
             let val = this.state.cells[index][0]
             if (val.length === 0 || val.length > 1) {
                 continue
@@ -230,11 +270,11 @@ class Grid extends React.Component<IGridProps, IGridState> {
      * Check if a block respect Sudoku blocks rules.
      * @param block The block number to be checked.
      */
-    checkBlock(block:number) {
+    validateBlock(block: number) {
         assert.ok(block >= 0 && block < 9)
         let check = Array(9).fill(0)
-        let listIndex = GridUtils.blockIndex(block)
-        for (let index of listIndex) {
+        let indexList = GridUtils.blockIndex(block)
+        for (let index of indexList) {
             let val = this.state.cells[index][0]
             if (val.length === 0 || val.length > 1) {
                 continue
@@ -247,98 +287,99 @@ class Grid extends React.Component<IGridProps, IGridState> {
     /**
      * This function check if all lines respect Sudoku lines rules.
      */
-    validateLine() {
-        let error = ""
+    checkLine() {
+        let indexList = []
         for (let line = 0; line < 9; line++) {
-            if (this.checkLine(line) === false) {
-                error += "Erreur ligne "+ (line + 1).toString()+" "
-                let listIndex = []
+            if (this.validateLine(line) === false) {
                 for (let i = 0; i < 9; i++) {
-                    listIndex.push(line * 9 + i)
+                    indexList.push(line * 9 + i)
                 }
-                GridUtils.setErrorCell(listIndex)
             }
         }
-        if (error) {
-            // console.error(error)
-            return false
-        }
-        return true
+        return indexList
     }
 
     /**
      * This function check if all columns respect Sudoku columns rules.
      */
-    validateColumn() {
-        let error = ""
-        for (let col = 0; col < 9; col++) {
-            if (this.checkColumn(col) === false) {
-                error += "Erreur colonne "+ (col+1).toString()+" "
-                let listIndex = []
+    checkColumn() {
+        let indexList = []
+        for (let column = 0; column < 9; column++) {
+            if (this.validateColumn(column) === false) {
                 for (let i = 0; i < 9; i++) {
-                    listIndex.push(i*9+col)
+                    indexList.push(i * 9 + column)
                 }
-                GridUtils.setErrorCell(listIndex)
             }
         }
-        if (error) {
-            // console.error(error)
-            return false
-        }
-        return true
+        return indexList
     }
 
     /**
      * This function check if all blocks respect Sudoku blocks rules.
      */
-    validateBlock() {
-        let error = ""
+    checkBlock() {
+        let indexList : number[] = []
         for (let block = 0; block < 9; block++) {
-            if (this.checkBlock(block) === false) {
-                error += "Erreur block "+ (block+1).toString()+" "
-                let listIndex = GridUtils.blockIndex(block)
-                GridUtils.setErrorCell(listIndex)
+            if (this.validateBlock(block) === false) {
+                indexList = indexList.concat(GridUtils.blockIndex(block));
             }
         }
-        if (error) {
-            // console.error(error)
-            return false
+        return indexList
+    }
+
+    /**
+     * This function check if all blocks respect Sudoku blocks rules.
+     */
+    checkCells() {
+        let indexList = []
+        for (let cell = 0; cell < 81; cell++) {
+            let val = this.state.cells[cell][0]
+            if (val.length > 1) {
+                indexList.push(cell)
+            }
         }
-        return true
+        return indexList
     }
 
     /**
      * This function check if all cells respect Sudoku rules.
      */
-    validateSudoku() {
-        let listIndex = []
-        for (let i = 0; i < 81; i++) {
-            listIndex.push(i)
-        }
-        GridUtils.removeErrorCell(listIndex)
+    checkGrid(cells: any) {
+        let errorIndexList = this.checkLine();
+        errorIndexList = errorIndexList.concat(this.checkColumn());
+        errorIndexList = errorIndexList.concat(this.checkBlock());
+        errorIndexList = errorIndexList.concat(this.checkCells());
+        this.setErrorCell(errorIndexList, cells);
+    }
 
-        let error = ""
-        if (!this.validateLine()) {
-            error = "Error"
-        }
-        if (!this.validateColumn()) {
-            error = "Error"
-        }
-        if (!this.validateBlock()) {
-            error = "Error"
+    /**
+     * Update cell to say if there is an error.
+     * @param errorIndexList List of cells containing an error input.
+     * @param cells Current value of cells.
+     */
+    setErrorCell(errorIndexList: any, cells: any) {
+        errorIndexList = new Set(errorIndexList)
+        for (let index = 0; index < 81; index++) {
+            if (errorIndexList.has(index)) {
+                cells[index][2] = true;
+            } else {
+                cells[index][2] = false;
+            }
         }
 
-        if (error) {
-            return error
+        if (errorIndexList.size) {
+            this.setState({cells: cells, finished: false});
+            return
         }
-        
+
         const regex = /^[1-9]$/
         for (let index = 0; index < 81; index++) {
             if (!regex.test(this.state.cells[index][0])) {
-                return "Continue"
+                this.setState({cells: cells, finished: false});
+                return
             }
         }
-        return "Complete"
+        this.setState({cells: cells, finished: true})
     }
 }
 

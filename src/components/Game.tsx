@@ -23,7 +23,6 @@
  */
 
 import React from 'react';
-import assert from 'assert';
 import Grid from './Grid';
 import { client } from '@concordant/c-client';
 
@@ -48,50 +47,15 @@ class Game extends React.Component<{}, IGameState> {
         this.state = {
             session: session,
             mvmap: mvmap
-        };
-    }
-
-    /**
-     * Return a predefined Sudoku grid as an array.
-     */
-    generateStaticGrid() {
-        const values = ["6", "", "2", "3", "8", "7", "9", "1", "4",
-                        "7", "1", "9", "4", "5", "2", "3", "6", "8",
-                        "3", "4", "8", "1", "9", "6", "2", "5", "7",
-                        "8", "2", "1", "9", "3", "5", "4", "7", "6",
-                        "5", "9", "", "2", "7", "4", "8", "3", "1",
-                        "4", "7", "3", "8", "6", "1", "5", "2", "9",
-                        "1", "8", "7", "5", "2", "9", "", "", "3",
-                        "2", "3", "4", "6", "1", "8", "7", "9", "5",
-                        "", "6", "5", "7", "4", "3", "1", "8", "2"];
-        assert.ok(values.every(x => (x==="" || (Number(x)>=1 && Number(x)<=9))));
-        return values;
-    }
-
-    /**
-     * Set the MVMap with the given values.
-     * @param values to be set in the MVMap.
-     */
-    setMVMap(values:any) {
-        this.state.session.transaction(client.utils.ConsistencyLevel.RC, () => {
-            for (let i = 0; i < 81; i++) {
-                this.state.mvmap.setString("cell" + i, values[i]);
-                if (values[i] === "") {
-                    this.state.mvmap.setBoolean("cell" + i, true);
-                } else {
-                    this.state.mvmap.setBoolean("cell" + i, false);
-                }
-            }
-        })
+        }
     }
 
     render() {
         return (
             <div className="game">
-                <div><button onClick={this.setMVMap.bind(this, this.generateStaticGrid())}>Reset</button></div>
                 <div className="game-grid">
-                <Grid session={this.state.session} mvmap={this.state.mvmap}/>
-                </div><br />
+                    <Grid session={this.state.session} mvmap={this.state.mvmap}/>
+                </div>
             </div>
         );
     }
