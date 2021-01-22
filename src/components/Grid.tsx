@@ -91,7 +91,7 @@ class Grid extends React.Component<IGridProps, IGridState> {
             console.error("updateGrid() called while not connected.")
             return cells;
         }
-        this.props.session.transaction(client.utils.ConsistencyLevel.RC, () => {
+        this.props.session.transaction(client.utils.ConsistencyLevel.None, () => {
             let itBoolean = this.props.mvmap.iteratorBoolean()
             let itString = this.props.mvmap.iteratorString()
             while(itBoolean.hasNext()) {
@@ -114,7 +114,7 @@ class Grid extends React.Component<IGridProps, IGridState> {
             this.cellsDeco = new Array(81).fill(null);
             clearInterval(this.timerID);
         } else {
-            this.props.session.transaction(client.utils.ConsistencyLevel.RC, () => {
+            this.props.session.transaction(client.utils.ConsistencyLevel.None, () => {
                 for (let i = 0; i < 81; i++) {
                     if (this.cellsDeco[i]!==null) {
                         this.props.mvmap.setString("cell" + i, this.cellsDeco[i]);
@@ -139,7 +139,7 @@ class Grid extends React.Component<IGridProps, IGridState> {
             cells[i][0] = values[i];
             cells[i][1] = values[i] === "" ? true : false;
             if (this.state.isConnected) {
-                this.props.session.transaction(client.utils.ConsistencyLevel.RC, () => {
+                this.props.session.transaction(client.utils.ConsistencyLevel.None, () => {
                     this.props.mvmap.setString("cell" + i, values[i]);
                     this.props.mvmap.setBoolean("cell" + i, values[i] === "" ? true : false);
                 })
@@ -165,7 +165,7 @@ class Grid extends React.Component<IGridProps, IGridState> {
         this.checkGrid(cells);
         
         if (this.state.isConnected) {
-            this.props.session.transaction(client.utils.ConsistencyLevel.RC, () => {
+            this.props.session.transaction(client.utils.ConsistencyLevel.None, () => {
                 this.props.mvmap.setString("cell"+index, value);
             })
         }
