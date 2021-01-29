@@ -58,15 +58,15 @@ class Cell extends React.Component<ICellProps, {}> {
     }
 
     render() {
-        let cellClass = "cell"
+        let cellClass = ""
         if (this.props.value.length > 1) {
-            cellClass += " mv"
+            cellClass += "mv "
         }
         if (!this.props.modifiable) {
-            cellClass += " locked"
+            cellClass += "locked "
         }
         if (this.props.error){
-            cellClass += " errorcell"
+            cellClass += "errorcell "
         }
         return (
             <input

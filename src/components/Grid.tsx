@@ -210,11 +210,10 @@ class Grid extends React.Component<IGridProps, IGridState> {
      */
     render() {
         return (
-            <div className="sudokuTable">
-                <div><button onClick={this.setMVMap.bind(this, GridUtils.generateStaticGrid())}>Reset</button></div>
-                <div><button onClick={() => this.switchConnection()}>{this.state.isConnected ? "Disconnect" : "Connect"}</button></div>
-                <br />
-                <table>
+            <div className="sudoku">
+                <div><button onClick={this.setMVMap.bind(this, GridUtils.generateStaticGrid())}>Reset</button></div><br />
+                <div><button onClick={() => this.switchConnection()}>{this.state.isConnected ? "Disconnect" : "Connect"}</button></div><br />
+                <table className="grid">
                     <tbody>
                         {[0, 1, 2].map((line) =>
                             <tr key={line.toString()}>
@@ -225,7 +224,7 @@ class Grid extends React.Component<IGridProps, IGridState> {
                         )}
                     </tbody>
                 </table>
-                {this.state.finished && <div className="status" id="status">Sudoku completed</div>}
+                {this.state.finished && <h2 className="status" id="status">Sudoku completed</h2>}
             </div>
         );
     }

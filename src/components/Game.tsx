@@ -41,7 +41,8 @@ interface IGameState {
 class Game extends React.Component<{}, IGameState> {
     constructor(props: any) {
         super(props);
-        let session = client.Session.Companion.connect("sudoku", "credentials");
+        let CONFIG = require('../config.json');
+        let session = client.Session.Companion.connect("sudoku", CONFIG.serviceUrl, "credentials");
         let collection = session.openCollection("sudokuCollection", false);
         let mvmap = collection.open("sudokuGrid", "MVMap", false, function () {return});
         this.state = {
@@ -52,11 +53,7 @@ class Game extends React.Component<{}, IGameState> {
 
     render() {
         return (
-            <div className="game">
-                <div className="game-grid">
-                    <Grid session={this.state.session} mvmap={this.state.mvmap}/>
-                </div>
-            </div>
+            <Grid session={this.state.session} mvmap={this.state.mvmap}/>
         );
     }
 }

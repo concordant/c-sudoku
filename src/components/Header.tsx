@@ -30,9 +30,9 @@ import React from 'react';
 class Header extends React.Component {
     render() {
       return (
-        <div className="header">
+        <div className="title background-turquoise padding">
           <h1>C - Sudoku</h1>
-          <h5>Sudoku with CRDT</h5>
+          <h2>Sudoku with CRDT</h2>
         </div>
       )
     }

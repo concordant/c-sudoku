@@ -23,101 +23,86 @@
  */
 
 body {
-    font: 2em "Century Gothic", Futura, sans-serif;
-    margin: 20px;
-    background: #FFFFFF;
-    min-width: 800px;
-}
-
-.board-row:after {
-    clear: both;
-    content: "";
-    display: table;
-}
-
-html {
+    background-color: white;
+    margin: auto;
     text-align: center;
+    min-width: 700px;
 }
 
-h1 {
-    color: black;
-}
-
-h5 {
-    color: black;
-    margin-top: -1.5em;
-    padding-bottom: 1em;
-    border-bottom: 2px dotted #82ccdd;
-}
-
-.game {
+.title {
+    height: 150px;
+    justify-content: center;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
+    color: white;
+    margin-top: -10px;
 }
 
-.game-grid {
-    margin-left: auto;
-    margin-right: auto;
+.sudoku {
+    padding-top: 20px;
+    margin: auto;
+    max-width: max-content;
 }
 
-.status {
-    margin-top:10px;
-    color: #60a3bc;
-    border : dotted;
+.grid {
+    margin: auto;
+    border: 1px solid black;
 }
 
 input {
+    text-align: center;
     color: transparent;
     border: 1px solid black;
-    display:inline-block;
-    vertical-align:middle;
-    resize: none;
     text-shadow: 0px 0px 0px #82ccdd;
-    outline: none;
+    height: 70px;
+    width: 70px;
+    font-size: 30px;
+    margin: -1px;
+    background-color: white;
 }
 
-.cell {
-    background: white;
-    font-size: 40px;
-    font-weight: bold;
-    line-height: 34px;
-    height: 36px;
-    width: 36px;
-    padding:20px;
-    margin-right: -3px;
-    margin-top: -3px;
-    text-align: center;
-}
-
-.cell:focus {
-    outline: none;
-    background: lightgrey;
+.locked {
+    text-shadow: 0px 0px 0px black;
 }
 
 .errorcell {
-    color:transparent;
     text-shadow: 0px 0px 0px #FFD700;
     background: #b71540;
 }
 
-.locked {
-    color:transparent;
-    text-shadow: 0px 0px 0px black;
+input:focus {
+    background-color: lightgrey;
+    outline: none;
 }
 
 .errorcell:focus {
-    outline: none;
-    background: purple;
+    background-color: purple;
 }
 
-.mv {
-    font-size: 22px;
-    line-height: 20px;
-    height: 60px;
-    width: 60px;
-    padding: 8px;
+.padding {
+    padding-top: 30px;
+    padding-bottom: 30px;
 }
 
-.mv::-webkit-scrollbar {
-    display: none;
+.background-turquoise {
+    background-color: #34D6D8;
+}
+
+.background-grey {
+    background-color: #F4F4F4;
+}
+
+.background-yellow {
+    background-color: #FFE840;
+}
+
+.status {
+    border : dotted;
+    color: #60a3bc;
+}
+
+.footer {
+    font-size: 11px;
+    color: grey;
+    padding: 30px;
 }

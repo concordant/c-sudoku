@@ -36,6 +36,9 @@ ReactDOM.render(
     <Helmet><title>{TITLE}</title></Helmet>
     <Header />
     <Game />
+    <div className="footer">
+        <p>© CONCORDANT 2021.</p>
+    </div>
     </>,
     document.getElementById('root')
 );
