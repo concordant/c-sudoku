@@ -66,7 +66,7 @@ class Cell extends React.Component<ICellProps, {}> {
             cellClass += "locked "
         }
         if (this.props.error){
-            cellClass += "errorcell "
+            cellClass += "wrongvalue "
         }
         return (
             <input

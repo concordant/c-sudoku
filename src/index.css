@@ -61,13 +61,13 @@ input {
     background-color: white;
 }
 
-.locked {
-    text-shadow: 0px 0px 0px black;
-}
-
-.errorcell {
+.wrongvalue {
     text-shadow: 0px 0px 0px #FFD700;
     background: #b71540;
+}
+
+.locked {
+    text-shadow: 0px 0px 0px black;
 }
 
 input:focus {
@@ -75,7 +75,7 @@ input:focus {
     outline: none;
 }
 
-.errorcell:focus {
+.wrongvalue:focus {
     background-color: purple;
 }
 
