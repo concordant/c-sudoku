@@ -25,67 +25,59 @@
 import React from 'react';
 
 /**
- * Interface for the properties of the Cell
+ * Interface for the properties of the Cell.
+ * The Cell needs to know his index in the grid, his value, a callback function
+ * used when the value is modified and if we are allowed to modify the value.
  */
 interface ICellProps {
     index: number,
     value: string,
-    onChange: any
-    lock: boolean
-}
-
-/**
- * Interface for the state of the Cell
- */
-interface ICellState {
-  value: string,
-  regexp: RegExp
+    onChange: any,
+    modifiable: boolean,
+    error: boolean
 }
 
 /**
  * This class represent a cell of the Sudoku
  */
-class Cell extends React.Component<ICellProps,ICellState> {
-  constructor(props: ICellProps) {
-    super(props);
-    this.state = {
-      value: props.value,
-      regexp:/^[1-9\b]$/
-    };
-  }
-  
-  onChange(event: any){
-    if (this.props.lock){
-      //console.log("lock")
-    } else if (event.target.value === "" || this.state.regexp.test(event.target.value)){
-      this.setState({value: event.target.value})
-      this.props.onChange(this.props.index, event.target.value)
-    } else {
-      //console.log("Invalid input : " + this.props.index + " = " + event.target.value)
-      event.target.value=this.state.value
+class Cell extends React.Component<ICellProps, {}> {
+    /**
+     * onChange event handler
+     * @param event handled
+     */
+    onChange(event: any) {
+        if (!this.props.modifiable) {
+            return;
+        }
+        const regexp = new RegExp('^[1-9]$');
+        if (event.target.value === "" || regexp.test(event.target.value)) {
+            this.props.onChange(this.props.index, event.target.value)
+        } else {
+            console.error("Invalid input in cell " + this.props.index + " : " + event.target.value)
+        }
     }
-  }
-  
-  render() {
-    let myClass="cell"
-    if (this.state.value.length>1){
-      myClass+=" mv"
+
+    render() {
+        let cellClass = ""
+        if (this.props.value.length > 1) {
+            cellClass += "mv "
+        }
+        if (!this.props.modifiable) {
+            cellClass += "locked "
+        }
+        if (this.props.error){
+            cellClass += "wrongvalue "
+        }
+        return (
+            <input
+                id={String(this.props.index)}
+                className={cellClass}
+                maxLength={1}
+                value={this.props.value}
+                onChange={(event) => this.onChange(event)}
+            />
+        );
     }
-    if (this.props.lock){
-      myClass+= " lock"
-    }
-    return (
-      <textarea
-        id={String(this.props.index)}
-        className={myClass}
-        maxLength={1}
-        rows={3}
-        cols={6}
-        value={this.state.value}
-        onChange={(event) => this.onChange(event)}
-      />
-    );
-  }
 }
 
 export default Cell

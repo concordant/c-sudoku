@@ -23,43 +23,39 @@
  */
 
 import React from 'react';
-import assert from 'assert';
 import Grid from './Grid';
+import { client } from '@concordant/c-client';
+
+/**
+ * Interface for the state of a Game.
+ * Keep a reference to the opened session and opened MVMap.
+ */
+interface IGameState {
+    session: any,
+    mvmap: any
+}
 
 /**
  * This class represent the Game that glues all components together.
  */
-class Game extends React.Component {
-    generateInitialGrid(){
-      const initVal = ["6","","2","3","8","7","9","1","4",
-                      "7","1","9","4","5","2","3","6","8",
-                      "3","4","8","1","9","6","2","5","7",
-                      "8","2","1","9","3","5","4","7","6",
-                      "5","9","6","2","7","4","8","3","1",
-                      "4","7","3","8","6","1","5","2","9",
-                      "1","8","7","5","2","9","","","3",
-                      "2","3","4","6","1","8","7","9","5",
-                      "","6","5","7","4","3","1","8","2"]
-      assert.ok(initVal.every(x => (x==="" || Number(x)>=1)))
-      assert.ok(initVal.every(x => Number(x)<=9))
-      return initVal
+class Game extends React.Component<{}, IGameState> {
+    constructor(props: any) {
+        super(props);
+        let CONFIG = require('../config.json');
+        let session = client.Session.Companion.connect(CONFIG.dbName, CONFIG.serviceUrl, CONFIG.credentials);
+        let collection = session.openCollection("sudokuCollection", false);
+        let mvmap = collection.open("sudokuGrid", "MVMap", false, function () {return});
+        this.state = {
+            session: session,
+            mvmap: mvmap
+        }
     }
 
     render() {
-      return (
-        <div className="game">
-          <div className="game-grid">
-            <Grid 
-                initial = {this.generateInitialGrid()}
-            />
-          </div><br />
-          <div className="game-info">
-            <div>{/* status */}</div>
-            <ol>{/* TODO */}</ol>
-          </div>
-        </div>
-      );
+        return (
+            <Grid session={this.state.session} mvmap={this.state.mvmap}/>
+        );
     }
-  }
+}
 
 export default Game

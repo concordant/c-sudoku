@@ -23,96 +23,86 @@
  */
 
 body {
-  font: 2em "Century Gothic", Futura, sans-serif;
-  margin: 20px;
-  background: #121212;
-  min-width: 800px;
+    background-color: white;
+    margin: auto;
+    text-align: center;
+    min-width: 700px;
 }
 
-.board-row:after {
-  clear: both;
-  content: "";
-  display: table;
+.title {
+    height: 150px;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    color: white;
+    margin-top: -10px;
 }
 
-html {
-  text-align: center;
+.sudoku {
+    padding-top: 20px;
+    margin: auto;
+    max-width: max-content;
 }
 
-h1, h5 {
-  color: #FFEA50
+.grid {
+    margin: auto;
+    border: 1px solid black;
 }
 
-h5 {
-  margin-top: -1.5em;
-  padding-bottom: 1em;
-  border-bottom: 2px dotted #FFEA50;
+input {
+    text-align: center;
+    color: transparent;
+    border: 1px solid black;
+    text-shadow: 0px 0px 0px #82ccdd;
+    height: 70px;
+    width: 70px;
+    font-size: 30px;
+    margin: -1px;
+    background-color: white;
 }
 
-.game {
-  display: flex;
-  flex-direction: row;
+.wrongvalue {
+    text-shadow: 0px 0px 0px #FFD700;
+    background: #b71540;
 }
 
-.game-grid {
-  margin-left: auto;
-  margin-right: auto;
+.locked {
+    text-shadow: 0px 0px 0px black;
+}
+
+input:focus {
+    background-color: lightgrey;
+    outline: none;
+}
+
+.wrongvalue:focus {
+    background-color: purple;
+}
+
+.padding {
+    padding-top: 30px;
+    padding-bottom: 30px;
+}
+
+.background-turquoise {
+    background-color: #34D6D8;
+}
+
+.background-grey {
+    background-color: #F4F4F4;
+}
+
+.background-yellow {
+    background-color: #FFE840;
 }
 
 .status {
-  margin-top:10px;
-  color: #FFEA50;
-  border : dotted;
+    border : dotted;
+    color: #60a3bc;
 }
 
-textarea {
-  color: #9e9e9e;
-  border: 1px solid #121212;
-  display:inline-block;
-  vertical-align:middle;
-  resize: none;
-}
-
-.mv {
-  font-size: 18px;
-  line-height: 20px;
-  height: 56px;
-  width: 56px;
-  padding:10px;
-}
-
-.mv::-webkit-scrollbar {
-  display: none;
-}
-
-.cell {
-  background: #FFFFFF;
-  font-size: 40px;
-  font-weight: bold;
-  line-height: 34px;
-  height: 36px;
-  width: 36px;
-  padding:20px;
-  margin-right: -3px;
-  margin-top: -3px;
-  text-align: center;
-}
-
-.errorcell {
-  color: #f05545;
-  background: #b71c1c;
-}
-
-.cell:focus {
-  outline: none;
-  background: #cfcfcf;
-}
-
-.errorcell:focus {
-  outline: none;
-  background: #7f0000;
-}
-
-.lock {
-  color:#121212
+.footer {
+    font-size: 11px;
+    color: grey;
+    padding: 30px;
 }
