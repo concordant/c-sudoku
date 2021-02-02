@@ -36,7 +36,7 @@ ReactDOM.render(
     <Helmet><title>{TITLE}</title></Helmet>
     <Header />
     <Game />
-    <div className="footer">
+    <div className="footer padding">
         <p>© CONCORDANT 2021.</p>
     </div>
     </>,

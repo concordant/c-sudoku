@@ -24,12 +24,15 @@
 
 body {
     background-color: white;
-    margin: auto;
-    text-align: center;
-    min-width: 700px;
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-size: 14px;
+    line-height: 1.42857143;
+    margin: 0px;
+    min-width: 650px;
 }
 
 .title {
+    text-align: center;
     height: 150px;
     justify-content: center;
     display: flex;
@@ -39,9 +42,10 @@ body {
 }
 
 .sudoku {
-    padding-top: 20px;
     margin: auto;
     max-width: max-content;
+    text-align: center;
+    padding: 20px;
 }
 
 .grid {
@@ -54,8 +58,8 @@ input {
     color: transparent;
     border: 1px solid black;
     text-shadow: 0px 0px 0px #82ccdd;
-    height: 70px;
-    width: 70px;
+    height: 60px;
+    width: 60px;
     font-size: 30px;
     margin: -1px;
     background-color: white;
@@ -102,7 +106,7 @@ input:focus {
 }
 
 .footer {
+    text-align: center;
     font-size: 11px;
     color: grey;
-    padding: 30px;
 }
