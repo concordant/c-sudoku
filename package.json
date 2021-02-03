@@ -4,7 +4,7 @@
     "version": "1.0.0",
     "author": "Yannick Li <yannick.li@concordant.io>",
     "license": "MIT",
-    "homepage": "/",
+    "homepage": "./",
     "dependencies": {
         "@concordant/c-client": "^1.0.0",
         "@concordant/c-crdtlib": "^1.0.2",

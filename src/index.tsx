@@ -24,16 +24,12 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Helmet from 'react-helmet';
 import './index.css';
 import Game from './components/Game'
 import Header from './components/Header'
 
-const TITLE = 'C-Sudoku'
-
 ReactDOM.render(
     <>
-    <Helmet><title>{TITLE}</title></Helmet>
     <Header />
     <Game />
     <div className="footer padding">
