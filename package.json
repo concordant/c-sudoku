@@ -4,7 +4,7 @@
     "version": "1.0.0",
     "author": "Yannick Li <yannick.li@concordant.io>",
     "license": "MIT",
-    "homepage": "/",
+    "homepage": "./",
     "dependencies": {
         "@concordant/c-client": "^1.0.0",
         "@concordant/c-crdtlib": "^1.0.2",
@@ -26,7 +26,7 @@
     },
     "scripts": {
         "start": "react-scripts start",
-        "build": "react-scripts build",
+        "build": "rm -rf ./build && react-scripts build",
         "test": "react-scripts test",
         "eject": "react-scripts eject"
     },
