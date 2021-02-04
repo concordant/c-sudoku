@@ -32,7 +32,7 @@ class Header extends React.Component {
       return (
         <div className="title background-turquoise padding">
           <h1>C - Sudoku</h1>
-          <h2>Sudoku with CRDT</h2>
+          <h2>Sudoku using Concordant CRDTs</h2>
         </div>
       )
     }
