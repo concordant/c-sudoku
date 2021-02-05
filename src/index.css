@@ -24,11 +24,30 @@
 
 body {
     background-color: white;
-    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-family: 'Montserrat', sans-serif;
     font-size: 14px;
-    line-height: 1.42857143;
+    line-height: 1.7;
     margin: 0px;
     min-width: 650px;
+    text-align: center;
+}
+
+h1 {
+    font-size: 34px;
+    line-height: 30px;
+    text-align: center;
+    font-weight: bold;
+}
+
+h2 {
+    font-size: 26px;
+    text-align: center;
+    font-weight: bold;
+}
+
+p {
+    text-align: justify;
+    text-justify: inter-word;
 }
 
 .title {
@@ -37,6 +56,7 @@ body {
     justify-content: center;
     display: flex;
     flex-direction: column;
+    line-height: 0px;
     color: white;
     margin-top: -10px;
 }
@@ -83,9 +103,19 @@ input:focus {
     background-color: purple;
 }
 
+.intro {
+    padding-top: 20px;
+}
+
 .padding {
     padding-top: 30px;
     padding-bottom: 30px;
+}
+
+.reduceWidth {
+    width: 60%;
+    text-align: center;
+    display: inline-block
 }
 
 .background-turquoise {
