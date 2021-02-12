@@ -232,7 +232,7 @@ class Grid extends React.Component<IGridProps, IGridState> {
      * Check if a line respect Sudoku lines rules.
      * @param line The line number to be checked.
      */
-    validateLine(line: number) {
+    checkLine(line: number) {
         assert.ok(line >= 0 && line < 9)
         let cpt = Array(9).fill(0)
         for (let column = 0; column < 9; column++) {
@@ -250,7 +250,7 @@ class Grid extends React.Component<IGridProps, IGridState> {
      * Check if a column respect Sudoku columns rules.
      * @param col The column number to be checked.
      */
-    validateColumn(column: number) {
+    checkColumn(column: number) {
         assert.ok(column >= 0 && column < 9)
         let cpt = Array(9).fill(0)
         for (let line = 0; line < 9; line++) {
@@ -268,7 +268,7 @@ class Grid extends React.Component<IGridProps, IGridState> {
      * Check if a block respect Sudoku blocks rules.
      * @param block The block number to be checked.
      */
-    validateBlock(block: number) {
+    checkBlock(block: number) {
         assert.ok(block >= 0 && block < 9)
         let cpt = Array(9).fill(0)
         let indexList = blockIndex(block)
@@ -285,10 +285,10 @@ class Grid extends React.Component<IGridProps, IGridState> {
     /**
      * This function check if all lines respect Sudoku lines rules.
      */
-    checkLine() {
+    checkLines() {
         let indexList = []
         for (let line = 0; line < 9; line++) {
-            if (this.validateLine(line) === false) {
+            if (this.checkLine(line) === false) {
                 for (let i = 0; i < 9; i++) {
                     indexList.push(line * 9 + i)
                 }
@@ -300,10 +300,10 @@ class Grid extends React.Component<IGridProps, IGridState> {
     /**
      * This function check if all columns respect Sudoku columns rules.
      */
-    checkColumn() {
+    checkColumns() {
         let indexList = []
         for (let column = 0; column < 9; column++) {
-            if (this.validateColumn(column) === false) {
+            if (this.checkColumn(column) === false) {
                 for (let i = 0; i < 9; i++) {
                     indexList.push(i * 9 + column)
                 }
@@ -315,10 +315,10 @@ class Grid extends React.Component<IGridProps, IGridState> {
     /**
      * This function check if all blocks respect Sudoku blocks rules.
      */
-    checkBlock() {
+    checkBlocks() {
         let indexList : number[] = []
         for (let block = 0; block < 9; block++) {
-            if (this.validateBlock(block) === false) {
+            if (this.checkBlock(block) === false) {
                 indexList = indexList.concat(blockIndex(block));
             }
         }
@@ -326,7 +326,7 @@ class Grid extends React.Component<IGridProps, IGridState> {
     }
 
     /**
-     * This function check if all blocks respect Sudoku blocks rules.
+     * This function check if cells contains multiple values.
      */
     checkCells() {
         let indexList = []
@@ -343,9 +343,9 @@ class Grid extends React.Component<IGridProps, IGridState> {
      * This function check if all cells respect Sudoku rules.
      */
     checkGrid(cells: any) {
-        let errorIndexList = this.checkLine();
-        errorIndexList = errorIndexList.concat(this.checkColumn());
-        errorIndexList = errorIndexList.concat(this.checkBlock());
+        let errorIndexList = this.checkLines();
+        errorIndexList = errorIndexList.concat(this.checkColumns());
+        errorIndexList = errorIndexList.concat(this.checkBlocks());
         errorIndexList = errorIndexList.concat(this.checkCells());
         this.setErrorCell(errorIndexList, cells);
     }
