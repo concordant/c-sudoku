@@ -132,7 +132,7 @@ class Grid extends React.Component<IGridProps, IGridState> {
      * Set the MVMap with the given values.
      * @param values to be set in the MVMap.
      */
-    setMVMap(values:any) {
+    initForm(values:any) {
         let cells = this.state.cells;
         for (let i = 0; i < 81; i++) {
             cells[i][0] = values[i];
@@ -210,7 +210,7 @@ class Grid extends React.Component<IGridProps, IGridState> {
     render() {
         return (
             <div className="sudoku">
-                <div><button onClick={this.setMVMap.bind(this, generateStaticGrid())}>Reset</button></div><br />
+                <div><button onClick={this.initForm.bind(this, generateStaticGrid())}>Reset</button></div><br />
                 <div><button onClick={() => this.switchConnection()}>{this.state.isConnected ? "Disconnect" : "Connect"}</button></div><br />
                 <table className="grid">
                     <tbody>
@@ -412,25 +412,13 @@ function checkArray(array:any) {
 }
 
 /**
- * Return the position of the first cell of a block.
- * @param block The block number of which we want the position.
- */
-function firstCellOfBlock(block:number) {
-    assert.ok(block >= 0 && block < 9)
-    let line = Math.floor(block / 3) * 3
-    let column = (block % 3) * 3
-    return [line,column]
-}
-
-/**
  * Return an array containing all cell index of a block.
  * @param block The block number of which we want the cells index.
  */
 function blockIndex(block: number) {
     assert.ok(block >= 0 && block < 9)
-    let blocklc = firstCellOfBlock(block)
-    let line = blocklc[0]
-    let col = blocklc[1]
+    let line = Math.floor(block / 3) * 3
+    let col = (block % 3) * 3
     let index = [ line      * 9 + col,   line      * 9 + col + 1,  line      * 9 + col + 2,
                  (line + 1) * 9 + col,  (line + 1) * 9 + col + 1, (line + 1) * 9 + col + 2,
                  (line + 2) * 9 + col,  (line + 2) * 9 + col + 1, (line + 2) * 9 + col + 2]
