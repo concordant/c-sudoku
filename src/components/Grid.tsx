@@ -234,16 +234,16 @@ class Grid extends React.Component<IGridProps, IGridState> {
      */
     validateLine(line: number) {
         assert.ok(line >= 0 && line < 9)
-        let check = Array(9).fill(0)
+        let cpt = Array(9).fill(0)
         for (let column = 0; column < 9; column++) {
             let index = line * 9 + column
             let val = this.state.cells[index][0]
             if (val.length === 0 || val.length > 1) {
                 continue
             }
-            check[Number(val)-1]++
+            cpt[Number(val)-1]++
         }
-        return checkArray(check)
+        return cpt.every((c) => c <= 1)
     }
 
     /**
@@ -252,16 +252,16 @@ class Grid extends React.Component<IGridProps, IGridState> {
      */
     validateColumn(column: number) {
         assert.ok(column >= 0 && column < 9)
-        let check = Array(9).fill(0)
+        let cpt = Array(9).fill(0)
         for (let line = 0; line < 9; line++) {
             let index = line * 9 + column
             let val = this.state.cells[index][0]
             if (val.length === 0 || val.length > 1) {
                 continue
             }
-            check[Number(val)-1]++
+            cpt[Number(val)-1]++
         }
-        return checkArray(check)
+        return cpt.every((c) => c <= 1)
     }
 
     /**
@@ -270,16 +270,16 @@ class Grid extends React.Component<IGridProps, IGridState> {
      */
     validateBlock(block: number) {
         assert.ok(block >= 0 && block < 9)
-        let check = Array(9).fill(0)
+        let cpt = Array(9).fill(0)
         let indexList = blockIndex(block)
         for (let index of indexList) {
             let val = this.state.cells[index][0]
             if (val.length === 0 || val.length > 1) {
                 continue
             }
-            check[Number(val)-1]++
+            cpt[Number(val)-1]++
         }
-        return checkArray(check)
+        return cpt.every((c) => c <= 1)
     }
 
     /**
@@ -396,19 +396,6 @@ function generateStaticGrid() {
                     "", "6", "5", "7", "4", "3", "1", "8", "2"];
     assert.ok(values.every(x => (x==="" || (Number(x)>=1 && Number(x)<=9))));
     return values;
-}
-
-/**
- * Check if a array only contains values 0 or 1.
- * @param array The array to be checked.
- */
-function checkArray(array:any) {
-    for (let i = 0; i < array.length; i++) {
-        if (array[i] !== 0 && array[i] !== 1) {
-            return false
-        }
-    }
-    return true
 }
 
 /**
