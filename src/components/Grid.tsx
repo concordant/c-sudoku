@@ -95,11 +95,11 @@ class Grid extends React.Component<IGridProps, IGridState> {
             let itString = this.props.mvmap.iteratorString()
             while(itBoolean.hasNext()) {
                 let val = itBoolean.next()
-                cells[val.first.replace('cell', '')][1] = val.second.iterator().next()
+                cells[val.first][1] = val.second.iterator().next()
             }
             while(itString.hasNext()) {
                 let val = itString.next()
-                cells[val.first.replace('cell', '')][0] = hashSetToString(val.second)
+                cells[val.first][0] = hashSetToString(val.second)
             }
         })
         this.checkGrid(cells)
@@ -116,7 +116,7 @@ class Grid extends React.Component<IGridProps, IGridState> {
             this.props.session.transaction(client.utils.ConsistencyLevel.None, () => {
                 for (let i = 0; i < 81; i++) {
                     if (this.cellsDeco[i]!==null) {
-                        this.props.mvmap.setString("cell" + i, this.cellsDeco[i]);
+                        this.props.mvmap.setString(i, this.cellsDeco[i]);
                     }
                 }
             })
@@ -130,17 +130,18 @@ class Grid extends React.Component<IGridProps, IGridState> {
 
     /**
      * Set the MVMap with the given values.
-     * @param values to be set in the MVMap.
+     * @param values values to be set in the MVMap.
      */
-    initForm(values:any) {
+    initFrom(values:any) {
+        assert.ok(values.length == 81);
         let cells = this.state.cells;
         for (let i = 0; i < 81; i++) {
-            cells[i][0] = values[i];
-            cells[i][1] = values[i] === "" ? true : false;
+            cells[i][0] = values[i] === "." ? "" : values[i];
+            cells[i][1] = values[i] === "." ? true : false;
             if (this.state.isConnected) {
                 this.props.session.transaction(client.utils.ConsistencyLevel.None, () => {
-                    this.props.mvmap.setString("cell" + i, values[i]);
-                    this.props.mvmap.setBoolean("cell" + i, values[i] === "" ? true : false);
+                    this.props.mvmap.setString(i, cells[i][0]);
+                    this.props.mvmap.setBoolean(i, cells[i][1]);
                 })
             } else {
                 this.cellsDeco[i] = values[i];
@@ -165,7 +166,7 @@ class Grid extends React.Component<IGridProps, IGridState> {
         
         if (this.state.isConnected) {
             this.props.session.transaction(client.utils.ConsistencyLevel.None, () => {
-                this.props.mvmap.setString("cell"+index, value);
+                this.props.mvmap.setString(index, value);
             })
         }
     }
@@ -210,7 +211,7 @@ class Grid extends React.Component<IGridProps, IGridState> {
     render() {
         return (
             <div className="sudoku">
-                <div><button onClick={this.initForm.bind(this, generateStaticGrid())}>Reset</button></div><br />
+                <div><button onClick={this.initFrom.bind(this, generateStaticGrid())}>Reset</button></div><br />
                 <div><button onClick={() => this.switchConnection()}>{this.state.isConnected ? "Disconnect" : "Connect"}</button></div><br />
                 <table className="grid">
                     <tbody>
@@ -382,19 +383,20 @@ class Grid extends React.Component<IGridProps, IGridState> {
 }
 
 /**
- * Return a predefined Sudoku grid as an array.
+ * Return a predefined Sudoku grid as a string.
  */
 function generateStaticGrid() {
-    const values = ["6", "", "2", "3", "8", "7", "9", "1", "4",
-                    "7", "1", "9", "4", "5", "2", "3", "6", "8",
-                    "3", "4", "8", "1", "9", "6", "2", "5", "7",
-                    "8", "2", "1", "9", "3", "5", "4", "7", "6",
-                    "5", "9", "", "2", "7", "4", "8", "3", "1",
-                    "4", "7", "3", "8", "6", "1", "5", "2", "9",
-                    "1", "8", "7", "5", "2", "9", "", "", "3",
-                    "2", "3", "4", "6", "1", "8", "7", "9", "5",
-                    "", "6", "5", "7", "4", "3", "1", "8", "2"];
-    assert.ok(values.every(x => (x==="" || (Number(x)>=1 && Number(x)<=9))));
+    const values = "\
+6.2387914\
+719452368\
+348196257\
+821935476\
+59.274831\
+473861529\
+187529..3\
+234618795\
+.65743182"
+    assert.ok(values.split('').every(x => (x === "." || (Number(x) >= 1 && Number(x) <= 9))));
     return values;
 }
 
