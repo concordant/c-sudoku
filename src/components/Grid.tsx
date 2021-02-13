@@ -102,7 +102,7 @@ class Grid extends React.Component<IGridProps, IGridState> {
                 cells[val.first][0] = hashSetToString(val.second)
             }
         })
-        this.checkGrid(cells)
+        this.updateState(cells)
     }
 
     /**
@@ -147,7 +147,7 @@ class Grid extends React.Component<IGridProps, IGridState> {
                 this.cellsDeco[i] = values[i];
             }
         }
-        this.checkGrid(cells)
+        this.updateState(cells)
     }
 
     /**
@@ -162,7 +162,7 @@ class Grid extends React.Component<IGridProps, IGridState> {
         let cells = this.state.cells;
         cells[index][0] = value;
         this.cellsDeco[index] = value;
-        this.checkGrid(cells);
+        this.updateState(cells);
         
         if (this.state.isConnected) {
             this.props.session.transaction(client.utils.ConsistencyLevel.None, () => {
@@ -341,32 +341,26 @@ class Grid extends React.Component<IGridProps, IGridState> {
     }
 
     /**
-     * This function check if all cells respect Sudoku rules.
+     * Check if all cells respect Sudoku rules and update cells.
+     * @param cells Current cells values.
      */
-    checkGrid(cells: any) {
+    updateState(cells: any) {
         let errorIndexList = this.checkLines();
         errorIndexList = errorIndexList.concat(this.checkColumns());
         errorIndexList = errorIndexList.concat(this.checkBlocks());
         errorIndexList = errorIndexList.concat(this.checkCells());
-        this.setErrorCell(errorIndexList, cells);
-    }
 
-    /**
-     * Update cell to say if there is an error.
-     * @param errorIndexList List of cells containing an error input.
-     * @param cells Current value of cells.
-     */
-    setErrorCell(errorIndexList: any, cells: any) {
-        errorIndexList = new Set(errorIndexList)
+        let errorIndexSet = new Set(errorIndexList);
+
         for (let index = 0; index < 81; index++) {
-            if (errorIndexList.has(index)) {
+            if (errorIndexSet.has(index)) {
                 cells[index][2] = true;
             } else {
                 cells[index][2] = false;
             }
         }
 
-        if (errorIndexList.size) {
+        if (errorIndexSet.size) {
             this.setState({cells: cells, finished: false});
             return
         }
