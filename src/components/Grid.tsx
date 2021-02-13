@@ -133,7 +133,7 @@ class Grid extends React.Component<IGridProps, IGridState> {
      * @param values values to be set in the MVMap.
      */
     initFrom(values:any) {
-        assert.ok(values.length == 81);
+        assert.ok(values.length === 81);
         let cells = this.state.cells;
         for (let i = 0; i < 81; i++) {
             cells[i][0] = values[i] === "." ? "" : values[i];
@@ -386,16 +386,18 @@ class Grid extends React.Component<IGridProps, IGridState> {
  * Return a predefined Sudoku grid as a string.
  */
 function generateStaticGrid() {
-    const values = "\
-6.2387914\
-719452368\
-348196257\
-821935476\
-59.274831\
-473861529\
-187529..3\
-234618795\
-.65743182"
+    /**
+     * 32.17.654
+     * 6152947..
+     * .783.6291
+     * .574.2816
+     * 18.7659.2
+     * 236.1.54.
+     * 742.813.9
+     * 8.36.7125
+     * 56.9234.8
+     */
+    const values = "32.17.6546152947...783.6291.574.281618.7659.2236.1.54.742.813.98.36.712556.9234.8"
     assert.ok(values.split('').every(x => (x === "." || (Number(x) >= 1 && Number(x) <= 9))));
     return values;
 }
