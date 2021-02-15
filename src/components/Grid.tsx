@@ -25,6 +25,7 @@
 import React from 'react';
 import assert from 'assert';
 import Cell from './Cell';
+import { validInput } from './Cell';
 import { client } from '@concordant/c-client';
 
 /**
@@ -39,9 +40,9 @@ interface IGridProps {
  * Interface for the state of the Grid
  */
 interface IGridState {
-    cells: any, //[value, modifiable, error]
+    cells: {value: string, modifiable: boolean, error: boolean}[],
     isConnected: boolean,
-    finished: boolean
+    isFinished: boolean
 }
 
 /**
@@ -49,16 +50,16 @@ interface IGridState {
  */
 class Grid extends React.Component<IGridProps, IGridState> {
     timerID!: NodeJS.Timeout;
-    cellsDeco: any;
+    modifiedCells: string[];
 
     constructor(props: any) {
         super(props);
-        let cells = new Array(81).fill(null).map(()=>(["", false, false]));
-        this.cellsDeco = new Array(81).fill(null);
+        let cells = new Array(81).fill(null).map(()=>({value:"", modifiable:false, error:false}));
+        this.modifiedCells = new Array(81).fill(null);
         this.state = {
             cells: cells,
             isConnected: true,
-            finished: false
+            isFinished: false
         };
     }
 
@@ -95,11 +96,11 @@ class Grid extends React.Component<IGridProps, IGridState> {
             let itString = this.props.mvmap.iteratorString()
             while(itBoolean.hasNext()) {
                 let val = itBoolean.next()
-                cells[val.first][1] = val.second.iterator().next()
+                cells[val.first].modifiable = val.second.iterator().next()
             }
             while(itString.hasNext()) {
                 let val = itString.next()
-                cells[val.first][0] = hashSetToString(val.second)
+                cells[val.first].value = hashSetToString(val.second)
             }
         })
         this.updateState(cells)
@@ -110,13 +111,13 @@ class Grid extends React.Component<IGridProps, IGridState> {
      */
     switchConnection() {
         if (this.state.isConnected) {
-            this.cellsDeco = new Array(81).fill(null);
+            this.modifiedCells = new Array(81).fill(null);
             clearInterval(this.timerID);
         } else {
             this.props.session.transaction(client.utils.ConsistencyLevel.None, () => {
                 for (let i = 0; i < 81; i++) {
-                    if (this.cellsDeco[i]!==null) {
-                        this.props.mvmap.setString(i, this.cellsDeco[i]);
+                    if (this.modifiedCells[i] !== null) {
+                        this.props.mvmap.setString(i, this.modifiedCells[i]);
                     }
                 }
             })
@@ -136,15 +137,15 @@ class Grid extends React.Component<IGridProps, IGridState> {
         assert.ok(values.length === 81);
         let cells = this.state.cells;
         for (let i = 0; i < 81; i++) {
-            cells[i][0] = values[i] === "." ? "" : values[i];
-            cells[i][1] = values[i] === "." ? true : false;
+            cells[i].value = values[i] === "." ? "" : values[i];
+            cells[i].modifiable = values[i] === "." ? true : false;
             if (this.state.isConnected) {
                 this.props.session.transaction(client.utils.ConsistencyLevel.None, () => {
-                    this.props.mvmap.setString(i, cells[i][0]);
-                    this.props.mvmap.setBoolean(i, cells[i][1]);
+                    this.props.mvmap.setString(i, cells[i].value);
+                    this.props.mvmap.setBoolean(i, cells[i].modifiable);
                 })
             } else {
-                this.cellsDeco[i] = values[i];
+                this.modifiedCells[i] = values[i];
             }
         }
         this.updateState(cells)
@@ -160,8 +161,8 @@ class Grid extends React.Component<IGridProps, IGridState> {
         assert.ok(index >= 0 && index < 81)
         
         let cells = this.state.cells;
-        cells[index][0] = value;
-        this.cellsDeco[index] = value;
+        cells[index].value = value;
+        this.modifiedCells[index] = value;
         this.updateState(cells);
         
         if (this.state.isConnected) {
@@ -177,14 +178,13 @@ class Grid extends React.Component<IGridProps, IGridState> {
      */
     renderCell(index: number) {
         assert.ok(index >= 0 && index < 81)
-        let [value, modifiable, error] = this.state.cells[index];
         return (
             <Cell
                 index={index}
-                value={value}
-                modifiable={modifiable}
+                value={this.state.cells[index].value}
+                modifiable={this.state.cells[index].modifiable}
                 onChange={(index:number, value:string) => this.handleChange(index, value)}
-                error={error}
+                error={this.state.cells[index].error}
             />
         );
     }
@@ -224,7 +224,7 @@ class Grid extends React.Component<IGridProps, IGridState> {
                         )}
                     </tbody>
                 </table>
-                {this.state.finished && <h2 className="status" id="status">Sudoku completed</h2>}
+                {this.state.isFinished && <h2 className="status" id="status">Sudoku completed</h2>}
             </div>
         );
     }
@@ -238,7 +238,7 @@ class Grid extends React.Component<IGridProps, IGridState> {
         let cpt = Array(9).fill(0)
         for (let column = 0; column < 9; column++) {
             let index = line * 9 + column
-            let val = this.state.cells[index][0]
+            let val = this.state.cells[index].value
             if (val.length === 0 || val.length > 1) {
                 continue
             }
@@ -256,7 +256,7 @@ class Grid extends React.Component<IGridProps, IGridState> {
         let cpt = Array(9).fill(0)
         for (let line = 0; line < 9; line++) {
             let index = line * 9 + column
-            let val = this.state.cells[index][0]
+            let val = this.state.cells[index].value
             if (val.length === 0 || val.length > 1) {
                 continue
             }
@@ -274,7 +274,7 @@ class Grid extends React.Component<IGridProps, IGridState> {
         let cpt = Array(9).fill(0)
         let indexList = blockIndex(block)
         for (let index of indexList) {
-            let val = this.state.cells[index][0]
+            let val = this.state.cells[index].value
             if (val.length === 0 || val.length > 1) {
                 continue
             }
@@ -332,7 +332,7 @@ class Grid extends React.Component<IGridProps, IGridState> {
     checkCells() {
         let indexList = []
         for (let cell = 0; cell < 81; cell++) {
-            let val = this.state.cells[cell][0]
+            let val = this.state.cells[cell].value
             if (val.length > 1) {
                 indexList.push(cell)
             }
@@ -354,25 +354,24 @@ class Grid extends React.Component<IGridProps, IGridState> {
 
         for (let index = 0; index < 81; index++) {
             if (errorIndexSet.has(index)) {
-                cells[index][2] = true;
+                cells[index].error = true;
             } else {
-                cells[index][2] = false;
+                cells[index].error = false;
             }
         }
 
         if (errorIndexSet.size) {
-            this.setState({cells: cells, finished: false});
+            this.setState({cells: cells, isFinished: false});
             return
         }
 
-        const regex = /^[1-9]$/
         for (let index = 0; index < 81; index++) {
-            if (!regex.test(this.state.cells[index][0])) {
-                this.setState({cells: cells, finished: false});
+            if (!validInput.test(this.state.cells[index].value)) {
+                this.setState({cells: cells, isFinished: false});
                 return
             }
         }
-        this.setState({cells: cells, finished: true})
+        this.setState({cells: cells, isFinished: true})
     }
 }
 

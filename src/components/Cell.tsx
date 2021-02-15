@@ -24,6 +24,8 @@
 
 import React from 'react';
 
+export const validInput = new RegExp('^[1-9]$');
+
 /**
  * Interface for the properties of the Cell.
  * The Cell needs to know his index in the grid, his value, a callback function
@@ -49,8 +51,7 @@ class Cell extends React.Component<ICellProps, {}> {
         if (!this.props.modifiable) {
             return;
         }
-        const regexp = new RegExp('^[1-9]$');
-        if (event.target.value === "" || regexp.test(event.target.value)) {
+        if (event.target.value === "" || validInput.test(event.target.value)) {
             this.props.onChange(this.props.index, event.target.value)
         } else {
             console.error("Invalid input in cell " + this.props.index + " : " + event.target.value)
@@ -75,6 +76,7 @@ class Cell extends React.Component<ICellProps, {}> {
                 maxLength={1}
                 value={this.props.value}
                 onChange={(event) => this.onChange(event)}
+                readOnly={!this.props.modifiable}
             />
         );
     }
