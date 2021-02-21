@@ -68,6 +68,7 @@ class Grid extends React.Component<IGridProps, IGridState> {
      * It set a timer to refresh cells values.
      */
     componentDidMount() {
+        this.initFrom(generateStaticGrid());
         this.timerID = setInterval(
             () => this.updateGrid(),
             1000
@@ -139,13 +140,32 @@ class Grid extends React.Component<IGridProps, IGridState> {
         for (let i = 0; i < 81; i++) {
             cells[i].value = values[i] === "." ? "" : values[i];
             cells[i].modifiable = values[i] === "." ? true : false;
-            if (this.state.isConnected) {
-                this.props.session.transaction(client.utils.ConsistencyLevel.None, () => {
-                    this.props.mvmap.setString(i, cells[i].value);
-                    this.props.mvmap.setBoolean(i, cells[i].modifiable);
-                })
-            } else {
-                this.modifiedCells[i] = values[i];
+
+            if (cells[i].modifiable === true) {
+                if (this.state.isConnected) {
+                    this.props.session.transaction(client.utils.ConsistencyLevel.None, () => {
+                        this.props.mvmap.setString(i, cells[i].value);
+                    })
+                } else {
+                    this.modifiedCells[i] = values[i];
+                }
+            }
+        }
+        this.updateState(cells)
+    }
+
+    reset() {
+        let cells = this.state.cells;
+        for (let i = 0; i < 81; i++) {
+            if (cells[i].modifiable) {
+                cells[i].value = "";
+                if (this.state.isConnected) {
+                    this.props.session.transaction(client.utils.ConsistencyLevel.None, () => {
+                        this.props.mvmap.setString(i, cells[i].value);
+                    })
+                } else {
+                    this.modifiedCells[i] = "";
+                }
             }
         }
         this.updateState(cells)
@@ -162,13 +182,14 @@ class Grid extends React.Component<IGridProps, IGridState> {
         
         let cells = this.state.cells;
         cells[index].value = value;
-        this.modifiedCells[index] = value;
         this.updateState(cells);
         
         if (this.state.isConnected) {
             this.props.session.transaction(client.utils.ConsistencyLevel.None, () => {
                 this.props.mvmap.setString(index, value);
             })
+        } else {
+            this.modifiedCells[index] = value;
         }
     }
 
@@ -211,7 +232,7 @@ class Grid extends React.Component<IGridProps, IGridState> {
     render() {
         return (
             <div className="sudoku">
-                <div><button onClick={this.initFrom.bind(this, generateStaticGrid())}>Reset</button></div><br />
+                <div><button onClick={this.reset.bind(this)}>Reset</button></div><br />
                 <div><button onClick={() => this.switchConnection()}>{this.state.isConnected ? "Disconnect" : "Connect"}</button></div><br />
                 <table className="grid">
                     <tbody>
