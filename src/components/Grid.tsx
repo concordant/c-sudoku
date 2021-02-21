@@ -203,8 +203,7 @@ class Grid extends React.Component<IGridProps, IGridState> {
             <Cell
                 index={index}
                 value={this.state.cells[index].value}
-                modifiable={this.state.cells[index].modifiable}
-                onChange={(index:number, value:string) => this.handleChange(index, value)}
+                onChange={this.state.cells[index].modifiable ? (index:number, value:string) => this.handleChange(index, value) : null}
                 error={this.state.cells[index].error}
             />
         );

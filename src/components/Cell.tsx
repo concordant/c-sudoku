@@ -35,7 +35,6 @@ interface ICellProps {
     index: number,
     value: string,
     onChange: any,
-    modifiable: boolean,
     error: boolean
 }
 
@@ -48,9 +47,6 @@ class Cell extends React.Component<ICellProps, {}> {
      * @param event handled
      */
     onChange(event: any) {
-        if (!this.props.modifiable) {
-            return;
-        }
         if (event.target.value === "" || validInput.test(event.target.value)) {
             this.props.onChange(this.props.index, event.target.value)
         } else {
@@ -63,7 +59,7 @@ class Cell extends React.Component<ICellProps, {}> {
         if (this.props.value.length > 1) {
             cellClass += "mv "
         }
-        if (!this.props.modifiable) {
+        if (this.props.onChange === null) {
             cellClass += "locked "
         }
         if (this.props.error){
@@ -75,8 +71,8 @@ class Cell extends React.Component<ICellProps, {}> {
                 className={cellClass}
                 maxLength={1}
                 value={this.props.value}
-                onChange={(event) => this.onChange(event)}
-                readOnly={!this.props.modifiable}
+                onChange={this.props.onChange ? (event) => this.onChange(event) : function() { }}
+                readOnly={this.props.onChange === null}
             />
         );
     }
