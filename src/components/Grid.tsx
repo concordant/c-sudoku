@@ -116,9 +116,9 @@ class Grid extends React.Component<IGridProps, IGridState> {
             clearInterval(this.timerID);
         } else {
             this.props.session.transaction(client.utils.ConsistencyLevel.None, () => {
-                for (let i = 0; i < 81; i++) {
-                    if (this.modifiedCells[i] !== null) {
-                        this.props.mvmap.setString(i, this.modifiedCells[i]);
+                for (let index = 0; index < 81; index++) {
+                    if (this.modifiedCells[index] !== null) {
+                        this.props.mvmap.setString(index, this.modifiedCells[index]);
                     }
                 }
             })
@@ -137,17 +137,17 @@ class Grid extends React.Component<IGridProps, IGridState> {
     initFrom(values:any) {
         assert.ok(values.length === 81);
         let cells = this.state.cells;
-        for (let i = 0; i < 81; i++) {
-            cells[i].value = values[i] === "." ? "" : values[i];
-            cells[i].modifiable = values[i] === "." ? true : false;
+        for (let index = 0; index < 81; index++) {
+            cells[index].value = values[index] === "." ? "" : values[index];
+            cells[index].modifiable = values[index] === "." ? true : false;
 
-            if (cells[i].modifiable === true) {
+            if (cells[index].modifiable === true) {
                 if (this.state.isConnected) {
                     this.props.session.transaction(client.utils.ConsistencyLevel.None, () => {
-                        this.props.mvmap.setString(i, cells[i].value);
+                        this.props.mvmap.setString(index, cells[index].value);
                     })
                 } else {
-                    this.modifiedCells[i] = values[i];
+                    this.modifiedCells[index] = values[index];
                 }
             }
         }
@@ -156,15 +156,15 @@ class Grid extends React.Component<IGridProps, IGridState> {
 
     reset() {
         let cells = this.state.cells;
-        for (let i = 0; i < 81; i++) {
-            if (cells[i].modifiable) {
-                cells[i].value = "";
+        for (let index = 0; index < 81; index++) {
+            if (cells[index].modifiable) {
+                cells[index].value = "";
                 if (this.state.isConnected) {
                     this.props.session.transaction(client.utils.ConsistencyLevel.None, () => {
-                        this.props.mvmap.setString(i, cells[i].value);
+                        this.props.mvmap.setString(index, cells[index].value);
                     })
                 } else {
-                    this.modifiedCells[i] = "";
+                    this.modifiedCells[index] = "";
                 }
             }
         }
@@ -270,7 +270,7 @@ class Grid extends React.Component<IGridProps, IGridState> {
 
     /**
      * Check if a column respect Sudoku columns rules.
-     * @param col The column number to be checked.
+     * @param column The column number to be checked.
      */
     checkColumn(column: number) {
         assert.ok(column >= 0 && column < 9)
@@ -311,8 +311,8 @@ class Grid extends React.Component<IGridProps, IGridState> {
         let indexList = []
         for (let line = 0; line < 9; line++) {
             if (this.checkLine(line) === false) {
-                for (let i = 0; i < 9; i++) {
-                    indexList.push(line * 9 + i)
+                for (let column = 0; column < 9; column++) {
+                    indexList.push(line * 9 + column)
                 }
             }
         }
@@ -326,8 +326,8 @@ class Grid extends React.Component<IGridProps, IGridState> {
         let indexList = []
         for (let column = 0; column < 9; column++) {
             if (this.checkColumn(column) === false) {
-                for (let i = 0; i < 9; i++) {
-                    indexList.push(i * 9 + column)
+                for (let line = 0; line < 9; line++) {
+                    indexList.push(line * 9 + column)
                 }
             }
         }
@@ -423,10 +423,10 @@ function generateStaticGrid() {
 function blockIndex(block: number) {
     assert.ok(block >= 0 && block < 9)
     let line = Math.floor(block / 3) * 3
-    let col = (block % 3) * 3
-    let index = [ line      * 9 + col,   line      * 9 + col + 1,  line      * 9 + col + 2,
-                 (line + 1) * 9 + col,  (line + 1) * 9 + col + 1, (line + 1) * 9 + col + 2,
-                 (line + 2) * 9 + col,  (line + 2) * 9 + col + 1, (line + 2) * 9 + col + 2]
+    let column = (block % 3) * 3
+    let index = [ line      * 9 + column,   line      * 9 + column + 1,  line      * 9 + column + 2,
+                 (line + 1) * 9 + column,  (line + 1) * 9 + column + 1, (line + 1) * 9 + column + 2,
+                 (line + 2) * 9 + column,  (line + 2) * 9 + column + 1, (line + 2) * 9 + column + 2]
     return index
 }
 
