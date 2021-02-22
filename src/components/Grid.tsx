@@ -92,13 +92,13 @@ class Grid extends React.Component<IGridProps, IGridState> {
             console.error("updateGrid() called while not connected.")
             return cells;
         }
-        this.props.session.transaction(client.utils.ConsistencyLevel.None, () => {
-            let itBoolean = this.props.mvmap.iteratorBoolean()
-            let itString = this.props.mvmap.iteratorString()
-            while(itBoolean.hasNext()) {
-                let val = itBoolean.next()
-                cells[val.first].modifiable = val.second.iterator().next()
+        for (let index = 0; index < 81; index++) {
+            if (cells[index].modifiable) {
+                cells[index].value = "";
             }
+        }
+        this.props.session.transaction(client.utils.ConsistencyLevel.None, () => {
+            let itString = this.props.mvmap.iteratorString()
             while(itString.hasNext()) {
                 let val = itString.next()
                 cells[val.first].value = hashSetToString(val.second)
@@ -115,13 +115,13 @@ class Grid extends React.Component<IGridProps, IGridState> {
             this.modifiedCells = new Array(81).fill(null);
             clearInterval(this.timerID);
         } else {
-            this.props.session.transaction(client.utils.ConsistencyLevel.None, () => {
-                for (let index = 0; index < 81; index++) {
-                    if (this.modifiedCells[index] !== null) {
+            for (let index = 0; index < 81; index++) {
+                if (this.state.cells[index].modifiable && this.modifiedCells[index] !== null) {
+                    this.props.session.transaction(client.utils.ConsistencyLevel.None, () => {
                         this.props.mvmap.setString(index, this.modifiedCells[index]);
-                    }
+                    })
                 }
-            })
+            }
             this.timerID = setInterval(
                 () => this.updateGrid(),
                 1000
@@ -131,8 +131,8 @@ class Grid extends React.Component<IGridProps, IGridState> {
     }
 
     /**
-     * Set the MVMap with the given values.
-     * @param values values to be set in the MVMap.
+     * Initialize the grid with the given values.
+     * @param values values to be set in the grid.
      */
     initFrom(values:any) {
         assert.ok(values.length === 81);
@@ -140,20 +140,13 @@ class Grid extends React.Component<IGridProps, IGridState> {
         for (let index = 0; index < 81; index++) {
             cells[index].value = values[index] === "." ? "" : values[index];
             cells[index].modifiable = values[index] === "." ? true : false;
-
-            if (cells[index].modifiable === true) {
-                if (this.state.isConnected) {
-                    this.props.session.transaction(client.utils.ConsistencyLevel.None, () => {
-                        this.props.mvmap.setString(index, cells[index].value);
-                    })
-                } else {
-                    this.modifiedCells[index] = values[index];
-                }
-            }
         }
         this.updateState(cells)
     }
 
+    /**
+     * Reset the value of all modifiable cells.
+     */
     reset() {
         let cells = this.state.cells;
         for (let index = 0; index < 81; index++) {
