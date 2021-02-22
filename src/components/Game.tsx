@@ -31,7 +31,8 @@ import { client } from '@concordant/c-client';
  * Keep a reference to the opened session and opened MVMap.
  */
 interface IGameState {
-    session: any
+    session: any,
+    collection: any
 }
 
 /**
@@ -42,16 +43,16 @@ class Game extends React.Component<{}, IGameState> {
         super(props);
         let CONFIG = require('../config.json');
         let session = client.Session.Companion.connect(CONFIG.dbName, CONFIG.serviceUrl, CONFIG.credentials);
+        let collection = session.openCollection("sudoku", false);
         this.state = {
-            session: session
+            session: session,
+            collection: collection
         }
     }
 
     render() {
-        let collection = this.state.session.openCollection("sudoku", false);
-        let mvmap = collection.open("room" + "", "MVMap", false, function () {return});
         return (
-            <Grid session={this.state.session} mvmap={mvmap} />
+            <Grid session={this.state.session} collection={this.state.collection} />
         );
     }
 }

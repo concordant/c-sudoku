@@ -33,13 +33,14 @@ import { client } from '@concordant/c-client';
  */
 interface IGridProps {
     session: any,
-    mvmap: any
+    collection: any
 }
 
 /**
  * Interface for the state of the Grid
  */
 interface IGridState {
+    mvmap: any,
     cells: {value: string, modifiable: boolean, error: boolean}[],
     isConnected: boolean,
     isFinished: boolean
@@ -56,7 +57,9 @@ class Grid extends React.Component<IGridProps, IGridState> {
         super(props);
         let cells = new Array(81).fill(null).map(()=>({value:"", modifiable:false, error:false}));
         this.modifiedCells = new Array(81).fill(null);
+        let mvmap = this.props.collection.open("room", "MVMap", false, function () {return});
         this.state = {
+            mvmap: mvmap,
             cells: cells,
             isConnected: true,
             isFinished: false
@@ -98,7 +101,7 @@ class Grid extends React.Component<IGridProps, IGridState> {
             }
         }
         this.props.session.transaction(client.utils.ConsistencyLevel.None, () => {
-            let itString = this.props.mvmap.iteratorString()
+            let itString = this.state.mvmap.iteratorString()
             while(itString.hasNext()) {
                 let val = itString.next()
                 cells[val.first].value = hashSetToString(val.second)
@@ -118,7 +121,7 @@ class Grid extends React.Component<IGridProps, IGridState> {
             for (let index = 0; index < 81; index++) {
                 if (this.state.cells[index].modifiable && this.modifiedCells[index] !== null) {
                     this.props.session.transaction(client.utils.ConsistencyLevel.None, () => {
-                        this.props.mvmap.setString(index, this.modifiedCells[index]);
+                        this.state.mvmap.setString(index, this.modifiedCells[index]);
                     })
                 }
             }
@@ -154,7 +157,7 @@ class Grid extends React.Component<IGridProps, IGridState> {
                 cells[index].value = "";
                 if (this.state.isConnected) {
                     this.props.session.transaction(client.utils.ConsistencyLevel.None, () => {
-                        this.props.mvmap.setString(index, cells[index].value);
+                        this.state.mvmap.setString(index, cells[index].value);
                     })
                 } else {
                     this.modifiedCells[index] = "";
@@ -179,7 +182,7 @@ class Grid extends React.Component<IGridProps, IGridState> {
         
         if (this.state.isConnected) {
             this.props.session.transaction(client.utils.ConsistencyLevel.None, () => {
-                this.props.mvmap.setString(index, value);
+                this.state.mvmap.setString(index, value);
             })
         } else {
             this.modifiedCells[index] = value;
