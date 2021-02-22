@@ -27,6 +27,7 @@ import assert from 'assert';
 import Cell from './Cell';
 import { validInput } from './Cell';
 import { client } from '@concordant/c-client';
+import Submit1Input from './Submit1Input';
 
 /**
  * Interface for the properties of the Grid
@@ -40,6 +41,7 @@ interface IGridProps {
  * Interface for the state of the Grid
  */
 interface IGridState {
+    gridNum: string,
     mvmap: any,
     cells: {value: string, modifiable: boolean, error: boolean}[],
     isConnected: boolean,
@@ -57,8 +59,10 @@ class Grid extends React.Component<IGridProps, IGridState> {
         super(props);
         let cells = new Array(81).fill(null).map(()=>({value:"", modifiable:false, error:false}));
         this.modifiedCells = new Array(81).fill(null);
-        let mvmap = this.props.collection.open("room", "MVMap", false, function () {return});
+        let gridNum = "1";
+        let mvmap = this.props.collection.open("grid" + gridNum, "MVMap", false, function () {return});
         this.state = {
+            gridNum: gridNum,
             mvmap: mvmap,
             cells: cells,
             isConnected: true,
@@ -190,6 +194,16 @@ class Grid extends React.Component<IGridProps, IGridState> {
     }
 
     /**
+     * This handler is called when a new grid number is submit.
+     * @param gridNum Desired grid number.
+     */
+    handleSubmit(gridNum: string) {
+        let mvmap = this.props.collection.open("grid" + gridNum, "MVMap", false, function () {return});
+        this.setState({gridNum: gridNum, mvmap: mvmap});
+        this.initFrom(generateStaticGrid());
+    }
+
+    /**
      * This function return a React element corresponding to a cell.
      * @param index The index of the cell to render.
      */
@@ -227,6 +241,8 @@ class Grid extends React.Component<IGridProps, IGridState> {
     render() {
         return (
             <div className="sudoku">
+                <div>Current grid : {this.state.gridNum}</div>
+                <Submit1Input inputName="Grid" onSubmit={this.handleSubmit.bind(this)} /><br />
                 <div><button onClick={this.reset.bind(this)}>Reset</button></div><br />
                 <div><button onClick={() => this.switchConnection()}>{this.state.isConnected ? "Disconnect" : "Connect"}</button></div><br />
                 <table className="grid">
