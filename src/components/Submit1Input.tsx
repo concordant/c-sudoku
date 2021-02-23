@@ -36,7 +36,7 @@ interface ISubmit1InputState {
 class Submit1Input extends React.Component<ISubmit1InputProps, ISubmit1InputState> {
     constructor(props: any) {
         super(props);
-        this.state = {value: ""};
+        this.state = {value: "1"};
 
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -52,7 +52,9 @@ class Submit1Input extends React.Component<ISubmit1InputProps, ISubmit1InputStat
 
     handleSubmit(event: any) {
         event.preventDefault();
-        this.props.onSubmit(this.state.value);
+        if (Number(this.state.value) >= 1 && Number(this.state.value) <= 46) {
+            this.props.onSubmit(this.state.value);
+        }
     }
 
     render() {
@@ -60,7 +62,8 @@ class Submit1Input extends React.Component<ISubmit1InputProps, ISubmit1InputStat
             <form onSubmit={this.handleSubmit}>
                 <label>
                     {this.props.inputName} : 
-                    <input value={this.state.value} onChange={this.handleChange} />
+                    <input type="number" value={this.state.value} onChange={this.handleChange}
+                           min="1" max="46"/>
                 </label>
                 <input type="submit" value={"Change " + this.props.inputName} />
             </form>
