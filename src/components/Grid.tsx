@@ -249,7 +249,7 @@ class Grid extends React.Component<IGridProps, IGridState> {
             <div className="sudoku">
                 <div>Current grid : {this.state.gridNum}</div>
                 <Submit1Input inputName="Grid" onSubmit={this.handleSubmit.bind(this)} />
-                <div>1-20: easy, 21-40: medium, 41-60: hard, 61-80: very-hard, 81-100: insame)</div>
+                <div>Difficulty levels: easy (1-20), medium (21-40), hard (41-60), very-hard (61-80), insane (81-100)</div>
                 <br />
                 <div><button onClick={this.reset.bind(this)}>Reset</button></div><br />
                 <div><button onClick={() => this.switchConnection()}>{this.state.isConnected ? "Disconnect" : "Connect"}</button></div><br />
