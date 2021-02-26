@@ -23,7 +23,7 @@
  */
 
 import React from 'react';
-import { validInput } from '../constants.js'
+import { validInput } from '../constants'
 
 /**
  * Interface for the properties of the Cell.

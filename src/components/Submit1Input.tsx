@@ -52,7 +52,7 @@ class Submit1Input extends React.Component<ISubmit1InputProps, ISubmit1InputStat
 
     handleSubmit(event: any) {
         event.preventDefault();
-        if (Number(this.state.value) >= 1 && Number(this.state.value) <= 46) {
+        if (Number(this.state.value) >= 1 && Number(this.state.value) <= 100) {
             this.props.onSubmit(this.state.value);
         }
     }
@@ -63,7 +63,7 @@ class Submit1Input extends React.Component<ISubmit1InputProps, ISubmit1InputStat
                 <label>
                     {this.props.inputName} : 
                     <input type="number" value={this.state.value} onChange={this.handleChange}
-                           min="1" max="46"/>
+                           min="1" max="100"/>
                 </label>
                 <input type="submit" value={"Change " + this.props.inputName} />
             </form>

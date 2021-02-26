@@ -25,7 +25,7 @@
 import React from 'react';
 import assert from 'assert';
 import Cell from './Cell';
-import { validInput, GRIDS } from '../constants.js'
+import { validInput, GRIDS } from '../constants'
 import { client } from '@concordant/c-client';
 import Submit1Input from './Submit1Input';
 
@@ -201,7 +201,7 @@ class Grid extends React.Component<IGridProps, IGridState> {
      * @param gridNum Desired grid number.
      */
     handleSubmit(gridNum: string) {
-        if (Number(gridNum) < 1 || Number(gridNum) > 46 || gridNum === this.state.gridNum) {
+        if (Number(gridNum) < 1 || Number(gridNum) > 100 || gridNum === this.state.gridNum) {
             return;
         }
         let mvmap = this.props.collection.open("grid" + gridNum, "MVMap", false, function () {return});
@@ -249,7 +249,7 @@ class Grid extends React.Component<IGridProps, IGridState> {
             <div className="sudoku">
                 <div>Current grid : {this.state.gridNum}</div>
                 <Submit1Input inputName="Grid" onSubmit={this.handleSubmit.bind(this)} />
-                <div>Grid difficulty on scale of 1-46 (1 being the easier and 46 being the harder)</div>
+                <div>1-20: easy, 21-40: medium, 41-60: hard, 61-80: very-hard, 81-100: insame)</div>
                 <br />
                 <div><button onClick={this.reset.bind(this)}>Reset</button></div><br />
                 <div><button onClick={() => this.switchConnection()}>{this.state.isConnected ? "Disconnect" : "Connect"}</button></div><br />
