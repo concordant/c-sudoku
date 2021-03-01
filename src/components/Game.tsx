@@ -32,7 +32,7 @@ import { client } from '@concordant/c-client';
  */
 interface IGameState {
     session: any,
-    mvmap: any
+    collection: any
 }
 
 /**
@@ -43,17 +43,16 @@ class Game extends React.Component<{}, IGameState> {
         super(props);
         let CONFIG = require('../config.json');
         let session = client.Session.Companion.connect(CONFIG.dbName, CONFIG.serviceUrl, CONFIG.credentials);
-        let collection = session.openCollection("sudokuCollection", false);
-        let mvmap = collection.open("sudokuGrid", "MVMap", false, function () {return});
+        let collection = session.openCollection("sudoku", false);
         this.state = {
             session: session,
-            mvmap: mvmap
+            collection: collection
         }
     }
 
     render() {
         return (
-            <Grid session={this.state.session} mvmap={this.state.mvmap}/>
+            <Grid session={this.state.session} collection={this.state.collection} />
         );
     }
 }

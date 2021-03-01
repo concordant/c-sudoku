@@ -73,7 +73,7 @@ p {
     border: 1px solid black;
 }
 
-input {
+.grid input {
     text-align: center;
     color: transparent;
     border: 1px solid black;
@@ -85,21 +85,21 @@ input {
     background-color: white;
 }
 
-.wrongvalue {
+.grid .wrongvalue {
     text-shadow: 0px 0px 0px #FFD700;
     background: #b71540;
 }
 
-.locked {
+.grid .locked {
     text-shadow: 0px 0px 0px black;
 }
 
-input:focus {
+.grid input:focus {
     background-color: lightgrey;
     outline: none;
 }
 
-.wrongvalue:focus {
+.grid .wrongvalue:focus {
     background-color: purple;
 }
 
