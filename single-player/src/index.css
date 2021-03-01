@@ -1,0 +1,142 @@
+/**
+ * MIT License
+ *
+ * Copyright (c) 2020, Concordant and contributors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
+body {
+    background-color: white;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    line-height: 1.7;
+    margin: 0px;
+    min-width: 650px;
+    text-align: center;
+}
+
+h1 {
+    font-size: 34px;
+    line-height: 30px;
+    text-align: center;
+    font-weight: bold;
+}
+
+h2 {
+    font-size: 26px;
+    text-align: center;
+    font-weight: bold;
+}
+
+p {
+    text-align: justify;
+    text-justify: inter-word;
+}
+
+.title {
+    text-align: center;
+    height: 150px;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    line-height: 0px;
+    color: white;
+    margin-top: -10px;
+}
+
+.sudoku {
+    margin: auto;
+    max-width: max-content;
+    text-align: center;
+    padding: 20px;
+}
+
+.grid {
+    margin: auto;
+    border: 1px solid black;
+}
+
+.grid input {
+    text-align: center;
+    color: transparent;
+    border: 1px solid black;
+    text-shadow: 0px 0px 0px #82ccdd;
+    height: 60px;
+    width: 60px;
+    font-size: 30px;
+    margin: -1px;
+    background-color: white;
+}
+
+.grid .wrongvalue {
+    text-shadow: 0px 0px 0px #FFD700;
+    background: #b71540;
+}
+
+.grid .locked {
+    text-shadow: 0px 0px 0px black;
+}
+
+.grid input:focus {
+    background-color: lightgrey;
+    outline: none;
+}
+
+.grid .wrongvalue:focus {
+    background-color: purple;
+}
+
+.intro {
+    padding-top: 20px;
+}
+
+.padding {
+    padding-top: 30px;
+    padding-bottom: 30px;
+}
+
+.reduceWidth {
+    width: 60%;
+    text-align: center;
+    display: inline-block
+}
+
+.background-turquoise {
+    background-color: #34D6D8;
+}
+
+.background-grey {
+    background-color: #F4F4F4;
+}
+
+.background-yellow {
+    background-color: #FFE840;
+}
+
+.status {
+    border : dotted;
+    color: #60a3bc;
+}
+
+.footer {
+    text-align: center;
+    font-size: 11px;
+    color: grey;
+}
