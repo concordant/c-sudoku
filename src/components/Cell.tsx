@@ -23,8 +23,7 @@
  */
 
 import React from 'react';
-
-export const validInput = new RegExp('^[1-9]$');
+import { validInput } from '../constants'
 
 /**
  * Interface for the properties of the Cell.

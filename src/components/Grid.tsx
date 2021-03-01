@@ -25,8 +25,9 @@
 import React from 'react';
 import assert from 'assert';
 import Cell from './Cell';
-import { validInput } from './Cell';
+import { validInput, GRIDS } from '../constants'
 import { client } from '@concordant/c-client';
+import Submit1Input from './Submit1Input';
 
 /**
  * Interface for the properties of the Grid
@@ -40,6 +41,7 @@ interface IGridProps {
  * Interface for the state of the Grid
  */
 interface IGridState {
+    gridNum: string,
     mvmap: any,
     cells: {value: string, modifiable: boolean, error: boolean}[],
     isConnected: boolean,
@@ -57,8 +59,10 @@ class Grid extends React.Component<IGridProps, IGridState> {
         super(props);
         let cells = new Array(81).fill(null).map(()=>({value:"", modifiable:false, error:false}));
         this.modifiedCells = new Array(81).fill(null);
-        let mvmap = this.props.collection.open("room", "MVMap", false, function () {return});
+        let gridNum = "1";
+        let mvmap = this.props.collection.open("grid" + gridNum, "MVMap", false, function () {return});
         this.state = {
+            gridNum: gridNum,
             mvmap: mvmap,
             cells: cells,
             isConnected: true,
@@ -71,7 +75,7 @@ class Grid extends React.Component<IGridProps, IGridState> {
      * It set a timer to refresh cells values.
      */
     componentDidMount() {
-        this.initFrom(generateStaticGrid());
+        this.initFrom(generateStaticGrid(this.state.gridNum));
         this.timerID = setInterval(
             () => this.updateGrid(),
             1000
@@ -175,7 +179,10 @@ class Grid extends React.Component<IGridProps, IGridState> {
     handleChange(index: number, value: string) {
         assert.ok(value === "" || (Number(value) >= 1 && Number(value) <= 9))
         assert.ok(index >= 0 && index < 81)
-        
+        if (!this.state.cells[index].modifiable) {
+            console.error("Trying to change an non modifiable cell. Should not happend");
+        }
+
         let cells = this.state.cells;
         cells[index].value = value;
         this.updateState(cells);
@@ -187,6 +194,19 @@ class Grid extends React.Component<IGridProps, IGridState> {
         } else {
             this.modifiedCells[index] = value;
         }
+    }
+
+    /**
+     * This handler is called when a new grid number is submit.
+     * @param gridNum Desired grid number.
+     */
+    handleSubmit(gridNum: string) {
+        if (Number(gridNum) < 1 || Number(gridNum) > 100 || gridNum === this.state.gridNum) {
+            return;
+        }
+        let mvmap = this.props.collection.open("grid" + gridNum, "MVMap", false, function () {return});
+        this.setState({gridNum: gridNum, mvmap: mvmap});
+        this.initFrom(generateStaticGrid(gridNum));
     }
 
     /**
@@ -227,6 +247,10 @@ class Grid extends React.Component<IGridProps, IGridState> {
     render() {
         return (
             <div className="sudoku">
+                <div>Current grid : {this.state.gridNum}</div>
+                <Submit1Input inputName="Grid" onSubmit={this.handleSubmit.bind(this)} />
+                <div>Difficulty levels: easy (1-20), medium (21-40), hard (41-60), very-hard (61-80), insane (81-100)</div>
+                <br />
                 <div><button onClick={this.reset.bind(this)}>Reset</button></div><br />
                 <div><button onClick={() => this.switchConnection()}>{this.state.isConnected ? "Disconnect" : "Connect"}</button></div><br />
                 <table className="grid">
@@ -393,22 +417,10 @@ class Grid extends React.Component<IGridProps, IGridState> {
 
 /**
  * Return a predefined Sudoku grid as a string.
+ * @param gridNum Desired grid number
  */
-function generateStaticGrid() {
-    /**
-     * 32.17.654
-     * 6152947..
-     * .783.6291
-     * .574.2816
-     * 18.7659.2
-     * 236.1.54.
-     * 742.813.9
-     * 8.36.7125
-     * 56.9234.8
-     */
-    const values = "32.17.6546152947...783.6291.574.281618.7659.2236.1.54.742.813.98.36.712556.9234.8"
-    assert.ok(values.split('').every(x => (x === "." || (Number(x) >= 1 && Number(x) <= 9))));
-    return values;
+function generateStaticGrid(gridNum: string) {
+    return GRIDS[gridNum];
 }
 
 /**
