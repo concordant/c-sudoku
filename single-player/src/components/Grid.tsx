@@ -26,7 +26,6 @@ import React from 'react';
 import assert from 'assert';
 import Cell from './Cell';
 import { validInput, GRIDS } from '../constants'
-import Submit1Input from './Submit1Input';
 
 /**
  * Interface for the state of the Grid
@@ -55,19 +54,6 @@ class Grid extends React.Component<{}, IGridState> {
      */
     componentDidMount() {
         this.initFrom(generateStaticGrid());
-    }
-
-    /**
-     * Update cells values from C-Client.
-     */
-    updateGrid() {
-        let cells = this.state.cells;
-        for (let index = 0; index < 81; index++) {
-            if (cells[index].modifiable) {
-                cells[index].value = "";
-            }
-        }
-        this.updateState(cells)
     }
 
     /**
@@ -334,22 +320,6 @@ function blockIndex(block: number) {
                  (line + 1) * 9 + column,  (line + 1) * 9 + column + 1, (line + 1) * 9 + column + 2,
                  (line + 2) * 9 + column,  (line + 2) * 9 + column + 1, (line + 2) * 9 + column + 2]
     return index
-}
-
-/**
- * Concatenates all values of a HashSet as a String.
- * @param set HashSet to be concatenated.
- */
-function hashSetToString(set: any) {
-    let res = new Set();
-    let it = set.iterator();
-    while (it.hasNext()) {
-        let val = it.next();
-        if (val !== "") {
-            res.add(val);
-        }
-    }
-    return Array.from(res).sort().join(' ')
 }
 
 export default Grid
