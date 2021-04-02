@@ -8,3 +8,5 @@ This repository contains two versions of Sudoku :
 - A collaborative version, using the Concordant platform API.
   This is the outcome of the tutorial and can be tried on our
   [sudoku demo page](https://demo.concordant.io/c-sudoku/index.html).
+
+The main repository is in [the Inria gitlab](https://gitlab.inria.fr/concordant/software/c-sudoku/) (this is where you can post tickets).  There is an identical clone in [GitHub](https://github.com/concordant/software/c-sudoku/) (tickets here might be ignored).
