@@ -41,9 +41,9 @@ interface IGameState {
 class Game extends React.Component<{}, IGameState> {
     constructor(props: any) {
         super(props);
-        let CONFIG = require('../config.json');
-        let session = client.Session.Companion.connect(CONFIG.dbName, CONFIG.serviceUrl, CONFIG.credentials);
-        let collection = session.openCollection("sudoku", false);
+        const CONFIG = require('../config.json');
+        const session = client.Session.Companion.connect(CONFIG.dbName, CONFIG.serviceUrl, CONFIG.credentials);
+        const collection = session.openCollection("sudoku", false);
         this.state = {
             session: session,
             collection: collection

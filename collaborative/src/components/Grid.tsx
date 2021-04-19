@@ -57,10 +57,10 @@ class Grid extends React.Component<IGridProps, IGridState> {
 
     constructor(props: any) {
         super(props);
-        let cells = new Array(81).fill(null).map(()=>({value:"", modifiable:false, error:false}));
+        const cells = new Array(81).fill(null).map(()=>({value:"", modifiable:false, error:false}));
         this.modifiedCells = new Array(81).fill(null);
-        let gridNum = "1";
-        let mvmap = this.props.collection.open("grid" + gridNum, "MVMap", false, function () {return});
+        const gridNum = "1";
+        const mvmap = this.props.collection.open("grid" + gridNum, "MVMap", false, function () {return});
         this.state = {
             gridNum: gridNum,
             mvmap: mvmap,
@@ -94,7 +94,7 @@ class Grid extends React.Component<IGridProps, IGridState> {
      * Update cells values from C-Client.
      */
     updateGrid() {
-        let cells = this.state.cells;
+        const cells = this.state.cells;
         if (!this.state.isConnected) {
             console.error("updateGrid() called while not connected.")
             return cells;
@@ -105,9 +105,9 @@ class Grid extends React.Component<IGridProps, IGridState> {
             }
         }
         this.props.session.transaction(client.utils.ConsistencyLevel.None, () => {
-            let itString = this.state.mvmap.iteratorString()
+            const itString = this.state.mvmap.iteratorString()
             while(itString.hasNext()) {
-                let val = itString.next()
+                const val = itString.next()
                 cells[val.first].value = hashSetToString(val.second)
             }
         })
@@ -143,7 +143,7 @@ class Grid extends React.Component<IGridProps, IGridState> {
      */
     initFrom(values:any) {
         assert.ok(values.length === 81);
-        let cells = this.state.cells;
+        const cells = this.state.cells;
         for (let index = 0; index < 81; index++) {
             cells[index].value = values[index] === "." ? "" : values[index];
             cells[index].modifiable = values[index] === "." ? true : false;
@@ -155,7 +155,7 @@ class Grid extends React.Component<IGridProps, IGridState> {
      * Reset the value of all modifiable cells.
      */
     reset() {
-        let cells = this.state.cells;
+        const cells = this.state.cells;
         for (let index = 0; index < 81; index++) {
             if (cells[index].modifiable) {
                 cells[index].value = "";
@@ -183,7 +183,7 @@ class Grid extends React.Component<IGridProps, IGridState> {
             console.error("Trying to change an non modifiable cell. Should not happend");
         }
 
-        let cells = this.state.cells;
+        const cells = this.state.cells;
         cells[index].value = value;
         this.updateState(cells);
         
@@ -204,7 +204,7 @@ class Grid extends React.Component<IGridProps, IGridState> {
         if (Number(gridNum) < 1 || Number(gridNum) > 100 || gridNum === this.state.gridNum) {
             return;
         }
-        let mvmap = this.props.collection.open("grid" + gridNum, "MVMap", false, function () {return});
+        const mvmap = this.props.collection.open("grid" + gridNum, "MVMap", false, function () {return});
         this.setState({gridNum: gridNum, mvmap: mvmap});
         this.initFrom(generateStaticGrid(gridNum));
     }
@@ -231,7 +231,7 @@ class Grid extends React.Component<IGridProps, IGridState> {
      */
     renderBlock(blockNum: number) {
         assert.ok(blockNum >= 0 && blockNum < 9)
-        let index = blockIndex(blockNum);
+        const index = blockIndex(blockNum);
         return (
             <td>
                 {this.renderCell(index[0])}{this.renderCell(index[1])}{this.renderCell(index[2])}<br />
@@ -275,10 +275,10 @@ class Grid extends React.Component<IGridProps, IGridState> {
      */
     checkLine(line: number) {
         assert.ok(line >= 0 && line < 9)
-        let cpt = Array(9).fill(0)
+        const cpt = Array(9).fill(0)
         for (let column = 0; column < 9; column++) {
-            let index = line * 9 + column
-            let val = this.state.cells[index].value
+            const index = line * 9 + column
+            const val = this.state.cells[index].value
             if (val.length === 0 || val.length > 1) {
                 continue
             }
@@ -293,10 +293,10 @@ class Grid extends React.Component<IGridProps, IGridState> {
      */
     checkColumn(column: number) {
         assert.ok(column >= 0 && column < 9)
-        let cpt = Array(9).fill(0)
+        const cpt = Array(9).fill(0)
         for (let line = 0; line < 9; line++) {
-            let index = line * 9 + column
-            let val = this.state.cells[index].value
+            const index = line * 9 + column
+            const val = this.state.cells[index].value
             if (val.length === 0 || val.length > 1) {
                 continue
             }
@@ -311,10 +311,10 @@ class Grid extends React.Component<IGridProps, IGridState> {
      */
     checkBlock(block: number) {
         assert.ok(block >= 0 && block < 9)
-        let cpt = Array(9).fill(0)
-        let indexList = blockIndex(block)
-        for (let index of indexList) {
-            let val = this.state.cells[index].value
+        const cpt = Array(9).fill(0)
+        const indexList = blockIndex(block)
+        for (const index of indexList) {
+            const val = this.state.cells[index].value
             if (val.length === 0 || val.length > 1) {
                 continue
             }
@@ -327,7 +327,7 @@ class Grid extends React.Component<IGridProps, IGridState> {
      * This function check if all lines respect Sudoku lines rules.
      */
     checkLines() {
-        let indexList = []
+        const indexList = []
         for (let line = 0; line < 9; line++) {
             if (this.checkLine(line) === false) {
                 for (let column = 0; column < 9; column++) {
@@ -342,7 +342,7 @@ class Grid extends React.Component<IGridProps, IGridState> {
      * This function check if all columns respect Sudoku columns rules.
      */
     checkColumns() {
-        let indexList = []
+        const indexList = []
         for (let column = 0; column < 9; column++) {
             if (this.checkColumn(column) === false) {
                 for (let line = 0; line < 9; line++) {
@@ -370,9 +370,9 @@ class Grid extends React.Component<IGridProps, IGridState> {
      * This function check if cells contains multiple values.
      */
     checkCells() {
-        let indexList = []
+        const indexList = []
         for (let cell = 0; cell < 81; cell++) {
-            let val = this.state.cells[cell].value
+            const val = this.state.cells[cell].value
             if (val.length > 1) {
                 indexList.push(cell)
             }
@@ -390,7 +390,7 @@ class Grid extends React.Component<IGridProps, IGridState> {
         errorIndexList = errorIndexList.concat(this.checkBlocks());
         errorIndexList = errorIndexList.concat(this.checkCells());
 
-        let errorIndexSet = new Set(errorIndexList);
+        const errorIndexSet = new Set(errorIndexList);
 
         for (let index = 0; index < 81; index++) {
             if (errorIndexSet.has(index)) {
@@ -429,9 +429,9 @@ function generateStaticGrid(gridNum: string) {
  */
 function blockIndex(block: number) {
     assert.ok(block >= 0 && block < 9)
-    let line = Math.floor(block / 3) * 3
-    let column = (block % 3) * 3
-    let index = [ line      * 9 + column,   line      * 9 + column + 1,  line      * 9 + column + 2,
+    const line = Math.floor(block / 3) * 3
+    const column = (block % 3) * 3
+    const index = [ line      * 9 + column,   line      * 9 + column + 1,  line      * 9 + column + 2,
                  (line + 1) * 9 + column,  (line + 1) * 9 + column + 1, (line + 1) * 9 + column + 2,
                  (line + 2) * 9 + column,  (line + 2) * 9 + column + 1, (line + 2) * 9 + column + 2]
     return index
@@ -442,10 +442,10 @@ function blockIndex(block: number) {
  * @param set HashSet to be concatenated.
  */
 function hashSetToString(set: any) {
-    let res = new Set();
-    let it = set.iterator();
+    const res = new Set();
+    const it = set.iterator();
     while (it.hasNext()) {
-        let val = it.next();
+        const val = it.next();
         if (val !== "") {
             res.add(val);
         }
