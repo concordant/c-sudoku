@@ -31,7 +31,7 @@ import Cell from "./Cell"
 configure({ adapter: new Adapter() });
 
 beforeEach(() => {
-    jest.spyOn(console, 'log').mockImplementation(() => {});
+    jest.spyOn(console, 'log').mockImplementation(() => ({}));
 });
 
 describe("Testing UI", () => {
@@ -43,7 +43,7 @@ describe("Testing UI", () => {
       const wrapper = mount(<Cell
           index={3}
           value={"6"}
-          onChange={(index:number, value:string) => {}}
+          onChange={() => ({})}
           lock={false}
         />)
       expect(wrapper.find('textarea').text()).toBe("6")
@@ -58,7 +58,7 @@ describe("Testing UI", () => {
       const wrapper = mount(<Cell
           index={3}
           value={"6"}
-          onChange={(index:number, value:string) => {}}
+          onChange={() => ({})}
           lock={false}
         />)
       expect(wrapper.find('textarea').text()).toBe("6")
@@ -74,7 +74,7 @@ describe("Testing UI", () => {
       const wrapper = mount(<Cell
           index={3}
           value={"6"}
-          onChange={(index:number, value:string) => {}}
+          onChange={() => ({})}
           lock={true}
         />)
       expect(wrapper.find('textarea').text()).toBe("6")
@@ -89,7 +89,7 @@ describe("Testing UI", () => {
       const wrapper = mount(<Cell
           index={3}
           value={"6"}
-          onChange={(index:number, value:string) => {}}
+          onChange={() => ({})}
           lock={false}
         />)
       expect(wrapper.find('textarea').text()).toBe("6")

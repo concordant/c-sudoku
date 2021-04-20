@@ -25,7 +25,7 @@
 import React from "react";
 import { configure } from 'enzyme';
 import Adapter from 'enzyme-adapter-react-16';
-import { shallow, mount, render } from 'enzyme';
+import { shallow, mount } from 'enzyme';
 import Grid from "./Grid"
 import {checkArray, firstCellOfBlock, blockIndex} from "./Grid"
 import {crdtlib} from '@concordant/c-crdtlib';
@@ -33,7 +33,7 @@ import {crdtlib} from '@concordant/c-crdtlib';
 configure({ adapter: new Adapter() });
 
 beforeEach(() => {
-    jest.spyOn(console, 'log').mockImplementation(() => {});
+    jest.spyOn(console, 'log').mockImplementation(() => ({}));
 });
 
 /**
@@ -90,8 +90,8 @@ describe ("getValue", () => {
         const wrapper = shallow(<Grid initial = {initVal}/>)
         const grid = wrapper.instance()
 
-        let envs = Array(9)
-        let newvals = Array(9)
+        const envs = Array(9)
+        const newvals = Array(9)
         for (let i = 0; i<9; i++){
             envs[i] = new crdtlib.utils.SimpleEnvironment(
                 new crdtlib.utils.ClientUId("myClientId"+i));
@@ -147,9 +147,9 @@ describe("checkLine", () => {
         const wrapper = shallow(<Grid initial = {initVal}/>)
         const grid = wrapper.instance()
 
-        let env = new crdtlib.utils.SimpleEnvironment(
+        const env = new crdtlib.utils.SimpleEnvironment(
             new crdtlib.utils.ClientUId("myClientId1"));
-        let newval = new crdtlib.crdt.MVRegister()
+        const newval = new crdtlib.crdt.MVRegister()
         newval.set("1", env.tick())
         grid.state.cells[45].merge(newval)
 
@@ -180,9 +180,9 @@ describe("checkColumn", () => {
         const wrapper = shallow(<Grid initial = {initVal}/>)
         const grid = wrapper.instance()
 
-        let env = new crdtlib.utils.SimpleEnvironment(
+        const env = new crdtlib.utils.SimpleEnvironment(
             new crdtlib.utils.ClientUId("myClientId1"));
-        let newval = new crdtlib.crdt.MVRegister()
+        const newval = new crdtlib.crdt.MVRegister()
         newval.set("1", env.tick())
         grid.state.cells[5].merge(newval)
 
@@ -213,9 +213,9 @@ describe("checkBlock", () => {
         const wrapper = shallow(<Grid initial = {initVal}/>)
         const grid = wrapper.instance()
 
-        let env = new crdtlib.utils.SimpleEnvironment(
+        const env = new crdtlib.utils.SimpleEnvironment(
             new crdtlib.utils.ClientUId("myClientId"));
-        let newval = new crdtlib.crdt.MVRegister()
+        const newval = new crdtlib.crdt.MVRegister()
         newval.set("1", env.tick())
         grid.state.cells[3].merge(newval)
 
@@ -321,9 +321,9 @@ describe("validateLine", () => {
         const wrapper = shallow(<Grid initial = {initVal}/>)
         const grid = wrapper.instance()
 
-        let env = new crdtlib.utils.SimpleEnvironment(
+        const env = new crdtlib.utils.SimpleEnvironment(
             new crdtlib.utils.ClientUId("myClientId"));
-        let newval = new crdtlib.crdt.MVRegister()
+        const newval = new crdtlib.crdt.MVRegister()
         newval.set("1", env.tick())
         grid.state.cells[1].merge(newval)
 
@@ -424,9 +424,9 @@ describe("validateColumn", () => {
         const wrapper = shallow(<Grid initial = {initVal}/>)
         const grid = wrapper.instance()
 
-        let env = new crdtlib.utils.SimpleEnvironment(
+        const env = new crdtlib.utils.SimpleEnvironment(
             new crdtlib.utils.ClientUId("myClientId"));
-        let newval = new crdtlib.crdt.MVRegister()
+        const newval = new crdtlib.crdt.MVRegister()
         newval.set("1", env.tick())
         grid.state.cells[1].merge(newval)
 
@@ -527,9 +527,9 @@ describe("validateBlock", () => {
         const wrapper = shallow(<Grid initial = {initVal}/>)
         const grid = wrapper.instance()
 
-        let env = new crdtlib.utils.SimpleEnvironment(
+        const env = new crdtlib.utils.SimpleEnvironment(
             new crdtlib.utils.ClientUId("myClientId"));
-        let newval = new crdtlib.crdt.MVRegister()
+        const newval = new crdtlib.crdt.MVRegister()
         newval.set("1", env.tick())
         grid.state.cells[1].merge(newval)
 
@@ -630,9 +630,9 @@ describe("validateSudoku", () => {
         const wrapper = shallow(<Grid initial = {initVal}/>)
         const grid = wrapper.instance()
 
-        let env = new crdtlib.utils.SimpleEnvironment(
+        const env = new crdtlib.utils.SimpleEnvironment(
             new crdtlib.utils.ClientUId("myClientId"));
-        let newval = new crdtlib.crdt.MVRegister()
+        const newval = new crdtlib.crdt.MVRegister()
         newval.set("1", env.tick())
         grid.state.cells[1].merge(newval)
 

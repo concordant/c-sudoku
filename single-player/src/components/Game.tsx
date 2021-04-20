@@ -28,8 +28,8 @@ import Grid from './Grid';
 /**
  * This class represent the Game that glues all components together.
  */
-class Game extends React.Component<{}, {}> {
-    render() {
+class Game extends React.Component {
+    render(): JSX.Element {
         return (
             <Grid />
         );
