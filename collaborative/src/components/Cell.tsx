@@ -33,19 +33,22 @@ import { validInput } from '../constants'
 interface ICellProps {
     index: number,
     value: string,
-    onChange: any,
+    onChange: ((index: number, value: string) => void) | null,
     error: boolean
 }
 
 /**
  * This class represent a cell of the Sudoku
  */
-class Cell extends React.Component<ICellProps, {}> {
+class Cell extends React.Component<ICellProps> {
     /**
      * onChange event handler
      * @param event handled
      */
-    onChange(event: any) {
+    onChange(event: React.ChangeEvent<HTMLInputElement>): void {
+        if (this.props.onChange === null) {
+            return
+        }
         if (event.target.value === "" || validInput.test(event.target.value)) {
             this.props.onChange(this.props.index, event.target.value)
         } else {
@@ -53,7 +56,7 @@ class Cell extends React.Component<ICellProps, {}> {
         }
     }
 
-    render() {
+    render(): JSX.Element {
         let cellClass = ""
         if (this.props.value.length > 1) {
             cellClass += "mv "
@@ -70,7 +73,7 @@ class Cell extends React.Component<ICellProps, {}> {
                 className={cellClass}
                 maxLength={1}
                 value={this.props.value}
-                onChange={this.props.onChange ? (event) => this.onChange(event) : function() { }}
+                onChange={(event) => this.onChange(event)}
                 readOnly={this.props.onChange === null}
             />
         );

@@ -26,22 +26,23 @@ import React from 'react';
 import Grid from './Grid';
 import { client } from '@concordant/c-client';
 
+import CONFIG from '../config.json';
+
 /**
  * Interface for the state of a Game.
  * Keep a reference to the opened session and opened MVMap.
  */
 interface IGameState {
-    session: any,
-    collection: any
+    session: client.Session,
+    collection: client.Collection
 }
 
 /**
  * This class represent the Game that glues all components together.
  */
-class Game extends React.Component<{}, IGameState> {
-    constructor(props: any) {
+class Game extends React.Component<Record<string, unknown>, IGameState> {
+    constructor(props: Record<string, unknown>) {
         super(props);
-        const CONFIG = require('../config.json');
         const session = client.Session.Companion.connect(CONFIG.dbName, CONFIG.serviceUrl, CONFIG.credentials);
         const collection = session.openCollection("sudoku", false);
         this.state = {
@@ -50,7 +51,7 @@ class Game extends React.Component<{}, IGameState> {
         }
     }
 
-    render() {
+    render(): JSX.Element {
         return (
             <Grid session={this.state.session} collection={this.state.collection} />
         );

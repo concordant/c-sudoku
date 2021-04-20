@@ -33,7 +33,7 @@ import {crdtlib} from '@concordant/c-crdtlib';
 configure({ adapter: new Adapter() });
 
 beforeEach(() => {
-    jest.spyOn(console, 'log').mockImplementation(() => {});
+    jest.spyOn(console, 'log').mockImplementation(() => ({}));
 });
 
 /**
