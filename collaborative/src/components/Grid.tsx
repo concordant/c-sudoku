@@ -506,8 +506,8 @@ function blockIndex(block: number) {
  * Concatenates all values of a HashSet as a String.
  * @param set HashSet to be concatenated.
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function hashSetToString(set: any): string {
-  // eslint-disable-line @typescript-eslint/no-explicit-any
   const res = new Set();
   const it = set.iterator();
   while (it.hasNext()) {
