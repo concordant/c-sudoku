@@ -22,18 +22,16 @@
  * SOFTWARE.
  */
 
-import React from 'react';
-import Grid from './Grid';
+import React from "react";
+import Grid from "./Grid";
 
 /**
  * This class represent the Game that glues all components together.
  */
 class Game extends React.Component {
-    render(): JSX.Element {
-        return (
-            <Grid />
-        );
-    }
+  render(): JSX.Element {
+    return <Grid />;
+  }
 }
 
-export default Game
+export default Game;
