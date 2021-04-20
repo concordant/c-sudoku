@@ -22,40 +22,44 @@
  * SOFTWARE.
  */
 
-import React from 'react';
-import Grid from './Grid';
-import { client } from '@concordant/c-client';
+import React from "react";
+import Grid from "./Grid";
+import { client } from "@concordant/c-client";
 
-import CONFIG from '../config.json';
+import CONFIG from "../config.json";
 
 /**
  * Interface for the state of a Game.
  * Keep a reference to the opened session and opened MVMap.
  */
 interface IGameState {
-    session: client.Session,
-    collection: client.Collection
+  session: client.Session;
+  collection: client.Collection;
 }
 
 /**
  * This class represent the Game that glues all components together.
  */
 class Game extends React.Component<Record<string, unknown>, IGameState> {
-    constructor(props: Record<string, unknown>) {
-        super(props);
-        const session = client.Session.Companion.connect(CONFIG.dbName, CONFIG.serviceUrl, CONFIG.credentials);
-        const collection = session.openCollection("sudoku", false);
-        this.state = {
-            session: session,
-            collection: collection
-        }
-    }
+  constructor(props: Record<string, unknown>) {
+    super(props);
+    const session = client.Session.Companion.connect(
+      CONFIG.dbName,
+      CONFIG.serviceUrl,
+      CONFIG.credentials
+    );
+    const collection = session.openCollection("sudoku", false);
+    this.state = {
+      session: session,
+      collection: collection,
+    };
+  }
 
-    render(): JSX.Element {
-        return (
-            <Grid session={this.state.session} collection={this.state.collection} />
-        );
-    }
+  render(): JSX.Element {
+    return (
+      <Grid session={this.state.session} collection={this.state.collection} />
+    );
+  }
 }
 
-export default Game
+export default Game;
