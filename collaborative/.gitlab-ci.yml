@@ -51,21 +51,11 @@ test:
     - couchdb:latest
 
   before_script:
-    # Gradle in APT repository is outdated:
-    #   install dependencies and download Gradle 6.8.3
-    - apt-get update &&
-      apt-get install -y default-jdk-headless
-    - wget -q "https://services.gradle.org/distributions/gradle-6.8.3-bin.zip"
-    - unzip -q gradle-6.8.3-bin.zip
-    - PATH=$(readlink -e gradle-6.8.3/bin):$PATH
     # setup couchdb
     - curl -su "$COUCHDB_USER:$COUCHDB_PASSWORD"
       -X PUT $COUCHDB_URL/_users
     # install c-service
-    - npm config set @concordant:registry "https://gitlab.inria.fr/api/v4/packages/npm/"
-    - npm config set '//gitlab.inria.fr/api/v4/packages/npm/:_authToken' "${CI_JOB_TOKEN}"
     # install in foreground, run in background
-    - npm install @concordant/c-service
     - npx @concordant/c-service &
 
   script:
