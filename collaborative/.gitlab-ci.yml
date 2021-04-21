@@ -69,8 +69,9 @@ test:
     - npx @concordant/c-service &
 
   script:
-    - gradle check
+    - npm test
+
+  coverage: /All files[^|]*\|[^|]*\s+([\d\.]+)/
   artifacts:
     paths:
-      - collaborative/build/reports/
-    when: always
+      - coverage/
