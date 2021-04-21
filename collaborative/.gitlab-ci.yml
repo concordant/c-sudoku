@@ -12,7 +12,6 @@ cache: &global_cache # per-branch cache
   policy: pull
 
 build:
-  extends: .collaborative-setup
   stage: build
   before_script:
     - cd collaborative
@@ -34,7 +33,6 @@ build:
     policy: pull-push
 
 test:
-  extends: .collaborative-setup
   stage: test
   # node 15+ has bug #2143 : https://github.com/npm/cli/issues/2143
   image: node:14.16.0
