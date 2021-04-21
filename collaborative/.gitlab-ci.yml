@@ -69,7 +69,8 @@ test:
     - npx @concordant/c-service &
 
   script:
-    - npm test
+    - cd collaborative
+    - npm test "a"
 
   coverage: /All files[^|]*\|[^|]*\s+([\d\.]+)/
   artifacts:
