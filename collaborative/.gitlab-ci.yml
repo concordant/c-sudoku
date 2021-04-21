@@ -28,8 +28,8 @@ build:
     - DISABLE_ESLINT_PLUGIN=true npm run build
   artifacts:
     paths:
-      - node_modules/
-      - build/
+      - collaborative/node_modules/
+      - collaborative/build/
     expire_in: 3 days
   cache:
     <<: *global_cache
@@ -61,7 +61,7 @@ test:
   coverage: /All files[^|]*\|[^|]*\s+([\d\.]+)/
   artifacts:
     paths:
-      - coverage/
+      - collaborative/coverage/
 
 test:
   stage: test
