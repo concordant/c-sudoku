@@ -38,33 +38,6 @@ build:
 test:
   extends: .collaborative-setup
   stage: test
-  variables:
-    COUCHDB_HOST: couchdb
-    COUCHDB_PORT: 5984
-    COUCHDB_URL: http://$COUCHDB_HOST:$COUCHDB_PORT/
-    COUCHDB_USER: admin
-    COUCHDB_PASSWORD: "admin"
-    DBNAME: testdb
-
-  services:
-    - couchdb:latest
-
-  before_script:
-    - curl -u "$COUCHDB_USER:$COUCHDB_PASSWORD"
-      -X PUT $COUCHDB_URL/_users
-    - curl -u "$COUCHDB_USER:$COUCHDB_PASSWORD"
-      -X PUT $COUCHDB_URL/$DBNAME
-
-  script:
-    - npm test
-
-  coverage: /All files[^|]*\|[^|]*\s+([\d\.]+)/
-  artifacts:
-    paths:
-      - collaborative/coverage/
-
-test:
-  stage: test
   # node 15+ has bug #2143 : https://github.com/npm/cli/issues/2143
   image: node:14.16.0
   variables:
