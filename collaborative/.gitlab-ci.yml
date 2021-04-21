@@ -11,13 +11,11 @@ cache: &global_cache # per-branch cache
   # make push explicit
   policy: pull
 
-.collaborative-setup:
-  before_script:
-    - cd collaborative
-
 build:
   extends: .collaborative-setup
   stage: build
+  before_script:
+    - cd collaborative
   script:
     - npm ci --cache .npm --prefer-offline
     # prepare script is skipped by install/ci when running NPM 6 as root.
@@ -51,6 +49,7 @@ test:
     - couchdb:latest
 
   before_script:
+    - cd collaborative
     # setup couchdb
     - curl -su "$COUCHDB_USER:$COUCHDB_PASSWORD"
       -X PUT $COUCHDB_URL/_users
@@ -58,7 +57,7 @@ test:
     - npx @concordant/c-service &
 
   script:
-    - npm test "a"
+    - npm test
 
   coverage: /All files[^|]*\|[^|]*\s+([\d\.]+)/
   artifacts:
