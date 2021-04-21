@@ -1,0 +1,12 @@
+stages:
+  - trigger-collaborative-pipelines
+
+collaborative:
+  stage: trigger-collaborative-pipelines
+  trigger:
+    include: collaborative/.gitlab-ci.yml
+    strategy: depend
+  only:
+    changes:
+      - collaborative/**/*
+      

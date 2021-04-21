@@ -1,0 +1,31 @@
+image: node:14.16.0
+
+stages:
+  - build
+  - test
+
+cache: &global_cache # per-branch cache
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+    - .npm/
+  # make push explicit
+  policy: pull
+
+build:
+  stage: build
+  script:
+    - npm ci --cache .npm --prefer-offline
+    # prepare script is skipped by install/ci when running NPM 6 as root.
+    # This line can be safely removed with NPM 7+ (see NPM Changelog)
+    - npm run prepare
+    # Build demo application
+    # Still some ESlint warnings to be fixed: disable ESlint at this stage
+    - DISABLE_ESLINT_PLUGIN=true npm run build
+  artifacts:
+    paths:
+      - node_modules/
+      - build/
+    expire_in: 3 days
+  cache:
+    <<: *global_cache
+    policy: pull-push
