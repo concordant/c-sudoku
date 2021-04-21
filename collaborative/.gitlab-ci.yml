@@ -54,12 +54,10 @@ test:
     # setup couchdb
     - curl -su "$COUCHDB_USER:$COUCHDB_PASSWORD"
       -X PUT $COUCHDB_URL/_users
-    # install c-service
-    # install in foreground, run in background
+    # run c-service in background
     - npx @concordant/c-service &
 
   script:
-    - cd collaborative
     - npm test "a"
 
   coverage: /All files[^|]*\|[^|]*\s+([\d\.]+)/
