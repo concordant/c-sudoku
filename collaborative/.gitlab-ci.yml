@@ -29,3 +29,70 @@ build:
   cache:
     <<: *global_cache
     policy: pull-push
+
+test:
+  stage: test
+  variables:
+    COUCHDB_HOST: couchdb
+    COUCHDB_PORT: 5984
+    COUCHDB_URL: http://$COUCHDB_HOST:$COUCHDB_PORT/
+    COUCHDB_USER: admin
+    COUCHDB_PASSWORD: "admin"
+    DBNAME: testdb
+
+  services:
+    - couchdb:latest
+
+  before_script:
+    - curl -u "$COUCHDB_USER:$COUCHDB_PASSWORD"
+      -X PUT $COUCHDB_URL/_users
+    - curl -u "$COUCHDB_USER:$COUCHDB_PASSWORD"
+      -X PUT $COUCHDB_URL/$DBNAME
+
+  script:
+    - npm test
+
+  coverage: /All files[^|]*\|[^|]*\s+([\d\.]+)/
+  artifacts:
+    paths:
+      - coverage/
+
+
+test:
+  stage: test
+  # node 15+ has bug #2143 : https://github.com/npm/cli/issues/2143
+  image: node:14.16.0
+  variables:
+    COUCHDB_HOST: couchdb
+    COUCHDB_PORT: 5984
+    COUCHDB_URL: http://$COUCHDB_HOST:$COUCHDB_PORT/
+    COUCHDB_USER: admin
+    COUCHDB_PASSWORD: "admin"
+
+  services:
+    - couchdb:latest
+
+  before_script:
+    # Gradle in APT repository is outdated:
+    #   install dependencies and download Gradle 6.8.3
+    - apt-get update &&
+      apt-get install -y default-jdk-headless
+    - wget -q "https://services.gradle.org/distributions/gradle-6.8.3-bin.zip"
+    - unzip -q gradle-6.8.3-bin.zip
+    - PATH=$(readlink -e gradle-6.8.3/bin):$PATH
+    # setup couchdb
+    - curl -su "$COUCHDB_USER:$COUCHDB_PASSWORD"
+      -X PUT $COUCHDB_URL/_users
+    # install c-service
+    - npm config set @concordant:registry "https://gitlab.inria.fr/api/v4/packages/npm/"
+    - npm config set '//gitlab.inria.fr/api/v4/packages/npm/:_authToken' "${CI_JOB_TOKEN}"
+    # install in foreground, run in background
+    - npm install @concordant/c-service
+    - npx @concordant/c-service &
+
+  script:
+    - gradle check
+  artifacts:
+    paths:
+      - build/reports/
+    when: always
