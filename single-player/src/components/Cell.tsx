@@ -51,10 +51,6 @@ class Cell extends React.Component<ICellProps> {
     }
     if (event.target.value === "" || validInput.test(event.target.value)) {
       this.props.onChange(this.props.index, event.target.value);
-    } else {
-      console.error(
-        "Invalid input in cell " + this.props.index + " : " + event.target.value
-      );
     }
   }
 
