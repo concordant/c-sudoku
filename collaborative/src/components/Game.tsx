@@ -24,8 +24,8 @@
 
 import React from "react";
 import assert from "assert";
-import Grid, { cellsIndexOfBlock } from "./Grid";
-import { validInput, GRIDS } from "../constants";
+import Grid from "./Grid";
+import { GRIDS } from "../constants";
 import { client } from "@concordant/c-client";
 import Submit1Input from "./Submit1Input";
 
@@ -45,9 +45,8 @@ const collection = session.openCollection("sudoku", false);
 interface IGameState {
   gridNum: string;
   mvmap: any; // eslint-disable-line @typescript-eslint/no-explicit-any
-  cells: { value: string; modifiable: boolean; error: boolean }[];
+  cells: { value: string; modifiable: boolean }[];
   isConnected: boolean;
-  isFinished: boolean;
 }
 
 /**
@@ -61,7 +60,7 @@ class Game extends React.Component<Record<string, unknown>, IGameState> {
     super(props);
     const cells = new Array(81)
       .fill(null)
-      .map(() => ({ value: "", modifiable: false, error: false }));
+      .map(() => ({ value: "", modifiable: false }));
     this.modifiedCells = new Array(81).fill(null);
     const gridNum = "1";
     const mvmap = collection.open(
@@ -77,7 +76,6 @@ class Game extends React.Component<Record<string, unknown>, IGameState> {
       mvmap: mvmap,
       cells: cells,
       isConnected: true,
-      isFinished: false,
     };
   }
 
@@ -119,7 +117,7 @@ class Game extends React.Component<Record<string, unknown>, IGameState> {
         cells[val.first].value = hashSetToString(val.second);
       }
     });
-    this.updateState(cells);
+    this.setState({ cells: cells });
   }
 
   /**
@@ -156,7 +154,7 @@ class Game extends React.Component<Record<string, unknown>, IGameState> {
       cells[index].value = values[index] === "." ? "" : values[index];
       cells[index].modifiable = values[index] === "." ? true : false;
     }
-    this.updateState(cells);
+    this.setState({ cells: cells });
   }
 
   /**
@@ -176,7 +174,7 @@ class Game extends React.Component<Record<string, unknown>, IGameState> {
         }
       }
     }
-    this.updateState(cells);
+    this.setState({ cells: cells });
   }
 
   /**
@@ -195,7 +193,7 @@ class Game extends React.Component<Record<string, unknown>, IGameState> {
 
     const cells = this.state.cells;
     cells[index].value = value;
-    this.updateState(cells);
+    this.setState({ cells: cells });
 
     if (this.state.isConnected) {
       session.transaction(client.utils.ConsistencyLevel.None, () => {
@@ -255,160 +253,12 @@ class Game extends React.Component<Record<string, unknown>, IGameState> {
         <br />
         <Grid
           cells={this.state.cells}
-          isFinished={this.state.isFinished}
           onChange={(index: number, value: string) =>
             this.handleChange(index, value)
           }
         />
       </div>
     );
-  }
-
-  /**
-   * Check if a line respect Sudoku lines rules.
-   * @param line The line number to be checked.
-   */
-  checkLine(line: number): boolean {
-    assert.ok(line >= 0 && line < 9);
-    const cpt = Array(9).fill(0);
-    for (let column = 0; column < 9; column++) {
-      const index = line * 9 + column;
-      const val = this.state.cells[index].value;
-      if (val.length === 0 || val.length > 1) {
-        continue;
-      }
-      cpt[Number(val) - 1]++;
-    }
-    return cpt.every((c) => c <= 1);
-  }
-
-  /**
-   * Check if a column respect Sudoku columns rules.
-   * @param column The column number to be checked.
-   */
-  checkColumn(column: number): boolean {
-    assert.ok(column >= 0 && column < 9);
-    const cpt = Array(9).fill(0);
-    for (let line = 0; line < 9; line++) {
-      const index = line * 9 + column;
-      const val = this.state.cells[index].value;
-      if (val.length === 0 || val.length > 1) {
-        continue;
-      }
-      cpt[Number(val) - 1]++;
-    }
-    return cpt.every((c) => c <= 1);
-  }
-
-  /**
-   * Check if a block respect Sudoku blocks rules.
-   * @param block The block number to be checked.
-   */
-  checkBlock(block: number): boolean {
-    assert.ok(block >= 0 && block < 9);
-    const cpt = Array(9).fill(0);
-    const indexList = cellsIndexOfBlock(block);
-    for (const index of indexList) {
-      const val = this.state.cells[index].value;
-      if (val.length === 0 || val.length > 1) {
-        continue;
-      }
-      cpt[Number(val) - 1]++;
-    }
-    return cpt.every((c) => c <= 1);
-  }
-
-  /**
-   * This function check if all lines respect Sudoku lines rules.
-   */
-  checkLines(): number[] {
-    const indexList = [];
-    for (let line = 0; line < 9; line++) {
-      if (this.checkLine(line) === false) {
-        for (let column = 0; column < 9; column++) {
-          indexList.push(line * 9 + column);
-        }
-      }
-    }
-    return indexList;
-  }
-
-  /**
-   * This function check if all columns respect Sudoku columns rules.
-   */
-  checkColumns(): number[] {
-    const indexList = [];
-    for (let column = 0; column < 9; column++) {
-      if (this.checkColumn(column) === false) {
-        for (let line = 0; line < 9; line++) {
-          indexList.push(line * 9 + column);
-        }
-      }
-    }
-    return indexList;
-  }
-
-  /**
-   * This function check if all blocks respect Sudoku blocks rules.
-   */
-  checkBlocks(): number[] {
-    let indexList: number[] = [];
-    for (let block = 0; block < 9; block++) {
-      if (this.checkBlock(block) === false) {
-        indexList = indexList.concat(cellsIndexOfBlock(block));
-      }
-    }
-    return indexList;
-  }
-
-  /**
-   * This function check if cells contains multiple values.
-   */
-  checkCells(): number[] {
-    const indexList = [];
-    for (let cell = 0; cell < 81; cell++) {
-      const val = this.state.cells[cell].value;
-      if (val.length > 1) {
-        indexList.push(cell);
-      }
-    }
-    return indexList;
-  }
-
-  /**
-   * Check if all cells respect Sudoku rules and update cells.
-   * @param cells Current cells values.
-   */
-  updateState(
-    cells: { value: string; modifiable: boolean; error: boolean }[]
-  ): void {
-    let errorIndexList = this.checkLines();
-    errorIndexList = errorIndexList.concat(this.checkColumns());
-    errorIndexList = errorIndexList.concat(this.checkBlocks());
-    errorIndexList = errorIndexList.concat(this.checkCells());
-
-    const errorIndexSet = new Set(errorIndexList);
-
-    for (let index = 0; index < 81; index++) {
-      if (errorIndexSet.has(index)) {
-        cells[index].error = true;
-      } else {
-        cells[index].error = false;
-      }
-    }
-
-    if (errorIndexSet.size) {
-      this.setState({ cells: cells, isFinished: false });
-      return;
-    }
-
-    for (let index = 0; index < 81; index++) {
-      if (!validInput.test(this.state.cells[index].value)) {
-        this.setState({ cells: cells, isFinished: false });
-        return;
-      }
-    }
-    this.setState({ cells: cells, isFinished: true });
   }
 }
 
