@@ -38,15 +38,15 @@ beforeEach(() => {
  * This test evaluates that checkLine return true only if
  * the array contains all numbers from 1 to 9 without repeat.
  */
- describe("checkLine", () => {
+describe("checkLine", () => {
   test("checkLine", () => {
     const wrapper = shallow(<Game />);
     const game = wrapper.instance();
 
     expect(game.checkLine(3)).toBe(true);
-    game.handleChange(35, "1")
+    game.handleChange(35, "1");
     expect(game.checkLine(3)).toBe(false);
-    game.handleChange(35, "2")
+    game.handleChange(35, "2");
     expect(game.checkLine(3)).toBe(true);
   });
 });
@@ -61,9 +61,9 @@ describe("checkColumn", () => {
     const game = wrapper.instance();
 
     expect(game.checkColumn(8)).toBe(true);
-    game.handleChange(35, "1")
+    game.handleChange(35, "1");
     expect(game.checkColumn(8)).toBe(false);
-    game.handleChange(35, "2")
+    game.handleChange(35, "2");
     expect(game.checkColumn(8)).toBe(true);
   });
 });
@@ -78,9 +78,9 @@ describe("checkBlock", () => {
     const game = wrapper.instance();
 
     expect(game.checkBlock(5)).toBe(true);
-    game.handleChange(35, "1")
+    game.handleChange(35, "1");
     expect(game.checkBlock(5)).toBe(false);
-    game.handleChange(35, "2")
+    game.handleChange(35, "2");
     expect(game.checkBlock(5)).toBe(true);
   });
 });
@@ -105,9 +105,11 @@ describe("validateLine", () => {
                         "","","","","","","","",""]
     const wrapper = shallow(<Game />);
     const game = wrapper.instance();
-    
+
     expect(game.checkLines()).toStrictEqual([]);
-    game.updateState(initVal.map(val =>({ value: val, modifiable: false, error: false })))
+    game.updateState(
+      initVal.map((val) => ({ value: val, modifiable: false, error: false }))
+    );
     expect(game.checkLines()).toStrictEqual([]);
   });
 
@@ -130,7 +132,9 @@ describe("validateLine", () => {
     const game = wrapper.instance();
 
     expect(game.checkLines()).toStrictEqual([]);
-    game.updateState(initVal.map(val =>({ value: val, modifiable: false, error: false })))
+    game.updateState(
+      initVal.map((val) => ({ value: val, modifiable: false, error: false }))
+    );
     expect(game.checkLines()).toStrictEqual([]);
   });
 
@@ -152,7 +156,9 @@ describe("validateLine", () => {
     const game = wrapper.instance();
 
     expect(game.checkLines()).toStrictEqual([]);
-    game.updateState(initVal.map(val =>({ value: val, modifiable: false, error: false })))
+    game.updateState(
+      initVal.map((val) => ({ value: val, modifiable: false, error: false }))
+    );
     expect(game.checkLines()).toStrictEqual([]);
   });
 
@@ -174,7 +180,9 @@ describe("validateLine", () => {
     const game = wrapper.instance();
 
     expect(game.checkLines()).toStrictEqual([]);
-    game.updateState(initVal.map(val =>({ value: val, modifiable: false, error: false })))
+    game.updateState(
+      initVal.map((val) => ({ value: val, modifiable: false, error: false }))
+    );
     expect(game.checkLines()).toStrictEqual([0, 1, 2, 3, 4, 5, 6, 7, 8]);
   });
 
@@ -196,7 +204,9 @@ describe("validateLine", () => {
     const game = wrapper.instance();
 
     expect(game.checkLines()).toStrictEqual([]);
-    game.updateState(initVal.map(val =>({ value: val, modifiable: false, error: false })))
+    game.updateState(
+      initVal.map((val) => ({ value: val, modifiable: false, error: false }))
+    );
     expect(game.checkLines()).toStrictEqual([]);
   });
 });
@@ -223,7 +233,9 @@ describe("validateColumn", () => {
     const game = wrapper.instance();
 
     expect(game.checkColumns()).toStrictEqual([]);
-    game.updateState(initVal.map(val =>({ value: val, modifiable: false, error: false })))
+    game.updateState(
+      initVal.map((val) => ({ value: val, modifiable: false, error: false }))
+    );
     expect(game.checkColumns()).toStrictEqual([]);
   });
 
@@ -246,7 +258,9 @@ describe("validateColumn", () => {
     const game = wrapper.instance();
 
     expect(game.checkColumns()).toStrictEqual([]);
-    game.updateState(initVal.map(val =>({ value: val, modifiable: false, error: false })))
+    game.updateState(
+      initVal.map((val) => ({ value: val, modifiable: false, error: false }))
+    );
     expect(game.checkColumns()).toStrictEqual([]);
   });
 
@@ -268,7 +282,9 @@ describe("validateColumn", () => {
     const game = wrapper.instance();
 
     expect(game.checkColumns()).toStrictEqual([]);
-    game.updateState(initVal.map(val =>({ value: val, modifiable: false, error: false })))
+    game.updateState(
+      initVal.map((val) => ({ value: val, modifiable: false, error: false }))
+    );
     expect(game.checkColumns()).toStrictEqual([]);
   });
 
@@ -290,8 +306,20 @@ describe("validateColumn", () => {
     const game = wrapper.instance();
 
     expect(game.checkColumns()).toStrictEqual([]);
-    game.updateState(initVal.map(val =>({ value: val, modifiable: false, error: false })))
-    expect(game.checkColumns()).toStrictEqual([1, 10, 19, 28, 37, 46, 55, 64, 73]);
+    game.updateState(
+      initVal.map((val) => ({ value: val, modifiable: false, error: false }))
+    );
+    expect(game.checkColumns()).toStrictEqual([
+      1,
+      10,
+      19,
+      28,
+      37,
+      46,
+      55,
+      64,
+      73,
+    ]);
   });
 
   /**
@@ -312,7 +340,9 @@ describe("validateColumn", () => {
     const game = wrapper.instance();
 
     expect(game.checkColumns()).toStrictEqual([]);
-    game.updateState(initVal.map(val =>({ value: val, modifiable: false, error: false })))
+    game.updateState(
+      initVal.map((val) => ({ value: val, modifiable: false, error: false }))
+    );
     expect(game.checkColumns()).toStrictEqual([]);
   });
 });
@@ -339,7 +369,9 @@ describe("validateBlock", () => {
     const game = wrapper.instance();
 
     expect(game.checkBlocks()).toStrictEqual([]);
-    game.updateState(initVal.map(val =>({ value: val, modifiable: false, error: false })))
+    game.updateState(
+      initVal.map((val) => ({ value: val, modifiable: false, error: false }))
+    );
     expect(game.checkBlocks()).toStrictEqual([]);
   });
 
@@ -362,7 +394,9 @@ describe("validateBlock", () => {
     const game = wrapper.instance();
 
     expect(game.checkBlocks()).toStrictEqual([]);
-    game.updateState(initVal.map(val =>({ value: val, modifiable: false, error: false })))
+    game.updateState(
+      initVal.map((val) => ({ value: val, modifiable: false, error: false }))
+    );
     expect(game.checkBlocks()).toStrictEqual([]);
   });
 
@@ -384,7 +418,9 @@ describe("validateBlock", () => {
     const game = wrapper.instance();
 
     expect(game.checkBlocks()).toStrictEqual([]);
-    game.updateState(initVal.map(val =>({ value: val, modifiable: false, error: false })))
+    game.updateState(
+      initVal.map((val) => ({ value: val, modifiable: false, error: false }))
+    );
     expect(game.checkBlocks()).toStrictEqual([]);
   });
 
@@ -406,7 +442,9 @@ describe("validateBlock", () => {
     const game = wrapper.instance();
 
     expect(game.checkBlocks()).toStrictEqual([]);
-    game.updateState(initVal.map(val =>({ value: val, modifiable: false, error: false })))
+    game.updateState(
+      initVal.map((val) => ({ value: val, modifiable: false, error: false }))
+    );
     expect(game.checkBlocks()).toStrictEqual([0, 1, 2, 9, 10, 11, 18, 19, 20]);
   });
 
@@ -428,7 +466,9 @@ describe("validateBlock", () => {
     const game = wrapper.instance();
 
     expect(game.checkBlocks()).toStrictEqual([]);
-    game.updateState(initVal.map(val =>({ value: val, modifiable: false, error: false })))
+    game.updateState(
+      initVal.map((val) => ({ value: val, modifiable: false, error: false }))
+    );
     expect(game.checkBlocks()).toStrictEqual([]);
   });
 });
@@ -455,7 +495,9 @@ describe("validateSudoku", () => {
     const game = wrapper.instance();
 
     expect(game.checkCells()).toStrictEqual([]);
-    game.updateState(initVal.map(val =>({ value: val, modifiable: false, error: false })))
+    game.updateState(
+      initVal.map((val) => ({ value: val, modifiable: false, error: false }))
+    );
     expect(game.checkCells()).toStrictEqual([]);
   });
 
@@ -478,7 +520,9 @@ describe("validateSudoku", () => {
     const game = wrapper.instance();
 
     expect(game.checkCells()).toStrictEqual([]);
-    game.updateState(initVal.map(val =>({ value: val, modifiable: false, error: false })))
+    game.updateState(
+      initVal.map((val) => ({ value: val, modifiable: false, error: false }))
+    );
     expect(game.checkCells()).toStrictEqual([]);
   });
 
@@ -498,9 +542,11 @@ describe("validateSudoku", () => {
                         "","6","5","7","4","3","1","8","2"]
     const wrapper = shallow(<Game />);
     const game = wrapper.instance();
-    
+
     expect(game.checkCells()).toStrictEqual([]);
-    game.updateState(initVal.map(val =>({ value: val, modifiable: false, error: false })))
+    game.updateState(
+      initVal.map((val) => ({ value: val, modifiable: false, error: false }))
+    );
     expect(game.checkCells()).toStrictEqual([]);
   });
 
@@ -520,9 +566,11 @@ describe("validateSudoku", () => {
                         "9","6","5","7","4","3","1","8","2"]
     const wrapper = shallow(<Game />);
     const game = wrapper.instance();
-    
+
     expect(game.checkCells()).toStrictEqual([]);
-    game.updateState(initVal.map(val =>({ value: val, modifiable: false, error: false })))
+    game.updateState(
+      initVal.map((val) => ({ value: val, modifiable: false, error: false }))
+    );
     expect(game.checkCells()).toStrictEqual([]);
   });
 
@@ -544,7 +592,9 @@ describe("validateSudoku", () => {
     const game = wrapper.instance();
 
     expect(game.checkCells()).toStrictEqual([]);
-    game.updateState(initVal.map(val =>({ value: val, modifiable: false, error: false })))
+    game.updateState(
+      initVal.map((val) => ({ value: val, modifiable: false, error: false }))
+    );
     expect(game.checkCells()).toStrictEqual([0, 1]);
   });
 });

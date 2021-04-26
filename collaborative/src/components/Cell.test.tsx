@@ -43,7 +43,7 @@ describe("Testing UI", () => {
     const wrapper = mount(
       <Cell index={3} value={"6"} onChange={() => ({})} error={false} />
     );
-    const input = wrapper.find('input');
+    const input = wrapper.find("input");
     expect(input.instance().value).toBe("6");
   });
 });

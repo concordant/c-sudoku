@@ -85,7 +85,7 @@ class Game extends React.Component<Record<string, unknown>, IGameState> {
    * Called after the component is rendered.
    * It set a timer to refresh cells values.
    */
-   componentDidMount(): void {
+  componentDidMount(): void {
     this.initFrom(generateStaticGrid(this.state.gridNum));
     this.timerID = setInterval(() => this.updateGrid(), 1000);
   }
@@ -135,12 +135,9 @@ class Game extends React.Component<Record<string, unknown>, IGameState> {
           this.state.cells[index].modifiable &&
           this.modifiedCells[index] !== null
         ) {
-          session.transaction(
-            client.utils.ConsistencyLevel.None,
-            () => {
-              this.state.mvmap.setString(index, this.modifiedCells[index]);
-            }
-          );
+          session.transaction(client.utils.ConsistencyLevel.None, () => {
+            this.state.mvmap.setString(index, this.modifiedCells[index]);
+          });
         }
       }
       this.timerID = setInterval(() => this.updateGrid(), 1000);
@@ -171,12 +168,9 @@ class Game extends React.Component<Record<string, unknown>, IGameState> {
       if (cells[index].modifiable) {
         cells[index].value = "";
         if (this.state.isConnected) {
-          session.transaction(
-            client.utils.ConsistencyLevel.None,
-            () => {
-              this.state.mvmap.setString(index, cells[index].value);
-            }
-          );
+          session.transaction(client.utils.ConsistencyLevel.None, () => {
+            this.state.mvmap.setString(index, cells[index].value);
+          });
         } else {
           this.modifiedCells[index] = "";
         }
@@ -235,7 +229,7 @@ class Game extends React.Component<Record<string, unknown>, IGameState> {
     this.setState({ gridNum: gridNum, mvmap: mvmap });
     this.initFrom(generateStaticGrid(gridNum));
   }
-  
+
   render(): JSX.Element {
     return (
       <div className="sudoku">
@@ -259,8 +253,13 @@ class Game extends React.Component<Record<string, unknown>, IGameState> {
           </button>
         </div>
         <br />
-        <Grid cells={this.state.cells} isFinished={this.state.isFinished} 
-          onChange={(index: number, value: string) => this.handleChange(index, value)} />
+        <Grid
+          cells={this.state.cells}
+          isFinished={this.state.isFinished}
+          onChange={(index: number, value: string) =>
+            this.handleChange(index, value)
+          }
+        />
       </div>
     );
   }
@@ -269,7 +268,7 @@ class Game extends React.Component<Record<string, unknown>, IGameState> {
    * Check if a line respect Sudoku lines rules.
    * @param line The line number to be checked.
    */
-   checkLine(line: number): boolean {
+  checkLine(line: number): boolean {
     assert.ok(line >= 0 && line < 9);
     const cpt = Array(9).fill(0);
     for (let column = 0; column < 9; column++) {
@@ -417,7 +416,7 @@ class Game extends React.Component<Record<string, unknown>, IGameState> {
  * Return a predefined Sudoku grid as a string.
  * @param gridNum Desired grid number
  */
- function generateStaticGrid(gridNum: string) {
+function generateStaticGrid(gridNum: string) {
   return GRIDS[gridNum];
 }
 

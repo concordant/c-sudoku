@@ -49,7 +49,17 @@ describe("Cells initialization", () => {
                        "1","8","7","5","2","9","","","3",
                        "2","3","4","6","1","8","7","9","5",
                        "","6","5","7","4","3","1","8","2"]
-    const wrapper = mount(<Grid cells={initVal.map(val =>({ value: val, modifiable: false, error: false }))} isFinished={false} onChange={() => ({})} />);
+    const wrapper = mount(
+      <Grid
+        cells={initVal.map((val) => ({
+          value: val,
+          modifiable: false,
+          error: false,
+        }))}
+        isFinished={false}
+        onChange={() => ({})}
+      />
+    );
 
     expect(wrapper.find({ id: "0" }).instance().value).toBe("6");
     expect(wrapper.find({ id: "1" }).instance().value).toBe("");
@@ -73,7 +83,17 @@ describe("Testing cells", () => {
                         "2","3","4","6","1","8","7","9","5",
                         "","6","5","7","4","3","1","8","2"]
 
-    const wrapper = shallow(<Grid cells={initVal.map(val =>({ value: val, modifiable: false, error: false }))} isFinished={false} onChange={() => ({})} />);
+    const wrapper = shallow(
+      <Grid
+        cells={initVal.map((val) => ({
+          value: val,
+          modifiable: false,
+          error: false,
+        }))}
+        isFinished={false}
+        onChange={() => ({})}
+      />
+    );
     expect(wrapper.find("Cell")).toHaveLength(81);
   });
 });
@@ -95,7 +115,17 @@ describe("Testing status", () => {
                         "2","3","4","6","1","8","7","9","5",
                         "9","6","5","7","4","3","1","8","2"]
 
-    const wrapper = mount(<Grid cells={initVal.map(val =>({ value: val, modifiable: false, error: false }))} isFinished={true} onChange={() => ({})} />);
+    const wrapper = mount(
+      <Grid
+        cells={initVal.map((val) => ({
+          value: val,
+          modifiable: false,
+          error: false,
+        }))}
+        isFinished={true}
+        onChange={() => ({})}
+      />
+    );
     const status = wrapper.find({ id: "status" });
     expect(status.text()).toBe("Sudoku completed");
   });
@@ -104,12 +134,62 @@ describe("Testing status", () => {
 /**
  * This test evaluates that cellsIndexOfBlock return a list containing index of all cells of the same block.
  */
- describe("cellsIndexOfBlock", () => {
+describe("cellsIndexOfBlock", () => {
   test("cellsIndexOfBlock", () => {
-    expect(cellsIndexOfBlock(0)).toStrictEqual([0, 1, 2, 9, 10, 11, 18, 19, 20]);
-    expect(cellsIndexOfBlock(1)).toStrictEqual([3, 4, 5, 12, 13, 14, 21, 22, 23]);
-    expect(cellsIndexOfBlock(2)).toStrictEqual([6, 7, 8, 15, 16, 17, 24, 25, 26]);
-    expect(cellsIndexOfBlock(4)).toStrictEqual([30, 31, 32, 39, 40, 41, 48, 49, 50]);
-    expect(cellsIndexOfBlock(8)).toStrictEqual([60, 61, 62, 69, 70, 71, 78, 79, 80]);
+    expect(cellsIndexOfBlock(0)).toStrictEqual([
+      0,
+      1,
+      2,
+      9,
+      10,
+      11,
+      18,
+      19,
+      20,
+    ]);
+    expect(cellsIndexOfBlock(1)).toStrictEqual([
+      3,
+      4,
+      5,
+      12,
+      13,
+      14,
+      21,
+      22,
+      23,
+    ]);
+    expect(cellsIndexOfBlock(2)).toStrictEqual([
+      6,
+      7,
+      8,
+      15,
+      16,
+      17,
+      24,
+      25,
+      26,
+    ]);
+    expect(cellsIndexOfBlock(4)).toStrictEqual([
+      30,
+      31,
+      32,
+      39,
+      40,
+      41,
+      48,
+      49,
+      50,
+    ]);
+    expect(cellsIndexOfBlock(8)).toStrictEqual([
+      60,
+      61,
+      62,
+      69,
+      70,
+      71,
+      78,
+      79,
+      80,
+    ]);
   });
 });
