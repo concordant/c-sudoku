@@ -1,0 +1,63 @@
+image: node:14.16.0
+
+stages:
+  - build
+  - test
+
+cache: &global_cache # per-branch cache
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+    - single-player/.npm/
+  # make push explicit
+  policy: pull
+
+build:
+  stage: build
+  before_script:
+    - cd single-player
+  script:
+    - npm ci --cache .npm --prefer-offline
+    # prepare script is skipped by install/ci when running NPM 6 as root.
+    # This line can be safely removed with NPM 7+ (see NPM Changelog)
+    - npm run prepare
+    # Build demo application
+    # Still some ESlint warnings to be fixed: disable ESlint at this stage
+    - DISABLE_ESLINT_PLUGIN=true npm run build
+  artifacts:
+    paths:
+      - single-player/node_modules/
+      - single-player/build/
+    expire_in: 3 days
+  cache:
+    <<: *global_cache
+    policy: pull-push
+
+test:
+  stage: test
+  # node 15+ has bug #2143 : https://github.com/npm/cli/issues/2143
+  image: node:14.16.0
+  variables:
+    COUCHDB_HOST: couchdb
+    COUCHDB_PORT: 5984
+    COUCHDB_URL: http://$COUCHDB_HOST:$COUCHDB_PORT/
+    COUCHDB_USER: admin
+    COUCHDB_PASSWORD: "admin"
+
+  services:
+    - couchdb:latest
+
+  before_script:
+    - cd single-player
+    # setup couchdb
+    - curl -su "$COUCHDB_USER:$COUCHDB_PASSWORD"
+      -X PUT $COUCHDB_URL/_users
+    # run c-service in background
+    - npx @concordant/c-service &
+
+  script:
+    - npm test
+
+  coverage: /All files[^|]*\|[^|]*\s+([\d\.]+)/
+  artifacts:
+    paths:
+      - coverage/
