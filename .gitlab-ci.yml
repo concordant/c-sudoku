@@ -1,5 +1,15 @@
 stages:
+  - single-player-pipeline
   - collaborative-pipeline
+
+single-player:
+  stage: single-player-pipeline
+  trigger:
+    include: single-player/.gitlab-ci.yml
+    strategy: depend
+  only:
+    changes:
+      - single-player/**/*
 
 collaborative:
   stage: collaborative-pipeline
