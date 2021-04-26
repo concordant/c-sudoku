@@ -32,7 +32,7 @@ import Cell from "./Cell";
 interface IGridProps {
   cells: { value: string; modifiable: boolean; error: boolean }[];
   isFinished: boolean;
-  onChange: ((index: number, value: string) => void);
+  onChange: (index: number, value: string) => void;
 }
 
 /**
