@@ -25,83 +25,24 @@
 import React from "react";
 import assert from "assert";
 import Cell from "./Cell";
-import { validInput, GRIDS } from "../constants";
+import { validInput } from "../constants";
 
 /**
- * Interface for the state of the Grid
+ * Interface for the properties of the Grid
  */
-interface IGridState {
-  cells: { value: string; modifiable: boolean; error: boolean }[];
-  isFinished: boolean;
+interface IGridProps {
+  cells: { value: string; modifiable: boolean }[];
+  onChange: (index: number, value: string) => void;
 }
 
 /**
  * This class represent the grid of the Sudoku
  */
-class Grid extends React.Component<Record<string, unknown>, IGridState> {
-  constructor(props: Record<string, unknown>) {
-    super(props);
-    const cells = new Array(81)
-      .fill(null)
-      .map(() => ({ value: "", modifiable: false, error: false }));
-    this.state = {
-      cells: cells,
-      isFinished: false,
-    };
-  }
+class Grid extends React.Component<IGridProps> {
+  errors : boolean[] = new Array(81).fill(false);
 
-  /**
-   * Called after the component is rendered.
-   * It set a timer to refresh cells values.
-   */
-  componentDidMount(): void {
-    this.initFrom(generateStaticGrid());
-  }
-
-  /**
-   * Initialize the grid with the given values.
-   * @param values values to be set in the grid.
-   */
-  initFrom(values: string): void {
-    assert.ok(values.length === 81);
-    const cells = this.state.cells;
-    for (let index = 0; index < 81; index++) {
-      cells[index].value = values[index] === "." ? "" : values[index];
-      cells[index].modifiable = values[index] === "." ? true : false;
-    }
-    this.updateState(cells);
-  }
-
-  /**
-   * Reset the value of all modifiable cells.
-   */
-  reset(): void {
-    const cells = this.state.cells;
-    for (let index = 0; index < 81; index++) {
-      if (cells[index].modifiable) {
-        cells[index].value = "";
-      }
-    }
-    this.updateState(cells);
-  }
-
-  /**
-   * This handler is called when the value of a cell is changed.
-   * @param index The index of the cell changed.
-   * @param value The new value of the cell.
-   */
   handleChange(index: number, value: string): void {
-    assert.ok(value === "" || (Number(value) >= 1 && Number(value) <= 9));
-    assert.ok(index >= 0 && index < 81);
-    if (!this.state.cells[index].modifiable) {
-      console.error(
-        "Trying to change an non modifiable cell. Should not happend"
-      );
-    }
-
-    const cells = this.state.cells;
-    cells[index].value = value;
-    this.updateState(cells);
+    this.props.onChange(index, value);
   }
 
   /**
@@ -113,13 +54,13 @@ class Grid extends React.Component<Record<string, unknown>, IGridState> {
     return (
       <Cell
         index={index}
-        value={this.state.cells[index].value}
+        value={this.props.cells[index].value}
         onChange={
-          this.state.cells[index].modifiable
+          this.props.cells[index].modifiable
             ? (index: number, value: string) => this.handleChange(index, value)
             : null
         }
-        error={this.state.cells[index].error}
+        error={this.errors[index]}
       />
     );
   }
@@ -130,7 +71,7 @@ class Grid extends React.Component<Record<string, unknown>, IGridState> {
    */
   renderBlock(blockNum: number): JSX.Element {
     assert.ok(blockNum >= 0 && blockNum < 9);
-    const index = blockIndex(blockNum);
+    const index = cellsIndexOfBlock(blockNum);
     return (
       <td>
         {this.renderCell(index[0])}
@@ -152,12 +93,9 @@ class Grid extends React.Component<Record<string, unknown>, IGridState> {
    * The function is called when the grid is updated. It return a React element corresponding to the grid of the Sudoku.
    */
   render(): JSX.Element {
+    const isFinished = this.checkAll();
     return (
-      <div className="sudoku">
-        <div>
-          <button onClick={this.reset.bind(this)}>Reset</button>
-        </div>
-        <br />
+      <div>
         <table className="grid">
           <tbody>
             {[0, 1, 2].map((line) => (
@@ -169,7 +107,7 @@ class Grid extends React.Component<Record<string, unknown>, IGridState> {
             ))}
           </tbody>
         </table>
-        {this.state.isFinished && (
+        {isFinished && (
           <h2 className="status" id="status">
             Sudoku completed
           </h2>
@@ -182,12 +120,12 @@ class Grid extends React.Component<Record<string, unknown>, IGridState> {
    * Check if a line respect Sudoku lines rules.
    * @param line The line number to be checked.
    */
-  checkLine(line: number): boolean {
+   checkLine(line: number): boolean {
     assert.ok(line >= 0 && line < 9);
     const cpt = Array(9).fill(0);
     for (let column = 0; column < 9; column++) {
       const index = line * 9 + column;
-      const val = this.state.cells[index].value;
+      const val = this.props.cells[index].value;
       if (val.length === 0 || val.length > 1) {
         continue;
       }
@@ -205,7 +143,7 @@ class Grid extends React.Component<Record<string, unknown>, IGridState> {
     const cpt = Array(9).fill(0);
     for (let line = 0; line < 9; line++) {
       const index = line * 9 + column;
-      const val = this.state.cells[index].value;
+      const val = this.props.cells[index].value;
       if (val.length === 0 || val.length > 1) {
         continue;
       }
@@ -221,9 +159,9 @@ class Grid extends React.Component<Record<string, unknown>, IGridState> {
   checkBlock(block: number): boolean {
     assert.ok(block >= 0 && block < 9);
     const cpt = Array(9).fill(0);
-    const indexList = blockIndex(block);
+    const indexList = cellsIndexOfBlock(block);
     for (const index of indexList) {
-      const val = this.state.cells[index].value;
+      const val = this.props.cells[index].value;
       if (val.length === 0 || val.length > 1) {
         continue;
       }
@@ -269,7 +207,7 @@ class Grid extends React.Component<Record<string, unknown>, IGridState> {
     let indexList: number[] = [];
     for (let block = 0; block < 9; block++) {
       if (this.checkBlock(block) === false) {
-        indexList = indexList.concat(blockIndex(block));
+        indexList = indexList.concat(cellsIndexOfBlock(block));
       }
     }
     return indexList;
@@ -281,7 +219,7 @@ class Grid extends React.Component<Record<string, unknown>, IGridState> {
   checkCells(): number[] {
     const indexList = [];
     for (let cell = 0; cell < 81; cell++) {
-      const val = this.state.cells[cell].value;
+      const val = this.props.cells[cell].value;
       if (val.length > 1) {
         indexList.push(cell);
       }
@@ -293,9 +231,7 @@ class Grid extends React.Component<Record<string, unknown>, IGridState> {
    * Check if all cells respect Sudoku rules and update cells.
    * @param cells Current cells values.
    */
-  updateState(
-    cells: { value: string; modifiable: boolean; error: boolean }[]
-  ): void {
+   checkAll(): boolean {
     let errorIndexList = this.checkLines();
     errorIndexList = errorIndexList.concat(this.checkColumns());
     errorIndexList = errorIndexList.concat(this.checkBlocks());
@@ -305,39 +241,31 @@ class Grid extends React.Component<Record<string, unknown>, IGridState> {
 
     for (let index = 0; index < 81; index++) {
       if (errorIndexSet.has(index)) {
-        cells[index].error = true;
+        this.errors[index] = true;
       } else {
-        cells[index].error = false;
+        this.errors[index] = false;
       }
     }
 
     if (errorIndexSet.size) {
-      this.setState({ cells: cells, isFinished: false });
-      return;
+      return false;
     }
 
     for (let index = 0; index < 81; index++) {
-      if (!validInput.test(this.state.cells[index].value)) {
-        this.setState({ cells: cells, isFinished: false });
-        return;
+      if (!validInput.test(this.props.cells[index].value)) {
+        return false;
       }
     }
-    this.setState({ cells: cells, isFinished: true });
-  }
-}
 
-/**
- * Return a predefined Sudoku grid as a string.
- */
-function generateStaticGrid(): string {
-  return GRIDS["1"];
+    return true;
+  }
 }
 
 /**
  * Return an array containing all cell index of a block.
  * @param block The block number of which we want the cells index.
  */
-function blockIndex(block: number): number[] {
+export function cellsIndexOfBlock(block: number): number[] {
   assert.ok(block >= 0 && block < 9);
   const line = Math.floor(block / 3) * 3;
   const column = (block % 3) * 3;

@@ -36,58 +36,14 @@ beforeEach(() => {
 
 describe("Testing UI", () => {
   /**
-   * This test evaluates that the cell displays the initial value.
+   * This test evaluates that the cell displays the value.
    * Here it should display 6.
    */
-  test("Cell value initialization", () => {
+  test("Cell value", () => {
     const wrapper = mount(
-      <Cell index={3} value={"6"} onChange={() => ({})} lock={false} />
+      <Cell index={3} value={"6"} onChange={() => ({})} error={false} />
     );
-    expect(wrapper.find("textarea").text()).toBe("6");
-  });
-
-  /**
-   * This test evaluates that after updating the cell value,
-   * the cell display the right value.
-   * Here it should display 2.
-   */
-  test("Cell value changed", () => {
-    const wrapper = mount(
-      <Cell index={3} value={"6"} onChange={() => ({})} lock={false} />
-    );
-    expect(wrapper.find("textarea").text()).toBe("6");
-    wrapper.find("textarea").simulate("change", { target: { value: "2" } });
-    expect(wrapper.find("textarea").text()).toBe("2");
-  });
-
-  /**
-   * This test evaluates that the value of a locked cell cannot be modified.
-   * Here it should display 2 even if we try to modify it.
-   */
-  test("Cell locked", () => {
-    const wrapper = mount(
-      <Cell index={3} value={"6"} onChange={() => ({})} lock={true} />
-    );
-    expect(wrapper.find("textarea").text()).toBe("6");
-    wrapper.find("textarea").simulate("change", { target: { value: "2" } });
-    expect(wrapper.find("textarea").text()).toBe("6");
-  });
-
-  /**
-   * This test evaluates that the value of a cell can only be modified with integers from 1 to 9.
-   */
-  test("Cell wrong value", () => {
-    const wrapper = mount(
-      <Cell index={3} value={"6"} onChange={() => ({})} lock={false} />
-    );
-    expect(wrapper.find("textarea").text()).toBe("6");
-    wrapper.find("textarea").simulate("change", { target: { value: "0" } });
-    expect(wrapper.find("textarea").text()).toBe("6");
-    wrapper.find("textarea").simulate("change", { target: { value: "10" } });
-    expect(wrapper.find("textarea").text()).toBe("6");
-    wrapper.find("textarea").simulate("change", { target: { value: "1.1" } });
-    expect(wrapper.find("textarea").text()).toBe("6");
-    wrapper.find("textarea").simulate("change", { target: { value: "abc" } });
-    expect(wrapper.find("textarea").text()).toBe("6");
+    const input = wrapper.find("input");
+    expect(input.instance().value).toBe("6");
   });
 });
