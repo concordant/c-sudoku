@@ -23,120 +23,120 @@
  */
 
 body {
-    background-color: white;
-    font-family: 'Montserrat', sans-serif;
-    font-size: 14px;
-    line-height: 1.7;
-    margin: 0px;
-    min-width: 650px;
-    text-align: center;
+  background-color: white;
+  font-family: "Montserrat", sans-serif;
+  font-size: 14px;
+  line-height: 1.7;
+  margin: 0px;
+  min-width: 650px;
+  text-align: center;
 }
 
 h1 {
-    font-size: 34px;
-    line-height: 30px;
-    text-align: center;
-    font-weight: bold;
+  font-size: 34px;
+  line-height: 30px;
+  text-align: center;
+  font-weight: bold;
 }
 
 h2 {
-    font-size: 26px;
-    text-align: center;
-    font-weight: bold;
+  font-size: 26px;
+  text-align: center;
+  font-weight: bold;
 }
 
 p {
-    text-align: justify;
-    text-justify: inter-word;
+  text-align: justify;
+  text-justify: inter-word;
 }
 
 .title {
-    text-align: center;
-    height: 150px;
-    justify-content: center;
-    display: flex;
-    flex-direction: column;
-    line-height: 0px;
-    color: white;
-    margin-top: -10px;
+  text-align: center;
+  height: 150px;
+  justify-content: center;
+  display: flex;
+  flex-direction: column;
+  line-height: 0px;
+  color: white;
+  margin-top: -10px;
 }
 
 .sudoku {
-    margin: auto;
-    max-width: max-content;
-    text-align: center;
-    padding: 20px;
+  margin: auto;
+  max-width: max-content;
+  text-align: center;
+  padding: 20px;
 }
 
 .grid {
-    margin: auto;
-    border: 1px solid black;
+  margin: auto;
+  border: 1px solid black;
 }
 
 .grid input {
-    text-align: center;
-    color: transparent;
-    border: 1px solid black;
-    text-shadow: 0px 0px 0px #82ccdd;
-    height: 60px;
-    width: 60px;
-    font-size: 30px;
-    margin: -1px;
-    background-color: white;
+  text-align: center;
+  color: transparent;
+  border: 1px solid black;
+  text-shadow: 0px 0px 0px #82ccdd;
+  height: 60px;
+  width: 60px;
+  font-size: 30px;
+  margin: -1px;
+  background-color: white;
 }
 
 .grid .wrongvalue {
-    text-shadow: 0px 0px 0px #FFD700;
-    background: #b71540;
+  text-shadow: 0px 0px 0px #ffd700;
+  background: #b71540;
 }
 
 .grid .locked {
-    text-shadow: 0px 0px 0px black;
+  text-shadow: 0px 0px 0px black;
 }
 
 .grid input:focus {
-    background-color: lightgrey;
-    outline: none;
+  background-color: lightgrey;
+  outline: none;
 }
 
 .grid .wrongvalue:focus {
-    background-color: purple;
+  background-color: purple;
 }
 
 .intro {
-    padding-top: 20px;
+  padding-top: 20px;
 }
 
 .padding {
-    padding-top: 30px;
-    padding-bottom: 30px;
+  padding-top: 30px;
+  padding-bottom: 30px;
 }
 
 .reduceWidth {
-    width: 60%;
-    text-align: center;
-    display: inline-block
+  width: 60%;
+  text-align: center;
+  display: inline-block;
 }
 
 .background-turquoise {
-    background-color: #34D6D8;
+  background-color: #34d6d8;
 }
 
 .background-grey {
-    background-color: #F4F4F4;
+  background-color: #f4f4f4;
 }
 
 .background-yellow {
-    background-color: #FFE840;
+  background-color: #ffe840;
 }
 
 .status {
-    border : dotted;
-    color: #60a3bc;
+  border: dotted;
+  color: #60a3bc;
 }
 
 .footer {
-    text-align: center;
-    font-size: 11px;
-    color: grey;
+  text-align: center;
+  font-size: 11px;
+  color: grey;
 }

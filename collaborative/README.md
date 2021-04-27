@@ -13,7 +13,7 @@ For the next steps, you will need the following software:
 - Make sure you have the latest version of Node.js (except Node v15): [see official installation guide](https://nodejs.org/en/download/);
 - The project uses the CRDT library from Concordant private registry: [see Usage section](https://gitlab.inria.fr/concordant/software/c-crdtlib/-/blob/master/README.md).
 
-1.**Install Project dependencies**
+  1.**Install Project dependencies**
 
 Go to project root directory and:
 
