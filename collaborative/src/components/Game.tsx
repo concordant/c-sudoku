@@ -80,12 +80,22 @@ class Game extends React.Component<Record<string, unknown>, IGameState> {
   }
 
   /**
+   * Every 3 seconds, retrieves remote changes
+   */
+  private setSyncTimer() {
+    this.timerID = setTimeout(() => {
+      this.pullGrid();
+      this.setSyncTimer();
+    }, 3000);
+  }
+
+  /**
    * Called after the component is rendered.
    * It set a timer to refresh cells values.
    */
   componentDidMount(): void {
     this.initFrom(generateStaticGrid(this.state.gridNum));
-    this.timerID = setInterval(() => this.updateGrid(), 1000);
+    this.setSyncTimer();
   }
 
   /**
@@ -99,12 +109,13 @@ class Game extends React.Component<Record<string, unknown>, IGameState> {
   /**
    * Update cells values from C-Client.
    */
-  updateGrid(): void {
-    const cells = this.state.cells;
+  pullGrid(): void {
     if (!this.state.isConnected) {
       console.error("updateGrid() called while not connected.");
       return;
     }
+    const cells = this.state.cells;
+    collection.pull(client.utils.ConsistencyLevel.None);
     for (let index = 0; index < 81; index++) {
       if (cells[index].modifiable) {
         cells[index].value = "";
@@ -138,7 +149,7 @@ class Game extends React.Component<Record<string, unknown>, IGameState> {
           });
         }
       }
-      this.timerID = setInterval(() => this.updateGrid(), 1000);
+      this.setSyncTimer();
     }
     this.setState({ isConnected: !this.state.isConnected });
   }
