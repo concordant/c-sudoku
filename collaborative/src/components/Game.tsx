@@ -22,39 +22,280 @@
  * SOFTWARE.
  */
 
-import React from 'react';
-import Grid from './Grid';
-import { client } from '@concordant/c-client';
+import React from "react";
+import assert from "assert";
+import Grid from "./Grid";
+import { GRIDS } from "../constants";
+import { client } from "@concordant/c-client";
+import Submit1Input from "./Submit1Input";
+
+import CONFIG from "../config.json";
+
+const session = client.Session.Companion.connect(
+  CONFIG.dbName,
+  CONFIG.serviceUrl,
+  CONFIG.credentials
+);
+const collection = session.openCollection("sudoku", false);
 
 /**
  * Interface for the state of a Game.
  * Keep a reference to the opened session and opened MVMap.
  */
 interface IGameState {
-    session: any,
-    collection: any
+  gridNum: string;
+  mvmap: any; // eslint-disable-line @typescript-eslint/no-explicit-any
+  cells: { value: string; modifiable: boolean }[];
+  isConnected: boolean;
 }
 
 /**
  * This class represent the Game that glues all components together.
  */
-class Game extends React.Component<{}, IGameState> {
-    constructor(props: any) {
-        super(props);
-        let CONFIG = require('../config.json');
-        let session = client.Session.Companion.connect(CONFIG.dbName, CONFIG.serviceUrl, CONFIG.credentials);
-        let collection = session.openCollection("sudoku", false);
-        this.state = {
-            session: session,
-            collection: collection
+class Game extends React.Component<Record<string, unknown>, IGameState> {
+  timerID!: NodeJS.Timeout;
+  modifiedCells: string[];
+
+  constructor(props: Record<string, unknown>) {
+    super(props);
+    const cells = new Array(81)
+      .fill(null)
+      .map(() => ({ value: "", modifiable: false }));
+    this.modifiedCells = new Array(81).fill(null);
+    const gridNum = "1";
+    const mvmap = collection.open(
+      "grid" + gridNum,
+      "MVMap",
+      false,
+      function () {
+        return;
+      }
+    );
+    this.state = {
+      gridNum: gridNum,
+      mvmap: mvmap,
+      cells: cells,
+      isConnected: true,
+    };
+  }
+
+  /**
+   * Every 3 seconds, retrieves remote changes
+   */
+  private setSyncTimer() {
+    this.timerID = setTimeout(() => {
+      this.pullGrid();
+      this.setSyncTimer();
+    }, 3000);
+  }
+
+  /**
+   * Called after the component is rendered.
+   * It set a timer to refresh cells values.
+   */
+  componentDidMount(): void {
+    this.initFrom(generateStaticGrid(this.state.gridNum));
+    this.setSyncTimer();
+  }
+
+  /**
+   * Called when the compenent is about to be removed from the DOM.
+   * It remove the timer set in componentDidMount().
+   */
+  componentWillUnmount(): void {
+    clearInterval(this.timerID);
+  }
+
+  /**
+   * Update cells values from C-Client.
+   */
+  pullGrid(): void {
+    if (!this.state.isConnected) {
+      console.error("updateGrid() called while not connected.");
+      return;
+    }
+    const cells = this.state.cells;
+    collection.pull(client.utils.ConsistencyLevel.None);
+    for (let index = 0; index < 81; index++) {
+      if (cells[index].modifiable) {
+        cells[index].value = "";
+      }
+    }
+    session.transaction(client.utils.ConsistencyLevel.None, () => {
+      const itString = this.state.mvmap.iteratorString();
+      while (itString.hasNext()) {
+        const val = itString.next();
+        cells[val.first].value = hashSetToString(val.second);
+      }
+    });
+    this.setState({ cells: cells });
+  }
+
+  /**
+   * This function is used to simulate the offline mode.
+   */
+  switchConnection(): void {
+    if (this.state.isConnected) {
+      this.modifiedCells = new Array(81).fill(null);
+      clearInterval(this.timerID);
+    } else {
+      for (let index = 0; index < 81; index++) {
+        if (
+          this.state.cells[index].modifiable &&
+          this.modifiedCells[index] !== null
+        ) {
+          session.transaction(client.utils.ConsistencyLevel.None, () => {
+            this.state.mvmap.setString(index, this.modifiedCells[index]);
+          });
         }
+      }
+      this.setSyncTimer();
+    }
+    this.setState({ isConnected: !this.state.isConnected });
+  }
+
+  /**
+   * Initialize the grid with the given values.
+   * @param values values to be set in the grid.
+   */
+  initFrom(values: string): void {
+    assert.ok(values.length === 81);
+    const cells = this.state.cells;
+    for (let index = 0; index < 81; index++) {
+      cells[index].value = values[index] === "." ? "" : values[index];
+      cells[index].modifiable = values[index] === "." ? true : false;
+    }
+    this.setState({ cells: cells });
+  }
+
+  /**
+   * Reset the value of all modifiable cells.
+   */
+  reset(): void {
+    const cells = this.state.cells;
+    for (let index = 0; index < 81; index++) {
+      if (cells[index].modifiable) {
+        cells[index].value = "";
+        if (this.state.isConnected) {
+          session.transaction(client.utils.ConsistencyLevel.None, () => {
+            this.state.mvmap.setString(index, cells[index].value);
+          });
+        } else {
+          this.modifiedCells[index] = "";
+        }
+      }
+    }
+    this.setState({ cells: cells });
+  }
+
+  /**
+   * This handler is called when the value of a cell is changed.
+   * @param index The index of the cell changed.
+   * @param value The new value of the cell.
+   */
+  handleChange(index: number, value: string): void {
+    assert.ok(value === "" || (Number(value) >= 1 && Number(value) <= 9));
+    assert.ok(index >= 0 && index < 81);
+    if (!this.state.cells[index].modifiable) {
+      console.error(
+        "Trying to change an non modifiable cell. Should not happend"
+      );
     }
 
-    render() {
-        return (
-            <Grid session={this.state.session} collection={this.state.collection} />
-        );
+    const cells = this.state.cells;
+    cells[index].value = value;
+    this.setState({ cells: cells });
+
+    if (this.state.isConnected) {
+      session.transaction(client.utils.ConsistencyLevel.None, () => {
+        this.state.mvmap.setString(index, value);
+      });
+    } else {
+      this.modifiedCells[index] = value;
     }
+  }
+
+  /**
+   * This handler is called when a new grid number is submit.
+   * @param gridNum Desired grid number.
+   */
+  handleSubmit(gridNum: string): void {
+    if (
+      Number(gridNum) < 1 ||
+      Number(gridNum) > 100 ||
+      gridNum === this.state.gridNum
+    ) {
+      return;
+    }
+    const mvmap = collection.open(
+      "grid" + gridNum,
+      "MVMap",
+      false,
+      function () {
+        return;
+      }
+    );
+    this.setState({ gridNum: gridNum, mvmap: mvmap });
+    this.initFrom(generateStaticGrid(gridNum));
+  }
+
+  render(): JSX.Element {
+    return (
+      <div className="sudoku">
+        <div>Current grid : {this.state.gridNum}</div>
+        <Submit1Input
+          inputName="Grid"
+          onSubmit={this.handleSubmit.bind(this)}
+        />
+        <div>
+          Difficulty levels: easy (1-20), medium (21-40), hard (41-60),
+          very-hard (61-80), insane (81-100)
+        </div>
+        <br />
+        <div>
+          <button onClick={this.reset.bind(this)}>Reset</button>
+        </div>
+        <br />
+        <div>
+          <button onClick={() => this.switchConnection()}>
+            {this.state.isConnected ? "Disconnect" : "Connect"}
+          </button>
+        </div>
+        <br />
+        <Grid
+          cells={this.state.cells}
+          onChange={(index: number, value: string) =>
+            this.handleChange(index, value)
+          }
+        />
+      </div>
+    );
+  }
 }
 
-export default Game
+/**
+ * Return a predefined Sudoku grid as a string.
+ * @param gridNum Desired grid number
+ */
+function generateStaticGrid(gridNum: string) {
+  return GRIDS[gridNum];
+}
+
+/**
+ * Concatenates all values of a HashSet as a String.
+ * @param set HashSet to be concatenated.
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function hashSetToString(set: any): string {
+  const res = new Set();
+  const it = set.iterator();
+  while (it.hasNext()) {
+    const val = it.next();
+    if (val !== "") {
+      res.add(val);
+    }
+  }
+  return Array.from(res).sort().join(" ");
+}
+
+export default Game;
