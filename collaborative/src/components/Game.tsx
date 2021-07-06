@@ -67,9 +67,7 @@ class Game extends React.Component<Record<string, unknown>, IGameState> {
       "grid" + gridNum,
       "MVMap",
       false,
-      function () {
-        return;
-      }
+      this.handler.bind(this)
     );
     this.state = {
       gridNum: gridNum,
@@ -104,6 +102,13 @@ class Game extends React.Component<Record<string, unknown>, IGameState> {
    */
   componentWillUnmount(): void {
     clearInterval(this.timerID);
+  }
+
+  /**
+   * Handles update
+   */
+  private handler() {
+    this.pullGrid();
   }
 
   /**
@@ -231,9 +236,7 @@ class Game extends React.Component<Record<string, unknown>, IGameState> {
       "grid" + gridNum,
       "MVMap",
       false,
-      function () {
-        return;
-      }
+      this.handler.bind(this)
     );
     this.setState({ gridNum: gridNum, mvmap: mvmap });
     this.initFrom(generateStaticGrid(gridNum));
