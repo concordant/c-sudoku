@@ -145,17 +145,17 @@ class Game extends React.Component<Record<string, unknown>, IGameState> {
   switchConnection(): void {
     this.setState({ isConnected: !this.state.isConnected });
     if (this.state.isConnected) {
-      for (let index = 0; index < 81; index++) {
-        if (
-          this.state.cells[index].modifiable &&
-          this.modifiedCells[index] !== null
-        ) {
-          session.transaction(client.utils.ConsistencyLevel.None, () => {
+      session.transaction(client.utils.ConsistencyLevel.None, () => {
+        for (let index = 0; index < 81; index++) {
+          if (
+            this.state.cells[index].modifiable &&
+            this.modifiedCells[index] !== null
+          ) {
             this.state.mvmap.setString(index, this.modifiedCells[index]);
-          });
+          }
         }
-      }
-      this.setGetTimeout();
+      });
+      this.pullGrid();
     } else {
       clearInterval(this.timeoutGet);
       this.modifiedCells = new Array(81).fill(null);
@@ -181,18 +181,18 @@ class Game extends React.Component<Record<string, unknown>, IGameState> {
    */
   reset(): void {
     const cells = this.state.cells;
-    for (let index = 0; index < 81; index++) {
-      if (cells[index].modifiable) {
-        cells[index].value = "";
-        if (this.state.isConnected) {
-          session.transaction(client.utils.ConsistencyLevel.None, () => {
+    session.transaction(client.utils.ConsistencyLevel.None, () => {
+      for (let index = 0; index < 81; index++) {
+        if (cells[index].modifiable) {
+          cells[index].value = "";
+          if (this.state.isConnected) {
             this.state.mvmap.setString(index, cells[index].value);
-          });
-        } else {
-          this.modifiedCells[index] = "";
+          } else {
+            this.modifiedCells[index] = "";
+          }
         }
       }
-    }
+    });
     this.setState({ cells: cells });
   }
 
