@@ -118,7 +118,6 @@ class Game extends React.Component<Record<string, unknown>, IGameState> {
    */
   pullGrid(): void {
     if (!this.state.isConnected) {
-      console.error("updateGrid() called while not connected.");
       return;
     }
     clearTimeout(this.timeoutGet);
