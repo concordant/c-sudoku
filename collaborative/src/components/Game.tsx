@@ -143,23 +143,24 @@ class Game extends React.Component<Record<string, unknown>, IGameState> {
    * This function is used to simulate the offline mode.
    */
   switchConnection(): void {
-    this.setState({ isConnected: !this.state.isConnected });
-    if (this.state.isConnected) {
-      session.transaction(client.utils.ConsistencyLevel.None, () => {
-        for (let index = 0; index < 81; index++) {
-          if (
-            this.state.cells[index].modifiable &&
-            this.modifiedCells[index] !== null
-          ) {
-            this.state.mvmap.setString(index, this.modifiedCells[index]);
+    this.setState({ isConnected: !this.state.isConnected }, () => {
+      if (this.state.isConnected) {
+        session.transaction(client.utils.ConsistencyLevel.None, () => {
+          for (let index = 0; index < 81; index++) {
+            if (
+              this.state.cells[index].modifiable &&
+              this.modifiedCells[index] !== null
+            ) {
+              this.state.mvmap.setString(index, this.modifiedCells[index]);
+            }
           }
-        }
-      });
-      this.pullGrid();
-    } else {
-      clearInterval(this.timeoutGet);
-      this.modifiedCells = new Array(81).fill(null);
-    }
+        });
+        this.pullGrid();
+      } else {
+        clearInterval(this.timeoutGet);
+        this.modifiedCells = new Array(81).fill(null);
+      }
+    });
   }
 
   /**
