@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 ### Added
+### Changed
+### Deprecated
+### Removed
+### Fixed
+### Security
+
+## [1.1.0] - 2021-07-22
+### Added
 
 - Provide a service worker file in public repository
 - Add a callback to receive notifications when a crdt is updated
@@ -15,11 +23,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Group the MVMap updates during a reset/reconnection
 - Remove frequent pooling but keep a backup call when it has not received a new version for a while
-
-### Deprecated
-### Removed
-### Fixed
-### Security
 
 ## [1.0.1] - 2021-05-17
 ### Changed
