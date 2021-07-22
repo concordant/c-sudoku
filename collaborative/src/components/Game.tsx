@@ -31,6 +31,8 @@ import Submit1Input from "./Submit1Input";
 
 import CONFIG from "../config.json";
 
+const TIMEOUTGET = 60000;
+
 const session = client.Session.Companion.connect(
   CONFIG.dbName,
   CONFIG.serviceUrl,
@@ -53,7 +55,7 @@ interface IGameState {
  * This class represent the Game that glues all components together.
  */
 class Game extends React.Component<Record<string, unknown>, IGameState> {
-  timerID!: NodeJS.Timeout;
+  timeoutGet!: NodeJS.Timeout;
   modifiedCells: string[];
 
   constructor(props: Record<string, unknown>) {
@@ -67,9 +69,7 @@ class Game extends React.Component<Record<string, unknown>, IGameState> {
       "grid" + gridNum,
       "MVMap",
       false,
-      function () {
-        return;
-      }
+      this.handler.bind(this)
     );
     this.state = {
       gridNum: gridNum,
@@ -80,22 +80,12 @@ class Game extends React.Component<Record<string, unknown>, IGameState> {
   }
 
   /**
-   * Every 3 seconds, retrieves remote changes
-   */
-  private setSyncTimer() {
-    this.timerID = setTimeout(() => {
-      this.pullGrid();
-      this.setSyncTimer();
-    }, 3000);
-  }
-
-  /**
    * Called after the component is rendered.
    * It set a timer to refresh cells values.
    */
   componentDidMount(): void {
     this.initFrom(generateStaticGrid(this.state.gridNum));
-    this.setSyncTimer();
+    this.setGetTimeout();
   }
 
   /**
@@ -103,7 +93,24 @@ class Game extends React.Component<Record<string, unknown>, IGameState> {
    * It remove the timer set in componentDidMount().
    */
   componentWillUnmount(): void {
-    clearInterval(this.timerID);
+    clearInterval(this.timeoutGet);
+  }
+
+  /**
+   * Get remote changes
+   */
+  private setGetTimeout() {
+    this.timeoutGet = setTimeout(() => {
+      collection.forceGet(this.state.mvmap);
+      this.setGetTimeout();
+    }, TIMEOUTGET);
+  }
+
+  /**
+   * Handles update
+   */
+  private handler() {
+    this.pullGrid();
   }
 
   /**
@@ -111,9 +118,9 @@ class Game extends React.Component<Record<string, unknown>, IGameState> {
    */
   pullGrid(): void {
     if (!this.state.isConnected) {
-      console.error("updateGrid() called while not connected.");
       return;
     }
+    clearTimeout(this.timeoutGet);
     const cells = this.state.cells;
     collection.pull(client.utils.ConsistencyLevel.None);
     for (let index = 0; index < 81; index++) {
@@ -129,29 +136,31 @@ class Game extends React.Component<Record<string, unknown>, IGameState> {
       }
     });
     this.setState({ cells: cells });
+    this.setGetTimeout();
   }
 
   /**
    * This function is used to simulate the offline mode.
    */
   switchConnection(): void {
-    if (this.state.isConnected) {
-      this.modifiedCells = new Array(81).fill(null);
-      clearInterval(this.timerID);
-    } else {
-      for (let index = 0; index < 81; index++) {
-        if (
-          this.state.cells[index].modifiable &&
-          this.modifiedCells[index] !== null
-        ) {
-          session.transaction(client.utils.ConsistencyLevel.None, () => {
-            this.state.mvmap.setString(index, this.modifiedCells[index]);
-          });
-        }
+    this.setState({ isConnected: !this.state.isConnected }, () => {
+      if (this.state.isConnected) {
+        session.transaction(client.utils.ConsistencyLevel.None, () => {
+          for (let index = 0; index < 81; index++) {
+            if (
+              this.state.cells[index].modifiable &&
+              this.modifiedCells[index] !== null
+            ) {
+              this.state.mvmap.setString(index, this.modifiedCells[index]);
+            }
+          }
+        });
+        this.pullGrid();
+      } else {
+        clearInterval(this.timeoutGet);
+        this.modifiedCells = new Array(81).fill(null);
       }
-      this.setSyncTimer();
-    }
-    this.setState({ isConnected: !this.state.isConnected });
+    });
   }
 
   /**
@@ -173,18 +182,18 @@ class Game extends React.Component<Record<string, unknown>, IGameState> {
    */
   reset(): void {
     const cells = this.state.cells;
-    for (let index = 0; index < 81; index++) {
-      if (cells[index].modifiable) {
-        cells[index].value = "";
-        if (this.state.isConnected) {
-          session.transaction(client.utils.ConsistencyLevel.None, () => {
+    session.transaction(client.utils.ConsistencyLevel.None, () => {
+      for (let index = 0; index < 81; index++) {
+        if (cells[index].modifiable) {
+          cells[index].value = "";
+          if (this.state.isConnected) {
             this.state.mvmap.setString(index, cells[index].value);
-          });
-        } else {
-          this.modifiedCells[index] = "";
+          } else {
+            this.modifiedCells[index] = "";
+          }
         }
       }
-    }
+    });
     this.setState({ cells: cells });
   }
 
@@ -231,9 +240,7 @@ class Game extends React.Component<Record<string, unknown>, IGameState> {
       "grid" + gridNum,
       "MVMap",
       false,
-      function () {
-        return;
-      }
+      this.handler.bind(this)
     );
     this.setState({ gridNum: gridNum, mvmap: mvmap });
     this.initFrom(generateStaticGrid(gridNum));
