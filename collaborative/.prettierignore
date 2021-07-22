@@ -7,3 +7,5 @@ package-lock.json
 
 # production
 /build
+
+public/c-service-worker.js
