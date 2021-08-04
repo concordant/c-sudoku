@@ -13,6 +13,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 ### Security
 
+## [1.1.1] - 2021-08-04
+### Changed
+- Use C-Service ServiceWorker v1.2.1
+
 ## [1.1.0] - 2021-07-22
 ### Added
 
