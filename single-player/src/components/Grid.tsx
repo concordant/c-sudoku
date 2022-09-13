@@ -1,7 +1,7 @@
 /**
  * MIT License
  *
- * Copyright (c) 2020, Concordant and contributors
+ * Copyright (c) 2022, Concordant and contributors
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -39,7 +39,7 @@ interface IGridProps {
  * This class represent the grid of the Sudoku
  */
 class Grid extends React.Component<IGridProps> {
-  errors : boolean[] = new Array(81).fill(false);
+  errors: boolean[] = new Array(81).fill(false);
 
   handleChange(index: number, value: string): void {
     this.props.onChange(index, value);
@@ -120,7 +120,7 @@ class Grid extends React.Component<IGridProps> {
    * Check if a line respect Sudoku lines rules.
    * @param line The line number to be checked.
    */
-   checkLine(line: number): boolean {
+  checkLine(line: number): boolean {
     assert.ok(line >= 0 && line < 9);
     const cpt = Array(9).fill(0);
     for (let column = 0; column < 9; column++) {
@@ -231,7 +231,7 @@ class Grid extends React.Component<IGridProps> {
    * Check if all cells respect Sudoku rules and update cells.
    * @param cells Current cells values.
    */
-   checkAll(): boolean {
+  checkAll(): boolean {
     let errorIndexList = this.checkLines();
     errorIndexList = errorIndexList.concat(this.checkColumns());
     errorIndexList = errorIndexList.concat(this.checkBlocks());

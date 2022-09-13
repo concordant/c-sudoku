@@ -2,7 +2,7 @@
   "name": "c-sudoku",
   "description": "Sudoku Demo with CRDT",
   "version": "1.0.1",
-  "author": "Yannick Li <yannick.li@concordant.io>",
+  "author": "Concordant.io <support@concordant.io>",
   "license": "MIT",
   "homepage": "./",
   "dependencies": {

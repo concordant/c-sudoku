@@ -1,7 +1,7 @@
 /**
  * MIT License
  *
- * Copyright (c) 2020, Concordant and contributors
+ * Copyright (c) 2022, Concordant and contributors
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -43,9 +43,9 @@ class Game extends React.Component<Record<string, unknown>, IGameState> {
     super(props);
     const cells = new Array(81)
       .fill(null)
-      .map(() => ({ value: "", modifiable: false}));
+      .map(() => ({ value: "", modifiable: false }));
     this.state = {
-      cells: cells
+      cells: cells,
     };
   }
 

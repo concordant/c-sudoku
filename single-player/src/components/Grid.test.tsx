@@ -1,7 +1,7 @@
 /**
  * MIT License
  *
- * Copyright (c) 2020, Concordant and contributors
+ * Copyright (c) 2022, Concordant and contributors
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -159,7 +159,7 @@ describe("checkLine", () => {
       <Grid
         cells={initVal.map((val) => ({
           value: val,
-          modifiable: false
+          modifiable: false,
         }))}
         onChange={() => ({})}
       />
@@ -195,7 +195,7 @@ describe("checkColumn", () => {
       <Grid
         cells={initVal.map((val) => ({
           value: val,
-          modifiable: false
+          modifiable: false,
         }))}
         onChange={() => ({})}
       />
@@ -231,7 +231,7 @@ describe("checkBlock", () => {
       <Grid
         cells={initVal.map((val) => ({
           value: val,
-          modifiable: false
+          modifiable: false,
         }))}
         onChange={() => ({})}
       />
@@ -265,13 +265,15 @@ describe("checkLines", () => {
                         "","","","","","","","","",
                         "","","","","","","","","",
                         "","","","","","","","",""]
-    const wrapper = shallow(<Grid
+    const wrapper = shallow(
+      <Grid
         cells={initVal.map((val) => ({
           value: val,
-          modifiable: false
+          modifiable: false,
         }))}
         onChange={() => ({})}
-      />);
+      />
+    );
     const game = wrapper.instance();
 
     expect(game.checkLines()).toStrictEqual([]);
@@ -292,13 +294,15 @@ describe("checkLines", () => {
                         "1","8","7","5","2","9","6","4","3",
                         "2","3","4","6","1","8","7","9","5",
                         "9","6","5","7","4","3","1","8","2"]
-    const wrapper = shallow(<Grid
+    const wrapper = shallow(
+      <Grid
         cells={initVal.map((val) => ({
           value: val,
-          modifiable: false
+          modifiable: false,
         }))}
         onChange={() => ({})}
-      />);
+      />
+    );
     const game = wrapper.instance();
 
     expect(game.checkLines()).toStrictEqual([]);
@@ -318,13 +322,15 @@ describe("checkLines", () => {
                         "1","8","7","5","2","9","","","3",
                         "2","3","4","6","1","8","7","9","5",
                         "","6","5","7","4","3","1","8","2"]
-    const wrapper = shallow(<Grid
+    const wrapper = shallow(
+      <Grid
         cells={initVal.map((val) => ({
           value: val,
-          modifiable: false
+          modifiable: false,
         }))}
         onChange={() => ({})}
-      />);
+      />
+    );
     const game = wrapper.instance();
 
     expect(game.checkLines()).toStrictEqual([]);
@@ -344,13 +350,15 @@ describe("checkLines", () => {
                         "1","8","7","5","2","9","6","4","3",
                         "2","3","4","6","1","8","7","9","5",
                         "9","6","5","7","4","3","1","8","2"]
-    const wrapper = shallow(<Grid
+    const wrapper = shallow(
+      <Grid
         cells={initVal.map((val) => ({
           value: val,
-          modifiable: false
+          modifiable: false,
         }))}
         onChange={() => ({})}
-      />);
+      />
+    );
     const game = wrapper.instance();
 
     expect(game.checkLines()).toStrictEqual([0, 1, 2, 3, 4, 5, 6, 7, 8]);
@@ -370,13 +378,15 @@ describe("checkLines", () => {
                        "1","8","7","5","2","9","","","3",
                        "2","3","4","6","1","8","7","9","5",
                        "","6","5","7","4","3","1","8","2"]
-    const wrapper = shallow(<Grid
+    const wrapper = shallow(
+      <Grid
         cells={initVal.map((val) => ({
           value: val,
-          modifiable: false
+          modifiable: false,
         }))}
         onChange={() => ({})}
-      />);
+      />
+    );
     const game = wrapper.instance();
 
     expect(game.checkLines()).toStrictEqual([]);
@@ -401,13 +411,15 @@ describe("checkColumns", () => {
                         "","","","","","","","","",
                         "","","","","","","","","",
                         "","","","","","","","",""]
-    const wrapper = shallow(<Grid
+    const wrapper = shallow(
+      <Grid
         cells={initVal.map((val) => ({
           value: val,
-          modifiable: false
+          modifiable: false,
         }))}
         onChange={() => ({})}
-      />);
+      />
+    );
     const game = wrapper.instance();
 
     expect(game.checkColumns()).toStrictEqual([]);
@@ -428,13 +440,15 @@ describe("checkColumns", () => {
                         "1","8","7","5","2","9","6","4","3",
                         "2","3","4","6","1","8","7","9","5",
                         "9","6","5","7","4","3","1","8","2"]
-    const wrapper = shallow(<Grid
+    const wrapper = shallow(
+      <Grid
         cells={initVal.map((val) => ({
           value: val,
-          modifiable: false
+          modifiable: false,
         }))}
         onChange={() => ({})}
-      />);
+      />
+    );
     const game = wrapper.instance();
 
     expect(game.checkColumns()).toStrictEqual([]);
@@ -454,13 +468,15 @@ describe("checkColumns", () => {
                         "1","8","7","5","2","9","","","3",
                         "2","3","4","6","1","8","7","9","5",
                         "","6","5","7","4","3","1","8","2"]
-    const wrapper = shallow(<Grid
+    const wrapper = shallow(
+      <Grid
         cells={initVal.map((val) => ({
           value: val,
-          modifiable: false
+          modifiable: false,
         }))}
         onChange={() => ({})}
-      />);
+      />
+    );
     const game = wrapper.instance();
 
     expect(game.checkColumns()).toStrictEqual([]);
@@ -480,13 +496,15 @@ describe("checkColumns", () => {
                         "1","8","7","5","2","9","6","4","3",
                         "2","3","4","6","1","8","7","9","5",
                         "9","6","5","7","4","3","1","8","2"]
-    const wrapper = shallow(<Grid
+    const wrapper = shallow(
+      <Grid
         cells={initVal.map((val) => ({
           value: val,
-          modifiable: false
+          modifiable: false,
         }))}
         onChange={() => ({})}
-      />);
+      />
+    );
     const game = wrapper.instance();
 
     expect(game.checkColumns()).toStrictEqual([
@@ -516,13 +534,15 @@ describe("checkColumns", () => {
                        "1","8","7","5","2","9","","","3",
                        "2","3","4","6","1","8","7","9","5",
                        "","6","5","7","4","3","1","8","2"]
-    const wrapper = shallow(<Grid
+    const wrapper = shallow(
+      <Grid
         cells={initVal.map((val) => ({
           value: val,
-          modifiable: false
+          modifiable: false,
         }))}
         onChange={() => ({})}
-      />);
+      />
+    );
     const game = wrapper.instance();
 
     expect(game.checkColumns()).toStrictEqual([]);
@@ -547,13 +567,15 @@ describe("checkBlocks", () => {
                         "","","","","","","","","",
                         "","","","","","","","","",
                         "","","","","","","","",""]
-    const wrapper = shallow(<Grid
+    const wrapper = shallow(
+      <Grid
         cells={initVal.map((val) => ({
           value: val,
-          modifiable: false
+          modifiable: false,
         }))}
         onChange={() => ({})}
-      />);
+      />
+    );
     const game = wrapper.instance();
 
     expect(game.checkBlocks()).toStrictEqual([]);
@@ -574,13 +596,15 @@ describe("checkBlocks", () => {
                         "1","8","7","5","2","9","6","4","3",
                         "2","3","4","6","1","8","7","9","5",
                         "9","6","5","7","4","3","1","8","2"]
-    const wrapper = shallow(<Grid
+    const wrapper = shallow(
+      <Grid
         cells={initVal.map((val) => ({
           value: val,
-          modifiable: false
+          modifiable: false,
         }))}
         onChange={() => ({})}
-      />);
+      />
+    );
     const game = wrapper.instance();
 
     expect(game.checkBlocks()).toStrictEqual([]);
@@ -600,13 +624,15 @@ describe("checkBlocks", () => {
                         "1","8","7","5","2","9","","","3",
                         "2","3","4","6","1","8","7","9","5",
                         "","6","5","7","4","3","1","8","2"]
-    const wrapper = shallow(<Grid
+    const wrapper = shallow(
+      <Grid
         cells={initVal.map((val) => ({
           value: val,
-          modifiable: false
+          modifiable: false,
         }))}
         onChange={() => ({})}
-      />);
+      />
+    );
     const game = wrapper.instance();
 
     expect(game.checkBlocks()).toStrictEqual([]);
@@ -626,13 +652,15 @@ describe("checkBlocks", () => {
                         "1","8","7","5","2","9","6","4","3",
                         "2","3","4","6","1","8","7","9","5",
                         "9","6","5","7","4","3","1","8","2"]
-    const wrapper = shallow(<Grid
+    const wrapper = shallow(
+      <Grid
         cells={initVal.map((val) => ({
           value: val,
-          modifiable: false
+          modifiable: false,
         }))}
         onChange={() => ({})}
-      />);
+      />
+    );
     const game = wrapper.instance();
 
     expect(game.checkBlocks()).toStrictEqual([0, 1, 2, 9, 10, 11, 18, 19, 20]);
@@ -652,13 +680,15 @@ describe("checkBlocks", () => {
                        "1","8","7","5","2","9","","","3",
                        "2","3","4","6","1","8","7","9","5",
                        "","6","5","7","4","3","1","8","2"]
-    const wrapper = shallow(<Grid
+    const wrapper = shallow(
+      <Grid
         cells={initVal.map((val) => ({
           value: val,
-          modifiable: false
+          modifiable: false,
         }))}
         onChange={() => ({})}
-      />);
+      />
+    );
     const game = wrapper.instance();
 
     expect(game.checkBlocks()).toStrictEqual([]);
@@ -683,13 +713,15 @@ describe("checkCells", () => {
                         "","","","","","","","","",
                         "","","","","","","","","",
                         "","","","","","","","",""]
-    const wrapper = shallow(<Grid
+    const wrapper = shallow(
+      <Grid
         cells={initVal.map((val) => ({
           value: val,
-          modifiable: false
+          modifiable: false,
         }))}
         onChange={() => ({})}
-      />);
+      />
+    );
     const game = wrapper.instance();
 
     expect(game.checkCells()).toStrictEqual([]);
@@ -710,13 +742,15 @@ describe("checkCells", () => {
                         "1","8","7","5","2","9","6","4","3",
                         "2","3","4","6","1","8","7","9","5",
                         "9","6","5","7","4","3","1","8","2"]
-    const wrapper = shallow(<Grid
+    const wrapper = shallow(
+      <Grid
         cells={initVal.map((val) => ({
           value: val,
-          modifiable: false
+          modifiable: false,
         }))}
         onChange={() => ({})}
-      />);
+      />
+    );
     const game = wrapper.instance();
 
     expect(game.checkCells()).toStrictEqual([]);
@@ -736,13 +770,15 @@ describe("checkCells", () => {
                         "1","8","7","5","2","9","","","3",
                         "2","3","4","6","1","8","7","9","5",
                         "","6","5","7","4","3","1","8","2"]
-    const wrapper = shallow(<Grid
+    const wrapper = shallow(
+      <Grid
         cells={initVal.map((val) => ({
           value: val,
-          modifiable: false
+          modifiable: false,
         }))}
         onChange={() => ({})}
-      />);
+      />
+    );
     const game = wrapper.instance();
 
     expect(game.checkCells()).toStrictEqual([]);
@@ -762,13 +798,15 @@ describe("checkCells", () => {
                         "1","8","7","5","2","9","6","4","3",
                         "2","3","4","6","1","8","7","9","5",
                         "9","6","5","7","4","3","1","8","2"]
-    const wrapper = shallow(<Grid
+    const wrapper = shallow(
+      <Grid
         cells={initVal.map((val) => ({
           value: val,
-          modifiable: false
+          modifiable: false,
         }))}
         onChange={() => ({})}
-      />);
+      />
+    );
     const game = wrapper.instance();
 
     expect(game.checkCells()).toStrictEqual([]);
@@ -788,13 +826,15 @@ describe("checkCells", () => {
                        "1","8","7","5","2","9","","","3",
                        "2","3","4","6","1","8","7","9","5",
                        "","6","5","7","4","3","1","8","2"]
-    const wrapper = shallow(<Grid
+    const wrapper = shallow(
+      <Grid
         cells={initVal.map((val) => ({
           value: val,
-          modifiable: false
+          modifiable: false,
         }))}
         onChange={() => ({})}
-      />);
+      />
+    );
     const game = wrapper.instance();
 
     expect(game.checkCells()).toStrictEqual([0, 1]);
